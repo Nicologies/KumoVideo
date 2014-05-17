@@ -65,3 +65,4 @@ packages/
 *.testsettings
 
 plugins.dat
+*.apk

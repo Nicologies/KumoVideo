@@ -19,11 +19,11 @@ namespace aairvid.Utils
                 profile = new CodecProfile();
 
                 DisplayMetrics localDisplayMetrics = activity.Resources.DisplayMetrics;
-                int m = Math.Min(localDisplayMetrics.WidthPixels, localDisplayMetrics.HeightPixels);
-                profile.Height = 288;
+                int height = Math.Min(localDisplayMetrics.WidthPixels, localDisplayMetrics.HeightPixels);
+                profile.Height = height;
 
-                int k = Math.Max(localDisplayMetrics.HeightPixels, localDisplayMetrics.WidthPixels);
-                profile.Width = 352;
+                int width = Math.Max(localDisplayMetrics.HeightPixels, localDisplayMetrics.WidthPixels);
+                profile.Width = width;
 
                 profile.Bitrate = 1024;
             }

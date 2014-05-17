@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+  <!--<item android:drawable="@drawable/splash_bkground">
+    
+  </item>-->
+  <item>
+    <shape
+      android:shape="rectangle" >
+
+      <gradient
+      
+      android:gradientRadius="495.0"
+      android:startColor="#ff7b8284"
+      android:endColor="#ff595a5a"
+      android:type="radial" />
+
+    </shape>
+  </item>
+  <item>
+    <bitmap
+      android:gravity="center"
+      
+      android:src="@drawable/logo">
+    </bitmap>
+  </item>
+  
+  
+</layer-list>

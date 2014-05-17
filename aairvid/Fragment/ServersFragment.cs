@@ -12,12 +12,17 @@ using Android.Views;
 using Android.Widget;
 using Network.ZeroConf;
 using aairvid.Model;
+using Network.Bonjour;
 
 namespace aairvid
 {
     public class ServersFragment : Fragment
     {
-        ServerListAdapter _servers;        
+        ServerListAdapter _servers;
+
+        ProgressDialog progressDetectingServer;
+
+        BonjourServiceResolver _serverDetector;
 
         private static readonly string PARCEL_SERVERS = "ServersFragment.Servers";
 
@@ -40,6 +45,15 @@ namespace aairvid
             }
         }
 
+        private void OnServiceFound(Network.ZeroConf.IService item)
+        {
+            if (progressDetectingServer != null)
+            {
+                progressDetectingServer.Dismiss();
+            }
+            this.Activity.RunOnUiThread(() => this.AddServer(item));
+        }
+
         public override void OnSaveInstanceState(Bundle outState)
         {
             base.OnSaveInstanceState(outState);
@@ -54,6 +68,24 @@ namespace aairvid
             lvServers.FastScrollEnabled = true;
             lvServers.Adapter = _servers;
             lvServers.ItemClick += lvServers_ItemClick;
+
+            if (_servers == null)
+            {
+                _servers = new ServerListAdapter(Activity);
+            }
+            if (_servers.Count == 0)
+            {
+                progressDetectingServer = new ProgressDialog(Activity);
+                progressDetectingServer.SetMessage("Detecting Servers...");
+                progressDetectingServer.Show();
+
+                if (_serverDetector == null)
+                {
+                    _serverDetector = new Network.Bonjour.BonjourServiceResolver();
+                    _serverDetector.ServiceFound += new Network.ZeroConf.ObjectEvent<Network.ZeroConf.IService>(OnServiceFound);
+                    _serverDetector.Resolve("_airvideoserver._tcp.local.");
+                }
+            }
             return view;
         }
 

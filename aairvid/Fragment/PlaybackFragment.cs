@@ -57,11 +57,22 @@ namespace aairvid
         {
             base.OnAttach(activity);
             activity.ActionBar.Hide();
+            var ads = activity.FindViewById(Resource.Id.adsLayout);
+            if (ads != null)
+            {
+                ads.Visibility = ViewStates.Gone;
+            }
         }
         public override void OnDetach()
         {
-            base.OnDetach();
             this.Activity.ActionBar.Show();
+            var ads = Activity.FindViewById(Resource.Id.adsLayout);
+            if (ads != null)
+            {
+                ads.Visibility = ViewStates.Visible;
+            }
+
+            base.OnDetach();            
         }
 
         private int _lastPos = 0;

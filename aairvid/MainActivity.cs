@@ -15,61 +15,112 @@ using aairvid.Protocol;
 using Android.Media;
 using aairvid.Utils;
 
+using Android.Gms.Ads;
+using Android.Net;
+using Android.Provider;
+
 namespace aairvid
 {
-    [Activity(Label = "aairvid", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "aairvid", MainLauncher = false, Icon = "@drawable/icon", NoHistory = false)]
     public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener
     {
-        ServersFragment _serverFragment;
+        ServersFragment _serverFragment;        
 
-        ProgressDialog progressDetectingServer;
+        bool killed = false;
 
-        BonjourServiceResolver _serverDetector;
+        protected override void OnDestroy()
+        {
+            killed = true;
+            base.OnDestroy();
+        }
         
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.main);
-            CodecProfile.InitProfile(this);
 
-            if (bundle != null)
+            if (FragmentManager.BackStackEntryCount == 0)
             {
-            }
-            else
-            {           
-                progressDetectingServer = new ProgressDialog(this);
-                progressDetectingServer.SetMessage("Detecting Servers...");
-                progressDetectingServer.Show();
+                var tag = typeof(ServersFragment).Name;
 
-                _serverFragment = new ServersFragment();
-
+                _serverFragment = FragmentManager.FindFragmentByTag<ServersFragment>(tag);
+                if (_serverFragment == null)
+                {
+                    _serverFragment = new ServersFragment();
+                }
                 var transaction = this.FragmentManager.BeginTransaction();
-
-                transaction.Replace(Resource.Id.fragmentPlaceholder, _serverFragment);
-                transaction.AddToBackStack(null);
+                transaction.Replace(Resource.Id.fragmentPlaceholder, _serverFragment, tag);
+                transaction.AddToBackStack(tag);
                 transaction.Commit();
             }
-            if (_serverDetector == null)
-            {
-                _serverDetector = new BonjourServiceResolver();
-                _serverDetector.ServiceFound += new Network.ZeroConf.ObjectEvent<Network.ZeroConf.IService>(OnServiceFound);
-                _serverDetector.Resolve("_airvideoserver._tcp.local.");
-            }
         }
 
-        private void OnServiceFound(Network.ZeroConf.IService item)
+        private void LoadAds()
         {
-            if (progressDetectingServer != null)
+            var adsLayout = this.FindViewById<LinearLayout>(Resource.Id.adsLayout);
+            if (adsLayout.ChildCount == 0)
             {
-                progressDetectingServer.Dismiss();
-            }
+                var ad = new AdView(this);
+                ad.AdSize = AdSize.SmartBanner;
+                ad.AdUnitId = "a1517d1d195f6bf";
+                ad.Id = Resource.Id.adView;
 
-            if (_serverFragment != null)
-            {
-                this.RunOnUiThread(() => _serverFragment.AddServer(item));
+                var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent);
+
+                ad.LayoutParameters = layoutParams;
+
+                adsLayout.RemoveAllViews();
+                adsLayout.AddView(ad);
+
+                AdRequest adRequest = new AdRequest.Builder()
+                    .AddTestDevice(AdRequest.DeviceIdEmulator)
+                    .Build();
+                ad.LoadAd(adRequest);
             }
         }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            CodecProfile.InitProfile(this);
+
+            if (!CheckWifiState())
+            {
+                return;
+            }
+
+            LoadAds();
+        }
+        private bool CheckWifiState()
+        {
+            var connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
+            var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi).GetState();
+            if (wifiState != NetworkInfo.State.Connected)
+            {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+                // Setting Dialog Title
+                alertDialogBuilder.SetTitle("Wifi Required");
+
+                // Setting Dialog Message
+                alertDialogBuilder
+                        .SetMessage("Wifi is not connected.");
+
+                // On pressing Settings button
+                alertDialogBuilder.SetPositiveButton("OK", (sender, arg) =>
+                {
+                    Intent intent = new Intent(
+                            Settings.ActionWifiSettings);
+                    StartActivity(intent);
+                });
+
+                alertDialogBuilder.Show();
+                return false;
+            }
+            return true;
+        }        
 
         public async void OnServerSelected(AVServer selectedServer)
         {
@@ -78,6 +129,11 @@ namespace aairvid
             progress.Show();
 
             var resources = await Task.Run(() => selectedServer.GetResources());
+
+            if (killed)
+            {
+                return;
+            }
 
             var adp = new AVResourceAdapter(this);
             adp.AddRange(resources);
@@ -99,6 +155,11 @@ namespace aairvid
 
             var resources = await Task.Run(() => folder.GetResources());
 
+            if (killed)
+            {
+                return;
+            }
+
             var adp = new AVResourceAdapter(this);
             adp.AddRange(resources);
 
@@ -119,6 +180,12 @@ namespace aairvid
             progress.Show();
 
             var mediaInfo = await Task.Run(() => video.GetMediaInfo());
+
+            if (killed)
+            {
+                return;
+            }
+
             var tag = typeof(MediaInfoFragment).Name;
 
             var mediaInfoFragment = new MediaInfoFragment(mediaInfo, video);
@@ -147,6 +214,12 @@ namespace aairvid
             progress.Show();
 
             string mediaInfo = await Task.Run(funcGetUrl);
+
+            if (killed)
+            {
+                return;
+            }
+
             var tag = typeof(PlaybackFragment).Name;
 
             var playbackFragment = new PlaybackFragment(mediaInfo);
