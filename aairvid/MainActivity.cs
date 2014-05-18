@@ -18,6 +18,7 @@ using aairvid.Utils;
 using Android.Gms.Ads;
 using Android.Net;
 using Android.Provider;
+using System.Timers;
 
 namespace aairvid
 {
@@ -26,7 +27,9 @@ namespace aairvid
     {
         ServersFragment _serverFragment;        
 
-        bool killed = false;
+        private bool killed = false;
+
+        private int exitCounter = 0;
 
         protected override void OnDestroy()
         {
@@ -198,6 +201,31 @@ namespace aairvid
             progress.Dismiss();
         }
 
+        public override void OnBackPressed()
+        {
+            if (FragmentManager.BackStackEntryCount > 1)
+            {
+                base.OnBackPressed();
+            }
+            else
+            {
+                if (exitCounter == 1)
+                {
+                    this.Finish();
+                }
+                else
+                {
+                    exitCounter = 1;                   
+                    
+                    Timer t = new Timer();
+                    t.Interval = 5000;
+                    t.Elapsed += (sender, arg) => this.RunOnUiThread(() => exitCounter = 0);
+                    t.Start();
+
+                    Toast.MakeText(this, Resource.String.ExitPrompt, ToastLength.Short).Show();
+                }
+            }
+        }
         public void OnPlayVideoWithConv(AVVideo vid)
         {
             DoPlayVideo(vid.GetPlayWithConvUrl);

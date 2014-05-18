@@ -1473,6 +1473,9 @@ namespace aairvid
 			// aapt resource value: 0x7f05002f
 			public const int ApplicationName = 2131034159;
 			
+			// aapt resource value: 0x7f050030
+			public const int ExitPrompt = 2131034160;
+			
 			// aapt resource value: 0x7f05002e
 			public const int Hello = 2131034158;
 			
