@@ -47,6 +47,9 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidLinkSkip />
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <BundleAssemblies>True</BundleAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GooglePlayServicesLib">
