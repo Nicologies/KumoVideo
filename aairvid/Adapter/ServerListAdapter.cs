@@ -11,10 +11,10 @@ using System.Text;
 
 namespace aairvid
 {
-    public class ServerListAdapter : BaseAdapter<AVServer>
+    public class ServerListAdapter : BaseAdapter<AirVidServer>
     {
         private LayoutInflater _inflater;
-        private List<AVServer> _servers = new List<AVServer>();
+        private List<AirVidServer> _servers = new List<AirVidServer>();
         public ServerListAdapter(Context context)
         {
             _inflater = LayoutInflater.From(context);
@@ -49,7 +49,7 @@ namespace aairvid
 
         public void AddServer(IService server)
         {
-            var svr = new AVServer(server);
+            var svr = new AirVidServer(server);
             if (_servers.FirstOrDefault(r => r.Name == svr.Name) == null)
             {
                 _servers.Add(svr);
@@ -57,7 +57,7 @@ namespace aairvid
             this.NotifyDataSetChanged();
         }
 
-        public override AVServer this[int position]
+        public override AirVidServer this[int position]
         {
             get
             {
@@ -74,7 +74,7 @@ namespace aairvid
             return this._servers.Cast<IParcelable>().ToList();
         }
 
-        internal void AddServer(IEnumerable<AVServer> enumerable)
+        internal void AddServer(IEnumerable<AirVidServer> enumerable)
         {
             _servers.AddRange(enumerable);
         }

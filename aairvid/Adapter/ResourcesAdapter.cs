@@ -10,12 +10,12 @@ using System.Text;
 
 namespace aairvid.Adapter
 {
-    public class AVResourceAdapter : BaseAdapter<AVResource>
+    public class AirVidResourcesAdapter : BaseAdapter<AirVidResource>
     {
         private LayoutInflater _inflater;
-        private List<AVResource> _resources = new List<AVResource>();
+        private List<AirVidResource> _resources = new List<AirVidResource>();
 
-        public AVResourceAdapter(Context context)
+        public AirVidResourcesAdapter(Context context)
         {
             _inflater = LayoutInflater.From(context);
         }
@@ -44,7 +44,7 @@ namespace aairvid.Adapter
 
             var item = this[position];
             resourceName.Text = item.Name;
-            if (item is AVFolder)
+            if (item is Folder)
             {
                 imgViewForIcon.SetImageResource(Resource.Drawable.folder);
             }
@@ -55,13 +55,13 @@ namespace aairvid.Adapter
             return convertView;
         }
 
-        public void Add(AVResource res)
+        public void Add(AirVidResource res)
         {
             this._resources.Add(res);
             this.NotifyDataSetChanged();
         }
 
-        public override AVResource this[int position]
+        public override AirVidResource this[int position]
         {
             get
             {
@@ -73,7 +73,7 @@ namespace aairvid.Adapter
             }
         }
 
-        public void AddRange(IEnumerable<AVResource> res)
+        public void AddRange(IEnumerable<AirVidResource> res)
         {
             this._resources.AddRange(res);
             this.NotifyDataSetChanged();

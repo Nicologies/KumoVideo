@@ -5,7 +5,7 @@ namespace aairvid
 {
     public interface IResourceSelectedListener
     {
-        void OnFolderSelected(AVFolder folder);
-        void OnMediaSelected(AVVideo media);
+        void OnFolderSelected(Folder folder);
+        void OnMediaSelected(Video media);
     }
 }

@@ -41,7 +41,7 @@ namespace aairvid
 
             if (savedInstanceState != null)
             {                
-                this._servers.AddServer(savedInstanceState.GetParcelableArrayList(PARCEL_SERVERS).Cast<AVServer>());
+                this._servers.AddServer(savedInstanceState.GetParcelableArrayList(PARCEL_SERVERS).Cast<AirVidServer>());
             }
         }
 

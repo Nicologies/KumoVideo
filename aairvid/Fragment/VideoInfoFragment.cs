@@ -8,18 +8,18 @@ using System;
 
 namespace aairvid
 {
-    public class MediaInfoFragment : Fragment
+    public class VideoInfoFragment : Fragment
     {
-        private AVMediaInfo _mediaInfo;
-        private AVVideo _videoInfo;
+        private MediaInfo _mediaInfo;
+        private Video _videoInfo;
 
-        public MediaInfoFragment(AVMediaInfo mediaInfo, AVVideo vid)
+        public VideoInfoFragment(MediaInfo mediaInfo, Video vid)
         {
             this._mediaInfo = mediaInfo;
             _videoInfo = vid;
         }
 
-        public MediaInfoFragment()
+        public VideoInfoFragment()
         {
         }
         public override void OnCreate(Bundle savedInstanceState)

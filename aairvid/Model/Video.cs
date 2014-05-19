@@ -8,20 +8,20 @@ using System.Text;
 
 namespace aairvid
 {
-    public class AVVideo : AVResource
+    public class Video : AirVidResource
     {
         public static readonly int ContentType = (int)EmContentType.Video;
 
-        public AVVideo(AVServer server, string name, string id)
+        public Video(AirVidServer server, string name, string id)
             : base(server, name, id)
         {
         }
 
-        public AVVideo(Android.OS.Parcel source) : base(source)
+        public Video(Android.OS.Parcel source) : base(source)
         {
         }
 
-        public AVMediaInfo GetMediaInfo()
+        public MediaInfo GetMediaInfo()
         {
             return Server.GetMediaInfo(Id);
         }

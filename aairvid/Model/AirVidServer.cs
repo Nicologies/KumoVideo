@@ -14,7 +14,7 @@ using System.Text;
 
 namespace aairvid.Model
 {
-    public class AVServer : Java.Lang.Object, IParcelable
+    public class AirVidServer : Java.Lang.Object, IParcelable
     {
         private Guid _clientId = Guid.NewGuid();
 
@@ -59,7 +59,7 @@ namespace aairvid.Model
             {ActionType.InitPlaybackWithConv, "initLivePlayback"},
         };
 
-        public AVServer(IService service)
+        public AirVidServer(IService service)
         {
             _service = service;
             Name = service.Name;
@@ -70,7 +70,7 @@ namespace aairvid.Model
             InitWebClientAndHeaders();
         }
 
-        public AVServer(Parcel source)
+        public AirVidServer(Parcel source)
         {
             this.Name = source.ReadString();
             this._clientId = new Guid(source.ReadString());
@@ -86,7 +86,7 @@ namespace aairvid.Model
             dest.WriteString(_endpoint);
         }
 
-        public AVServer()
+        public AirVidServer()
         {
         }
 
@@ -101,7 +101,7 @@ namespace aairvid.Model
             headers.Add("Content-Type", "application/x-www-form-urlencoded");
         }
 
-        public List<AVResource> GetResources(string path, ActionType actionType = ActionType.GetResources)
+        public List<AirVidResource> GetResources(string path, ActionType actionType = ActionType.GetResources)
         {
             ServiceType serviceType = ServiceType.Browser;
 
@@ -212,19 +212,19 @@ namespace aairvid.Model
             }
         }
 
-        public List<AVResource> GetResources()
+        public List<AirVidResource> GetResources()
         {
             return GetResources("");
         }
 
-        internal AVMediaInfo GetMediaInfo(string id)
+        internal MediaInfo GetMediaInfo(string id)
         {
             var res = GetResources(id, ActionType.GetNestItem);
 
-            return res.Single(r => r is AVMediaInfo) as AVMediaInfo;
+            return res.Single(r => r is MediaInfo) as MediaInfo;
         }
 
-        public string GetPlaybackUrl(AVVideo vid)
+        public string GetPlaybackUrl(Video vid)
         {
             ServiceType serviceType = ServiceType.PlaybackService;
 
@@ -245,7 +245,7 @@ namespace aairvid.Model
             }
         }
 
-        internal string GetPlayWithConvUrl(AVVideo vid)
+        internal string GetPlayWithConvUrl(Video vid)
         {
             ServiceType serviceType = ServiceType.PlayWithConvService;
 
@@ -289,12 +289,12 @@ namespace aairvid.Model
     {
         public Java.Lang.Object CreateFromParcel(Parcel source)
         {
-            return new AVServer(source);
+            return new AirVidServer(source);
         }
 
         public Java.Lang.Object[] NewArray(int size)
         {
-            return new AVServer[size];
+            return new AirVidServer[size];
         }
     }
 }

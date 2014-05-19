@@ -124,10 +124,10 @@ namespace aairvid.Protocol
             return null;
         }
 
-        internal List<AVResource> GetResources(AVServer server, AVServer.ActionType actionType)
+        internal List<AirVidResource> GetResources(AirVidServer server, AirVidServer.ActionType actionType)
         {
-            var res = new List<AVResource>();
-            if (actionType == AVServer.ActionType.GetResources)
+            var res = new List<AirVidResource>();
+            if (actionType == AirVidServer.ActionType.GetResources)
             {
                 var folderContent = Get(OBJ_TYPE_DESC[EmObjType.FolderContent]) as RootObj;
                 if (folderContent == null)
@@ -158,23 +158,23 @@ namespace aairvid.Protocol
                         string name;
                         string id;
                         GetNameAndId(itemObj, out name, out id);
-                        res.Add(new AVFolder(server, name, id));
+                        res.Add(new Folder(server, name, id));
                     }
                     else if (objType == EmObjType.VideoItem)
                     {
                         string name;
                         string id;
                         GetNameAndId(itemObj, out name, out id);
-                        res.Add(new AVVideo(server, name, id));
+                        res.Add(new Video(server, name, id));
                     }
                 }
             }
-            else if (actionType == AVServer.ActionType.GetNestItem)
+            else if (actionType == AirVidServer.ActionType.GetNestItem)
             {
                 var videoItem = this.Get(EmObjType.VideoItem);
                 if (videoItem != null)
                 {
-                    var avMediaInfo = new AVMediaInfo(server);
+                    var avMediaInfo = new MediaInfo(server);
                     var mediaInfo = videoItem.Get(EmObjType.MediaInfo);
                     if (mediaInfo != null)
                     {
@@ -234,7 +234,7 @@ namespace aairvid.Protocol
             return res;
         }
 
-        private void ParseStreams(AVMediaInfo avMediaInfo, KeyValueBase keyValue)
+        private void ParseStreams(MediaInfo avMediaInfo, KeyValueBase keyValue)
         {
             var o = keyValue as EncodableValue;
             if (o != null)
@@ -261,9 +261,9 @@ namespace aairvid.Protocol
             }
         }
 
-        private AVAudioStream GetAudioStream(RootObj stream)
+        private AudioStream GetAudioStream(RootObj stream)
         {
-            var audioStream = new AVAudioStream();
+            var audioStream = new AudioStream();
             foreach (var item in stream.Children)
             {
                 var keyValue = item as KeyValueBase;
@@ -311,9 +311,9 @@ namespace aairvid.Protocol
             return audioStream;
         }
 
-        private static AVVideoStream GetVideoStream(RootObj stream)
+        private static VideoStream GetVideoStream(RootObj stream)
         {
-            var vidStream = new AVVideoStream();
+            var vidStream = new VideoStream();
             foreach (var item in stream.Children)
             {
                 var keyValue = item as KeyValueBase;

@@ -7,16 +7,16 @@ using System.Text;
 
 namespace aairvid.Model
 {
-    public class AVVideoStream : AVStreamBase
+    public class VideoStream : StreamBase
     {
         public int Width = 0;
         public int Height = 0;
 
-        public AVVideoStream()
+        public VideoStream()
         {
         }
 
-        public AVVideoStream(Parcel source) : base(source)
+        public VideoStream(Parcel source) : base(source)
         {
             Width = source.ReadInt();
             Height = source.ReadInt();
@@ -40,12 +40,12 @@ namespace aairvid.Model
     {
         public Java.Lang.Object CreateFromParcel(Parcel source)
         {
-            return new AVVideoStream(source);
+            return new VideoStream(source);
         }
 
         public Java.Lang.Object[] NewArray(int size)
         {
-            return new AVVideoStream[size];
+            return new VideoStream[size];
         }
     }
 }

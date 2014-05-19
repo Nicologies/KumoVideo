@@ -6,18 +6,18 @@ using System.Text;
 
 namespace aairvid.Model
 {
-    public class AVStreamBase : Java.Lang.Object, IParcelable
+    public class StreamBase : Java.Lang.Object, IParcelable
     {
         public int index = 0;
         public int StreamType = 0;
         public string Codec = "";
         public string Language = "";
 
-        public AVStreamBase()
+        public StreamBase()
         {
         }
 
-        public AVStreamBase(Parcel source)
+        public StreamBase(Parcel source)
         {
             index = source.ReadInt();
             StreamType = source.ReadInt();

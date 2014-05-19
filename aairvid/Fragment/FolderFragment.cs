@@ -17,11 +17,11 @@ namespace aairvid
 {
     public class FolderFragment : Fragment
     {
-        private AVResourceAdapter _resources;
+        private AirVidResourcesAdapter _resources;
 
         private static readonly string PARCEL_RESOURCES = "FolderFragment.Resources";
 
-        public FolderFragment(AVResourceAdapter adp)
+        public FolderFragment(AirVidResourcesAdapter adp)
         {
             _resources = adp;
         }
@@ -36,12 +36,12 @@ namespace aairvid
 
             if (_resources == null)
             {
-                _resources = new AVResourceAdapter(this.Activity);
+                _resources = new AirVidResourcesAdapter(this.Activity);
             }
 
             if (savedInstanceState != null)
             {
-                _resources.AddRange(savedInstanceState.GetParcelableArrayList(PARCEL_RESOURCES).Cast<AVResource>());
+                _resources.AddRange(savedInstanceState.GetParcelableArrayList(PARCEL_RESOURCES).Cast<AirVidResource>());
             }
         }
 
@@ -66,13 +66,13 @@ namespace aairvid
         {
             var listener = this.Activity as IResourceSelectedListener;
             var res = _resources[e.Position];
-            if (res is AVFolder)
+            if (res is Folder)
             {
-                listener.OnFolderSelected(res as AVFolder);
+                listener.OnFolderSelected(res as Folder);
             }
             else
             {
-                listener.OnMediaSelected(res as AVVideo);
+                listener.OnMediaSelected(res as Video);
             }
         }
     }

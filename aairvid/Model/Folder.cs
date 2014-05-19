@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace aairvid.Model
 {
-    public class AVFolder : AVResource
+    public class Folder : AirVidResource
     {
         public static readonly int ContentType = (int)EmContentType.Folder;
-        public AVFolder(AVServer server, string name, string id) : base(server, name, id)
+        public Folder(AirVidServer server, string name, string id) : base(server, name, id)
         {
         }
 
-        public AVFolder(Parcel source) : base(source)
+        public Folder(Parcel source) : base(source)
         {
         }
-        public List<AVResource> GetResources()
+        public List<AirVidResource> GetResources()
         {
             return Server.GetResources(this.Id.ToString());
         }

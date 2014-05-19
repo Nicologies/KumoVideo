@@ -70,21 +70,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fragment\MediaInfoFragment.cs" />
+    <Compile Include="Fragment\VideoInfoFragment.cs" />
     <Compile Include="Fragment\PlaybackFragment.cs" />
     <Compile Include="IPlayVideoListener.cs" />
     <Compile Include="IResourceSelectedListener.cs" />
     <Compile Include="IServerSelectedListener.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Adapter\AVResourceAdapter.cs" />
-    <Compile Include="Model\AVAudioStream.cs" />
-    <Compile Include="Model\AVFolder.cs" />
-    <Compile Include="Model\AVResourceCreator.cs" />
-    <Compile Include="Model\AVStreamBase.cs" />
-    <Compile Include="Model\AVVideo.cs" />
-    <Compile Include="Model\AVResource.cs" />
-    <Compile Include="Model\AVServer.cs" />
-    <Compile Include="Model\AVVideoStream.cs" />
+    <Compile Include="Adapter\ResourcesAdapter.cs" />
+    <Compile Include="Model\AudioStream.cs" />
+    <Compile Include="Model\Folder.cs" />
+    <Compile Include="Model\AirVidResourceCreator.cs" />
+    <Compile Include="Model\StreamBase.cs" />
+    <Compile Include="Model\Video.cs" />
+    <Compile Include="Model\AirVidResource.cs" />
+    <Compile Include="Model\AirVidServer.cs" />
+    <Compile Include="Model\VideoStream.cs" />
     <Compile Include="Protocol\BigIntValue.cs" />
     <Compile Include="Protocol\BitratesValue.cs" />
     <Compile Include="Protocol\BytesValue.cs" />
@@ -96,7 +96,7 @@
     <Compile Include="Protocol\KeyValueBase.cs" />
     <Compile Include="Protocol\Encoder.cs" />
     <Compile Include="Protocol\Encodable.cs" />
-    <Compile Include="Model\AVMediaInfo.cs" />
+    <Compile Include="Model\MediaInfo.cs" />
     <Compile Include="Protocol\RootObj.cs" />
     <Compile Include="Protocol\StringValue.cs" />
     <Compile Include="Protocol\EncodableValue.cs" />

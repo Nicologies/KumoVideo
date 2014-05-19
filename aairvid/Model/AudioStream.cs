@@ -7,12 +7,12 @@ using System.Text;
 
 namespace aairvid.Model
 {
-    public class AVAudioStream : AVStreamBase
+    public class AudioStream : StreamBase
     {
-        public AVAudioStream()
+        public AudioStream()
         {
         }
-        public AVAudioStream(Parcel source)
+        public AudioStream(Parcel source)
             : base(source)
         {
         }
@@ -28,12 +28,12 @@ namespace aairvid.Model
     {
         public Java.Lang.Object CreateFromParcel(Parcel source)
         {
-            return new AVAudioStream(source);
+            return new AudioStream(source);
         }
 
         public Java.Lang.Object[] NewArray(int size)
         {
-            return new AVAudioStream[size];
+            return new AudioStream[size];
         }
     }
 }

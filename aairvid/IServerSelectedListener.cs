@@ -5,6 +5,6 @@ namespace aairvid
 {
     interface IServerSelectedListener
     {
-        void OnServerSelected(AVServer server);        
+        void OnServerSelected(AirVidServer server);        
     }
 }

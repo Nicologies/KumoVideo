@@ -6,24 +6,24 @@ using System.Text;
 
 namespace aairvid.Model
 {
-    public class AVResourceCreator : Java.Lang.Object, IParcelableCreator
+    public class AirVidResourceCreator : Java.Lang.Object, IParcelableCreator
     {
         public Java.Lang.Object CreateFromParcel(Parcel source)
         {
             int description = source.ReadInt();
-            if (description == AVFolder.ContentType)
+            if (description == Folder.ContentType)
             {
-                return new AVFolder(source);
+                return new Folder(source);
             }
             else
             {
-                return new AVVideo(source);
+                return new Video(source);
             }
         }
 
         public Java.Lang.Object[] NewArray(int size)
         {
-            return new AVResource[size];
+            return new AirVidResource[size];
         }
     }
 }

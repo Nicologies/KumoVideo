@@ -7,14 +7,14 @@ using System.Text;
 
 namespace aairvid
 {
-    public class AVMediaInfo : AVResource
+    public class MediaInfo : AirVidResource
     {
         public static readonly int ContentType = (int)EmContentType.MediaInfo;
-        public AVMediaInfo(AVServer server) : base(server, "", "")
+        public MediaInfo(AirVidServer server) : base(server, "", "")
         {
         }
 
-        public AVMediaInfo(Parcel source) : base(source)
+        public MediaInfo(Parcel source) : base(source)
         {
             FileSize = source.ReadLong();
             Duration = source.ReadDouble();
@@ -26,16 +26,16 @@ namespace aairvid
                 source.ReadByteArray(Thumbnail);
             }
 
-            VideoStreams = source.ReadParcelableArray(new AVVideoStream().Class.ClassLoader).Cast<AVVideoStream>().ToList();
-            AudioStreams = source.ReadParcelableArray(new AVAudioStream().Class.ClassLoader).Cast<AVAudioStream>().ToList();
+            VideoStreams = source.ReadParcelableArray(new VideoStream().Class.ClassLoader).Cast<VideoStream>().ToList();
+            AudioStreams = source.ReadParcelableArray(new AudioStream().Class.ClassLoader).Cast<AudioStream>().ToList();
         }
 
         public long FileSize = 0L;
         public double Duration = 0f;
         public int Bitrate = 0;
         public byte[] Thumbnail = null;
-        public List<AVVideoStream> VideoStreams = new List<AVVideoStream>();
-        public List<AVAudioStream> AudioStreams = new List<AVAudioStream>();
+        public List<VideoStream> VideoStreams = new List<VideoStream>();
+        public List<AudioStream> AudioStreams = new List<AudioStream>();
 
         public override int DescribeContents()
         {

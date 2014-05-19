@@ -14,8 +14,8 @@ namespace aairvid
 {
     interface IPlayVideoListener
     {
-        void OnPlayVideo(AVVideo vid);
+        void OnPlayVideo(Video vid);
 
-        void OnPlayVideoWithConv(AVVideo vid);
+        void OnPlayVideoWithConv(Video vid);
     }
 }

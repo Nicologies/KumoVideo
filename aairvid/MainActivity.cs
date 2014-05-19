@@ -125,7 +125,7 @@ namespace aairvid
             return true;
         }        
 
-        public async void OnServerSelected(AVServer selectedServer)
+        public async void OnServerSelected(AirVidServer selectedServer)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
@@ -138,7 +138,7 @@ namespace aairvid
                 return;
             }
 
-            var adp = new AVResourceAdapter(this);
+            var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
             var folderFragment = new FolderFragment(adp);
@@ -150,7 +150,7 @@ namespace aairvid
             progress.Dismiss();
         }
 
-        public async void OnFolderSelected(AVFolder folder)
+        public async void OnFolderSelected(Folder folder)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
@@ -163,7 +163,7 @@ namespace aairvid
                 return;
             }
 
-            var adp = new AVResourceAdapter(this);
+            var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
             var folderFragment = new FolderFragment(adp);
@@ -176,7 +176,7 @@ namespace aairvid
             progress.Dismiss();            
         }
 
-        public async void OnMediaSelected(AVVideo video)
+        public async void OnMediaSelected(Video video)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
@@ -189,9 +189,9 @@ namespace aairvid
                 return;
             }
 
-            var tag = typeof(MediaInfoFragment).Name;
+            var tag = typeof(VideoInfoFragment).Name;
 
-            var mediaInfoFragment = new MediaInfoFragment(mediaInfo, video);
+            var mediaInfoFragment = new VideoInfoFragment(mediaInfo, video);
 
             var transaction = FragmentManager.BeginTransaction();
 
@@ -226,11 +226,11 @@ namespace aairvid
                 }
             }
         }
-        public void OnPlayVideoWithConv(AVVideo vid)
+        public void OnPlayVideoWithConv(Video vid)
         {
             DoPlayVideo(vid.GetPlayWithConvUrl);
         }
-        public void OnPlayVideo(AVVideo vid)
+        public void OnPlayVideo(Video vid)
         {
             DoPlayVideo(vid.GetPlaybackUrl);
         }

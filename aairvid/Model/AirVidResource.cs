@@ -9,7 +9,7 @@ using System.Text;
 
 namespace aairvid
 {
-    public class AVResource : Java.Lang.Object, IParcelable
+    public class AirVidResource : Java.Lang.Object, IParcelable
     {
         protected enum EmContentType
         {
@@ -18,7 +18,7 @@ namespace aairvid
             MediaInfo = 3
         }
 
-        public AVServer Server
+        public AirVidServer Server
         {
             get;
             private set;
@@ -35,18 +35,18 @@ namespace aairvid
             private set;
         }
 
-        public AVResource(AVServer server, string name, string id)
+        public AirVidResource(AirVidServer server, string name, string id)
         {
             Server = server;
             Name = name;
             Id = id;
         }
 
-        public AVResource(Parcel source)
+        public AirVidResource(Parcel source)
         {
             Name = source.ReadString();
             Id = source.ReadString();
-            Server = new AVServer(source);
+            Server = new AirVidServer(source);
         }
 
         public virtual int DescribeContents()
@@ -63,9 +63,9 @@ namespace aairvid
         }
 
         [ExportField("CREATOR")]
-        public static AVResourceCreator InitializeCreator()
+        public static AirVidResourceCreator InitializeCreator()
         {
-            return new AVResourceCreator();
+            return new AirVidResourceCreator();
         }
     }
 }
