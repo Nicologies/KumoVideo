@@ -152,6 +152,7 @@
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\splash.xml" />
     <AndroidResource Include="Resources\drawable\download.9.png" />
+    <AndroidResource Include="Resources\values-cn\strings.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bonjour.NET\Bonjour.NET.csproj">
