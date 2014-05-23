@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- For more information on using transformations 
+     see the web.config examples at http://go.microsoft.com/fwlink/?LinkId=214134. -->
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"
+  package="com.ezhang.aairvidpro"
+  xdt:Transform="SetAttributes(package)"
+  >
+</manifest>

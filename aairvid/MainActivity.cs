@@ -61,6 +61,7 @@ namespace aairvid
 
         private void LoadAds()
         {
+#if FREE_VERSION
             var adsLayout = this.FindViewById<LinearLayout>(Resource.Id.adsLayout);
             if (adsLayout.ChildCount == 0)
             {
@@ -81,6 +82,7 @@ namespace aairvid
                     .Build();
                 ad.LoadAd(adRequest);
             }
+#endif
         }
 
         protected override void OnResume()
