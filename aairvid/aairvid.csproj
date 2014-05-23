@@ -175,7 +175,9 @@
     <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\round_corner_bkground.xml" />
+    <AndroidResource Include="Resources\drawable\round_corner_bkground.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <None Include="Properties\AndroidManifest.Debug.xml">
       <DependentUpon>AndroidManifest.xml</DependentUpon>
       <IsTransformFile>True</IsTransformFile>

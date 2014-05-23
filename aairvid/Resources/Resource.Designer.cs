@@ -1050,10 +1050,13 @@ namespace aairvid
 			public const int mr_ic_media_route_on_holo_light = 2130837639;
 			
 			// aapt resource value: 0x7f020088
-			public const int splash = 2130837640;
+			public const int round_corner_bkground = 2130837640;
 			
 			// aapt resource value: 0x7f020089
-			public const int video = 2130837641;
+			public const int splash = 2130837641;
+			
+			// aapt resource value: 0x7f02008a
+			public const int video = 2130837642;
 			
 			static Drawable()
 			{

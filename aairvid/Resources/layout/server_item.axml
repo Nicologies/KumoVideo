@@ -3,13 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:textSize="18sp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="2sp"
+    android:background="@drawable/round_corner_bkground">
     <TextView
+        android:minHeight="24sp"
+        android:layout_marginLeft="4sp"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:gravity="center_vertical"
         android:id="@+id/tvServerName" />
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp" />
 </LinearLayout>
