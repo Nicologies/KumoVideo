@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.ezhang.aairvid">
+<manifest 
+  xmlns:android="http://schemas.android.com/apk/res/android" 
+  android:installLocation="auto"
+  package="com.ezhang.aairvid"
+  android:versionName="1.0.0.2"
+  android:versionCode="2">
 	<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="18" />
 	<application android:label="aairvid" android:icon="@drawable/Icon">
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
