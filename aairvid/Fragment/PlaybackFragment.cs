@@ -10,29 +10,50 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+
+using HistoryContainer = System.Collections.Generic.Dictionary<string, aairvid.Model.HistoryItem>;
+using aairvid.Model;
+using Android.Preferences;
 
 namespace aairvid
 {
     public class PlaybackFragment : Fragment
-    {
+    {        
         private string _playbackUrl;
+        private string _mediaId;
 
-        //private static readonly string PARCEL_PLAYBACK_URL= "PlaybackFragment.PlaybackUrl";
-        //private static readonly string PARCEL_CURR_POS = "PlaybackFragment.CurrentPosition";
+        private static readonly string HISTORY_FILE = "history.bin";
 
-        public PlaybackFragment(string playbackUrl)
+        private static HistoryContainer _history = new HistoryContainer();
+
+        public PlaybackFragment(string playbackUrl, string mediaId)
         {
-            // TODO: Complete member initialization
             this._playbackUrl = playbackUrl;
+            _mediaId = mediaId;
+
+            if(_history.Count() == 0)
+            {
+                
+                if(File.Exists(HISTORY_FILE))
+                {
+                    var fmt = new BinaryFormatter();
+                    _history = fmt.Deserialize(File.OpenRead(HISTORY_FILE)) as HistoryContainer;
+                }
+            }
         }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             RetainInstance = true;
             base.OnCreate(savedInstanceState);
-            if (savedInstanceState != null)
+            int maxHis = 2;
+
+            if (_history.Count() > maxHis)
             {
-               // _playbackUrl = savedInstanceState.GetString(PARCEL_PLAYBACK_URL);
+                _history.OrderBy(r => r.Value.LastPlayDate);
+                _history = _history.Skip(_history.Count()/2).ToDictionary(r => r.Key, r => r.Value);
             }
         }
         
@@ -50,7 +71,30 @@ namespace aairvid
             {
                 _lastPos = playbackView.CurrentPosition;
             }
-            //outState.PutString(PARCEL_PLAYBACK_URL, this._playbackUrl);
+        }
+
+        public override void OnDestroyView()
+        {
+            if (playbackView != null && _mediaId != null)
+            {
+                var pos = playbackView.CurrentPosition;
+                if (!_history.ContainsKey(_mediaId))
+                {
+                    _history.Add(_mediaId, new HistoryItem()
+                    {
+                        LastPosition = pos,
+                        LastPlayDate = DateTime.Now
+                    });
+                }
+                else
+                {
+                    _history[_mediaId].LastPlayDate = DateTime.Now;
+                }
+
+                new BinaryFormatter().Serialize(File.OpenWrite(HISTORY_FILE), _history);
+            }
+
+            base.OnDestroyView();
         }
 
         public override void OnAttach(Activity activity)
@@ -71,7 +115,6 @@ namespace aairvid
             {
                 ads.Visibility = ViewStates.Visible;
             }
-
             base.OnDetach();            
         }
 
@@ -115,6 +158,13 @@ namespace aairvid
                 playbackView.SetMediaController(mediaController);
 
                 playbackView.RequestFocus();
+
+                HistoryItem hisItem;
+                if (_history.TryGetValue(_mediaId, out hisItem))
+                {
+                    _lastPos = hisItem.LastPosition;
+                    hisItem.LastPlayDate = DateTime.Now;
+                }
 
                 playbackView.Prepared += playbackView_Prepared;
             }

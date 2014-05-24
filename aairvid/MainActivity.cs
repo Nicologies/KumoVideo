@@ -237,14 +237,14 @@ namespace aairvid
         }
         public void OnPlayVideoWithConv(Video vid)
         {
-            DoPlayVideo(vid.GetPlayWithConvUrl);
+            DoPlayVideo(vid.GetPlayWithConvUrl, vid);
         }
         public void OnPlayVideo(Video vid)
         {
-            DoPlayVideo(vid.GetPlaybackUrl);
+            DoPlayVideo(vid.GetPlaybackUrl, vid);
         }
 
-        private async void DoPlayVideo(Func<string> funcGetUrl)
+        private async void DoPlayVideo(Func<string> funcGetUrl, Video vid)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
@@ -259,7 +259,7 @@ namespace aairvid
 
             var tag = typeof(PlaybackFragment).Name;
 
-            var playbackFragment = new PlaybackFragment(mediaInfo);
+            var playbackFragment = new PlaybackFragment(mediaInfo, vid.Id);
 
             var transaction = FragmentManager.BeginTransaction();
 
