@@ -12,6 +12,8 @@ namespace aairvid.Model
         public int Width = 0;
         public int Height = 0;
 
+        public int Language = 0;
+
         public VideoStream()
         {
         }
@@ -20,6 +22,7 @@ namespace aairvid.Model
         {
             Width = source.ReadInt();
             Height = source.ReadInt();
+            Language = source.ReadInt();
         }
 
         public override void WriteToParcel(Parcel dest, ParcelableWriteFlags flags)
@@ -27,6 +30,7 @@ namespace aairvid.Model
             base.WriteToParcel(dest, flags);
             dest.WriteInt(Width);
             dest.WriteInt(Height);
+            dest.WriteInt(Language);
         }
 
         [ExportField("CREATOR")]

@@ -349,8 +349,8 @@ namespace aairvid.Protocol
                 }
                 else if (keyValue.Key == "language")
                 {
-                    var strValue = keyValue as StringValue;
-                    vidStream.Language = strValue.Value;
+                    var intValue = keyValue as IntValue;
+                    vidStream.Language = intValue.Value;// strValue.Value;
                 }
             }
             return vidStream;
