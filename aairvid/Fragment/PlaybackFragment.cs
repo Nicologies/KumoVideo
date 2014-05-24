@@ -24,22 +24,25 @@ namespace aairvid
         private string _playbackUrl;
         private string _mediaId;
 
-        private static readonly string HISTORY_FILE = "history.bin";
+        private static readonly string HISTORY_FILE_NAME = "./history.bin";
+        private static readonly string HISTORY_FILE = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), HISTORY_FILE_NAME);
 
         private static HistoryContainer _history = new HistoryContainer();
 
         public PlaybackFragment(string playbackUrl, string mediaId)
         {
             this._playbackUrl = playbackUrl;
-            _mediaId = mediaId;
+            _mediaId = mediaId.Split('\\').LastOrDefault();
 
             if(_history.Count() == 0)
             {
-                
                 if(File.Exists(HISTORY_FILE))
                 {
-                    var fmt = new BinaryFormatter();
-                    _history = fmt.Deserialize(File.OpenRead(HISTORY_FILE)) as HistoryContainer;
+                    using (var stream = File.OpenRead(HISTORY_FILE))
+                    {
+                        var fmt = new BinaryFormatter();
+                        _history = fmt.Deserialize(stream) as HistoryContainer;
+                    }
                 }
             }
         }
@@ -48,7 +51,7 @@ namespace aairvid
         {
             RetainInstance = true;
             base.OnCreate(savedInstanceState);
-            int maxHis = 2;
+            int maxHis = 200;
 
             if (_history.Count() > maxHis)
             {
@@ -78,20 +81,28 @@ namespace aairvid
             if (playbackView != null && _mediaId != null)
             {
                 var pos = playbackView.CurrentPosition;
-                if (!_history.ContainsKey(_mediaId))
+                if (pos != 0)
                 {
-                    _history.Add(_mediaId, new HistoryItem()
+                    if (!_history.ContainsKey(_mediaId))
                     {
-                        LastPosition = pos,
-                        LastPlayDate = DateTime.Now
-                    });
-                }
-                else
-                {
-                    _history[_mediaId].LastPlayDate = DateTime.Now;
-                }
+                        _history.Add(_mediaId, new HistoryItem()
+                        {
+                            LastPosition = pos,
+                            LastPlayDate = DateTime.Now
+                        });
+                    }
+                    else
+                    {
+                        var histItem = _history[_mediaId];
+                        histItem.LastPosition = pos;
+                        histItem.LastPlayDate = DateTime.Now;
+                    }
 
-                new BinaryFormatter().Serialize(File.OpenWrite(HISTORY_FILE), _history);
+                    using (var stream = File.OpenWrite(HISTORY_FILE))
+                    {
+                        new BinaryFormatter().Serialize(stream, _history);
+                    }
+                }
             }
 
             base.OnDestroyView();
@@ -153,12 +164,6 @@ namespace aairvid
                 var mediaController = new MediaController(this.Activity);
                 mediaController.SetAnchorView(playbackView);
 
-                playbackView.SetVideoURI(Android.Net.Uri.Parse(this._playbackUrl));
-
-                playbackView.SetMediaController(mediaController);
-
-                playbackView.RequestFocus();
-
                 HistoryItem hisItem;
                 if (_history.TryGetValue(_mediaId, out hisItem))
                 {
@@ -167,6 +172,12 @@ namespace aairvid
                 }
 
                 playbackView.Prepared += playbackView_Prepared;
+
+                playbackView.SetVideoURI(Android.Net.Uri.Parse(this._playbackUrl));
+
+                playbackView.SetMediaController(mediaController);
+
+                playbackView.RequestFocus();
             }
             catch (Exception ex)
             {
