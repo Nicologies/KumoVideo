@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ExitPrompt">再按一次退出.</string>
-    <string name="ApplicationName">aairvid</string>
+  <string name="ExitPrompt">再按一次退出.</string>
+  <string name="CannotPlay">无法播放此视频</string>
+  <string name="ApplicationName">aairvid</string>
 </resources>

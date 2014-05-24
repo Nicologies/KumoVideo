@@ -85,9 +85,20 @@ namespace aairvid
 
             playbackView = view.FindViewById<VideoView>(Resource.Id.playbackView);
 
+            playbackView.Error += playbackView_Error;
+
             StartPlay(view);
 
             return view;
+        }
+
+        void playbackView_Error(object sender, Android.Media.MediaPlayer.ErrorEventArgs e)
+        {
+            var listner = Activity as IVideoNotPlayableListener;
+            if (listner != null)
+            {
+                listner.OnVideoNotPlayable();
+            }
         }
 
         VideoView playbackView;

@@ -23,7 +23,7 @@ using System.Timers;
 namespace aairvid
 {
     [Activity(Label = "aairvid", MainLauncher = false, Icon = "@drawable/icon", NoHistory = false)]
-    public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener
+    public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener
     {
         ServersFragment _serverFragment;        
 
@@ -52,11 +52,17 @@ namespace aairvid
                 {
                     _serverFragment = new ServersFragment();
                 }
-                var transaction = this.FragmentManager.BeginTransaction();
-                transaction.Replace(Resource.Id.fragmentPlaceholder, _serverFragment, tag);
-                transaction.AddToBackStack(tag);
-                transaction.Commit();
+
+                AddFragment(_serverFragment, tag);
             }
+        }
+
+        private void AddFragment(Fragment fragment, string tag)
+        {
+            var transaction = this.FragmentManager.BeginTransaction();
+            transaction.Replace(Resource.Id.fragmentPlaceholder, fragment, tag);
+            transaction.AddToBackStack(tag);
+            transaction.Commit();
         }
 
         private void LoadAds()
@@ -193,13 +199,14 @@ namespace aairvid
 
             var tag = typeof(VideoInfoFragment).Name;
 
-            var mediaInfoFragment = new VideoInfoFragment(mediaInfo, video);
+            var mediaInfoFragment = FragmentManager.FindFragmentByTag<VideoInfoFragment>(tag);
+            if (mediaInfoFragment == null)
+            {
+                mediaInfoFragment = new VideoInfoFragment(mediaInfo, video);
+            }
 
-            var transaction = FragmentManager.BeginTransaction();
+            AddFragment(mediaInfoFragment, tag);
 
-            transaction.Replace(Resource.Id.fragmentPlaceholder, mediaInfoFragment);
-            transaction.AddToBackStack(null);
-            transaction.Commit();
             progress.Dismiss();
         }
 
@@ -265,6 +272,12 @@ namespace aairvid
         protected override void OnSaveInstanceState(Bundle outState)
         {
             base.OnSaveInstanceState(outState);
+        }
+
+        public void OnVideoNotPlayable()
+        {
+            this.OnBackPressed();
+            Toast.MakeText(this, Resource.String.CannotPlay, ToastLength.Short).Show();
         }
     }
 }

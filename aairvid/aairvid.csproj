@@ -111,6 +111,7 @@
     <Compile Include="IPlayVideoListener.cs" />
     <Compile Include="IResourceSelectedListener.cs" />
     <Compile Include="IServerSelectedListener.cs" />
+    <Compile Include="IVideoNotPlayableListener.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Adapter\ResourcesAdapter.cs" />
     <Compile Include="Model\AudioStream.cs" />
