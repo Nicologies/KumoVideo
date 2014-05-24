@@ -349,8 +349,22 @@ namespace aairvid.Protocol
                 }
                 else if (keyValue.Key == "language")
                 {
-                    var intValue = keyValue as IntValue;
-                    vidStream.Language = intValue.Value;// strValue.Value;
+                    var lan = "";
+                    if (keyValue is IntValue)
+                    {
+                        var intValue = keyValue as IntValue;
+                        lan = intValue.ToString();
+                    }
+                    else if (keyValue is StringValue)
+                    {
+                        var strValue = keyValue as StringValue;
+                        if (strValue != null && !string.IsNullOrWhiteSpace(strValue.Value))
+                        {
+                            lan = strValue.Value;
+                        }
+                    }
+
+                    vidStream.Language = lan;
                 }
             }
             return vidStream;

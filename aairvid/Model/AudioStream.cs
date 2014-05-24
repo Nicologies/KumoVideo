@@ -9,20 +9,12 @@ namespace aairvid.Model
 {
     public class AudioStream : StreamBase
     {
-        public string Language = "";
         public AudioStream()
         {
         }
         public AudioStream(Parcel source)
             : base(source)
         {
-            Language = source.ReadString();
-        }
-
-        public override void WriteToParcel(Parcel dest, ParcelableWriteFlags flags)
-        {
-            base.WriteToParcel(dest, flags);
-            dest.WriteString(Language);
         }
 
         [ExportField("CREATOR")]

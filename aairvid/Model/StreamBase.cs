@@ -11,6 +11,7 @@ namespace aairvid.Model
         public int index = 0;
         public int StreamType = 0;
         public string Codec = "";
+        public string Language = "";
 
         public StreamBase()
         {
@@ -21,6 +22,7 @@ namespace aairvid.Model
             index = source.ReadInt();
             StreamType = source.ReadInt();
             Codec = source.ReadString();
+            Language = source.ReadString();
         }
 
         public int DescribeContents()
@@ -33,6 +35,7 @@ namespace aairvid.Model
             dest.WriteInt(index);
             dest.WriteInt(StreamType);
             dest.WriteString(Codec);
+            dest.WriteString(Language);
         }
     }
 }
