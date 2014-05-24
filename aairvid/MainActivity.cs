@@ -73,10 +73,10 @@ namespace aairvid
             {
                 var ad = new AdView(this);
                 ad.AdSize = AdSize.SmartBanner;
-                ad.AdUnitId = "a1517d1d195f6bf";
+                ad.AdUnitId = "ca-app-pub-3312616311449672/9767882743";
                 ad.Id = Resource.Id.adView;
 
-                var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.WrapContent);
+                var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.FillParent);
 
                 ad.LayoutParameters = layoutParams;
 
