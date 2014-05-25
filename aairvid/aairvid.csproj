@@ -139,6 +139,7 @@
     <Compile Include="Protocol\StringValue.cs" />
     <Compile Include="Protocol\EncodableValue.cs" />
     <Compile Include="SplashActivity.cs" />
+    <Compile Include="UIUtils\AspectRatioImageView.cs" />
     <Compile Include="Utils\CodecProfile.cs" />
     <Compile Include="Utils\PropertyHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
