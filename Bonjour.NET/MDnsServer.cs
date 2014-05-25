@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Network.Dns;
+using Network.ZeroConf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Network.Dns;
 using System.Net;
-using Network.ZeroConf;
 
 namespace Network.Bonjour
 {

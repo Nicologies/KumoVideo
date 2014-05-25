@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Network.Dns;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using Network.Dns;
 using System.Net.NetworkInformation;
+using System.Threading;
 
 namespace Network.ZeroConf
 {

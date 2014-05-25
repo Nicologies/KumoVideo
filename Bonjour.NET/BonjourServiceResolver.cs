@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using Network.Dns;
+﻿using Network.Dns;
 using Network.ZeroConf;
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace Network.Bonjour
 {

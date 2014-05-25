@@ -1,10 +1,4 @@
 ﻿using aairvid.Model;
-using aairvid.Protocol;
-using Android.Media;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace aairvid
 {

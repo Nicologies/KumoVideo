@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using aairvid.Model;
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Network.ZeroConf;
-using aairvid.Model;
 using Network.Bonjour;
+using Network.ZeroConf;
+using System.Linq;
 
 namespace aairvid
 {

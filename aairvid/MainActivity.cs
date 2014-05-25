@@ -1,23 +1,16 @@
-﻿using System;
-
+﻿using aairvid.Adapter;
+using aairvid.Model;
+using aairvid.Utils;
 using Android.App;
 using Android.Content;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.OS;
-using Network.Bonjour;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using aairvid.Model;
-using aairvid.Adapter;
-using aairvid.Protocol;
-using Android.Media;
-using aairvid.Utils;
-
 using Android.Gms.Ads;
 using Android.Net;
+using Android.OS;
 using Android.Provider;
+using Android.Views;
+using Android.Widget;
+using System;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace aairvid

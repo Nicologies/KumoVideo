@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace Network
 {
     public abstract class Message<T> : IClientResponse<T>, IServerRequest<T>, IServerResponse, IClientRequest

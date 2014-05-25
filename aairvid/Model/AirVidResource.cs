@@ -1,11 +1,6 @@
 ﻿using aairvid.Model;
 using Android.OS;
 using Java.Interop;
-using Network.ZeroConf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace aairvid
 {

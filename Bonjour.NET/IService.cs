@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Network.Dns;
 using System.Collections.Generic;
-using System.Text;
-using Network.Dns;
 
 namespace Network.ZeroConf
 {

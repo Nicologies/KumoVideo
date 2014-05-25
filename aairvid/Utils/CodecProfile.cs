@@ -1,11 +1,7 @@
 ﻿using Android.App;
 using Android.Media;
 using Android.Util;
-using Android.Views;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace aairvid.Utils
 {
