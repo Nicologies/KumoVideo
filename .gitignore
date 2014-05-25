@@ -67,3 +67,4 @@ packages/
 plugins.dat
 *.apk
 aairvid/sign.bat
+*.Designer.cs
