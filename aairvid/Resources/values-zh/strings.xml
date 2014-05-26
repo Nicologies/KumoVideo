@@ -3,4 +3,6 @@
   <string name="ExitPrompt">再按一次退出.</string>
   <string name="CannotPlay">无法播放此视频</string>
   <string name="ApplicationName">aairvid</string>
+  <string name="ThanksForClickingAds">感谢点击广告. 祝观赏愉快!</string>
+  <string name="ThanksForClickingAdsBigDay">感谢点击广告. 祝你好运!</string>
 </resources>

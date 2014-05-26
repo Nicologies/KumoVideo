@@ -139,6 +139,7 @@
     <Compile Include="Protocol\StringValue.cs" />
     <Compile Include="Protocol\EncodableValue.cs" />
     <Compile Include="SplashActivity.cs" />
+    <Compile Include="UIUtils\AdsLayout.cs" />
     <Compile Include="UIUtils\AspectRatioImageView.cs" />
     <Compile Include="Utils\CodecProfile.cs" />
     <Compile Include="Utils\PropertyHelper.cs" />
@@ -169,7 +170,9 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\main.axml" />
+    <AndroidResource Include="Resources\layout\main.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />

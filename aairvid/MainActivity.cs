@@ -1,13 +1,13 @@
 ﻿using aairvid.Adapter;
 using aairvid.Model;
+using aairvid.UIUtils;
 using aairvid.Utils;
 using Android.App;
 using Android.Content;
-using Android.Gms.Ads;
 using Android.Net;
 using Android.OS;
+using Android.Preferences;
 using Android.Provider;
-using Android.Views;
 using Android.Widget;
 using System;
 using System.Threading.Tasks;
@@ -23,6 +23,8 @@ namespace aairvid
         private bool killed = false;
 
         private int exitCounter = 0;
+
+        private AdsLayout _adsLayout;
 
         protected override void OnDestroy()
         {
@@ -61,26 +63,8 @@ namespace aairvid
         private void LoadAds()
         {
 #if FREE_VERSION
-            var adsLayout = this.FindViewById<LinearLayout>(Resource.Id.adsLayout);
-            if (adsLayout.ChildCount == 0)
-            {
-                var ad = new AdView(this);
-                ad.AdSize = AdSize.SmartBanner;
-                ad.AdUnitId = "ca-app-pub-3312616311449672/9767882743";
-                ad.Id = Resource.Id.adView;
-
-                var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.FillParent);
-
-                ad.LayoutParameters = layoutParams;
-
-                adsLayout.RemoveAllViews();
-                adsLayout.AddView(ad);
-
-                AdRequest adRequest = new AdRequest.Builder()
-                    .AddTestDevice(AdRequest.DeviceIdEmulator)
-                    .Build();
-                ad.LoadAd(adRequest);
-            }
+            _adsLayout = this.FindViewById<AdsLayout>(Resource.Id.adsLayout);
+            _adsLayout.LoadAds();
 #endif
         }
 
@@ -97,6 +81,7 @@ namespace aairvid
 
             LoadAds();
         }
+
         private bool CheckWifiState()
         {
             var connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
@@ -203,8 +188,19 @@ namespace aairvid
             progress.Dismiss();
         }
 
+        public override bool DispatchTouchEvent(Android.Views.MotionEvent ev)
+        {
+            if (ev.Action == Android.Views.MotionEventActions.Up)
+            {
+                ResetAdsClick();
+            }
+            return base.DispatchTouchEvent(ev);
+        }
+
         public override void OnBackPressed()
         {
+            ResetAdsClick();
+
             if (FragmentManager.BackStackEntryCount > 1)
             {
                 base.OnBackPressed();
@@ -226,6 +222,16 @@ namespace aairvid
 
                     Toast.MakeText(this, Resource.String.ExitPrompt, ToastLength.Short).Show();
                 }
+            }
+        }
+
+        private void ResetAdsClick()
+        {
+            if (_adsLayout != null
+                    && CurrentFocus != _adsLayout
+                    && CurrentFocus != _adsLayout.FocusedChild)
+            {
+                _adsLayout.ResetAdsClickStatus();
             }
         }
         public void OnPlayVideoWithConv(Video vid)

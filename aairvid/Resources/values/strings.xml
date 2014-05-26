@@ -3,4 +3,6 @@
     <string name="ExitPrompt">Press again to exit.</string>
     <string name="CannotPlay">cannot play this video</string>
     <string name="ApplicationName">aairvid</string>
+    <string name="ThanksForClickingAds">Thks for ADs. Enjoy your movies!</string>
+    <string name="ThanksForClickingAdsBigDay">Thks for ADs. Enjoy your big day!</string>
 </resources>
