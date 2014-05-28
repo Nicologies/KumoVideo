@@ -13,10 +13,18 @@ namespace aairvid.UIUtils
     public class AdsLayout : LinearLayout
     {
         public static readonly string RESUME_FROM_AD_CLICKED = "AdsLayout.AdsClicked";
-        public static readonly string NO_ADS_MIN = "AdsLayout.NoAdsMin";
+        public static readonly string NO_ADS_HOURS = "AdsLayout.NoAdsHours";
         public static readonly string NO_ADS_FROM = "AdsLayout.NoAdsFrom";
         private static readonly string NO_ADS_DATE_FMT = "dd/MM/yyyy HH:mm:ss";
-        private static readonly int[] LostMagicNumber = { 4, 8, 15, 16, 23, 42 };
+        private static readonly int[] Weights = 
+        {
+            4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4 ,4,4,
+            8,8,8,8,8,8,8,8,8,8,8,8,8,
+            15,15,15,15,15,15,15,
+            16,16,16,16,16,16,16,
+            23,23,23,
+            42,
+        };
 
         private bool _adsMightClicked = false;
         public AdsLayout(Context context)
@@ -64,13 +72,19 @@ namespace aairvid.UIUtils
         }
 
         public static void SaveNoAdsPref(ISharedPreferences pref)
-        {            
-            int noAdsIndex = new Random().Next() % LostMagicNumber.Length;
-            var editor = pref.Edit();
-            editor.PutInt(AdsLayout.NO_ADS_MIN, LostMagicNumber[noAdsIndex]);
-            editor.PutString(AdsLayout.NO_ADS_FROM, DateTime.Now.ToString(NO_ADS_DATE_FMT));
-            editor.PutBoolean(AdsLayout.RESUME_FROM_AD_CLICKED, false);
-            editor.Commit();
+        {
+            var rand = new Random().Next();
+            System.Diagnostics.Trace.TraceInformation("rand, {0}", rand%100);
+            bool hit = rand % 100 <= 5;
+            if (hit)
+            {
+                int noAdsIndex = new Random().Next() % Weights.Length;
+                var editor = pref.Edit();
+                editor.PutInt(AdsLayout.NO_ADS_HOURS, Weights[noAdsIndex]);
+                editor.PutString(AdsLayout.NO_ADS_FROM, DateTime.Now.ToString(NO_ADS_DATE_FMT));
+                editor.PutBoolean(AdsLayout.RESUME_FROM_AD_CLICKED, false);
+                editor.Commit();
+            }
         }
 
         public void LoadAds()
@@ -109,8 +123,8 @@ namespace aairvid.UIUtils
             {
                 if (resumeFromAdsClicked)
                 {
-                    var noAdsMin = pref.GetInt(NO_ADS_MIN, 0);
-                    if (noAdsMin == LostMagicNumber.Last())
+                    var noAdsMin = pref.GetInt(NO_ADS_HOURS, 0);
+                    if (noAdsMin == Weights.Last())
                     {
                         var bigDay = this.Resources.GetString(aairvid.Resource.String.ThanksForClickingAdsBigDay);
                         string txt = noAdsMin.ToString() + ": " + bigDay;
@@ -134,13 +148,13 @@ namespace aairvid.UIUtils
 
         private bool ShouldShowAds(ISharedPreferences pref)
         {
-            var noAdsMin = pref.GetInt(NO_ADS_MIN, 0);
+            var noAdsHours = pref.GetInt(NO_ADS_HOURS, 0);
             var noAdsFromStr = pref.GetString(NO_ADS_FROM, DateTime.Now.ToString(NO_ADS_DATE_FMT));
             var noAdsFrom = DateTime.ParseExact(noAdsFromStr, NO_ADS_DATE_FMT, CultureInfo.InvariantCulture);
 
             var now = DateTime.Now;
 
-            if (noAdsFrom + TimeSpan.FromMinutes(noAdsMin) > now)
+            if (noAdsFrom + TimeSpan.FromHours(noAdsHours * 5) > now)
             {
                 return false;
             }
