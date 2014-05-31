@@ -28,8 +28,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;FREE_VERSION</DefineConstants>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
@@ -41,8 +41,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;FREE_VERSION</DefineConstants>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
@@ -53,8 +53,8 @@
     <BundleAssemblies>True</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Arm|AnyCPU'">
-    <OutputPath>bin\Arm\</OutputPath>
-    <DefineConstants>TRACE;FREE_VERSION</DefineConstants>
+    <OutputPath>..\bin\Arm\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -69,8 +69,8 @@
     <BundleAssemblies>True</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ArmV7|AnyCPU'">
-    <OutputPath>bin\ArmV7\</OutputPath>
-    <DefineConstants>TRACE;FREE_VERSION</DefineConstants>
+    <OutputPath>..\bin\ArmV7\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -85,8 +85,8 @@
     <BundleAssemblies>True</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'X86|AnyCPU'">
-    <OutputPath>bin\X86\</OutputPath>
-    <DefineConstants>TRACE;FREE_VERSION</DefineConstants>
+    <OutputPath>..\bin\X86\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -217,6 +217,7 @@
     <ProjectReference Include="..\Bonjour.NET\Bonjour.NET.csproj">
       <Project>{dd32db45-727c-4683-9384-affec891172b}</Project>
       <Name>Bonjour.NET</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

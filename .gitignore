@@ -68,3 +68,5 @@ plugins.dat
 *.apk
 aairvid/sign.bat
 *.Designer.cs
+buildaairvid.ps1
+sign.bat
