@@ -20,14 +20,14 @@ namespace aairvid
             return Server.GetMediaInfo(Id);
         }
 
-        internal string GetPlaybackUrl()
+        internal string GetPlaybackUrl(SubtitleStream sub)
         {
-            return Server.GetPlaybackUrl(this);
+            return Server.GetPlaybackUrl(this, sub);
         }
         
-        internal string GetPlayWithConvUrl()
+        internal string GetPlayWithConvUrl(SubtitleStream sub)
         {
-            return Server.GetPlayWithConvUrl(this);
+            return Server.GetPlayWithConvUrl(this, sub);
         }
 
         public override int DescribeContents()

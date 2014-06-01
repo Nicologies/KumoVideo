@@ -119,7 +119,10 @@ namespace aairvid.Model
             }
         }
 
-        private byte[] GetFormData(ServiceType serviceType, ActionType action, string itemId)
+        private byte[] GetFormData(ServiceType serviceType, 
+            ActionType action,
+            string itemId, 
+            SubtitleStream sub = null)
         {
             using (var stream = new MemoryStream())
             {
@@ -137,7 +140,7 @@ namespace aairvid.Model
 
                     root.Add(new StringValue("requestURL", this._endpoint));
 
-                    var paramList = GetParamList(itemId, action);
+                    var paramList = GetParamList(itemId, action, sub);
 
                     root.Add(new EncodableValue("parameters", paramList));
 
@@ -151,8 +154,10 @@ namespace aairvid.Model
                 }
             }
         }
-
-        private static EncodableList GetParamList(string itemId, ActionType action)
+        
+        private static EncodableList GetParamList(string itemId,
+            ActionType action, 
+            SubtitleStream sub = null)
         {
             if (action == ActionType.GetResources)
             {
@@ -190,7 +195,7 @@ namespace aairvid.Model
                 convReq.Add(new IntValue("cropBottom", 0));
                 convReq.Add(new IntValue("cropTop", 0));
                 convReq.Add(new DoubleValue("quality", 0.7));
-                convReq.Add(new StringValue("subtitleInfo", null));
+                convReq.Add(new EncodableValue("subtitleInfo", sub.SubtitleInfoFromServer));
                 convReq.Add(new DoubleValue("offset", 0.0));
                 convReq.Add(new IntValue("resolutionHeight", profile.Height));
                 DeviceInfoValue devInfo = new DeviceInfoValue("metaData");
@@ -222,11 +227,11 @@ namespace aairvid.Model
             return res.Single(r => r is MediaInfo) as MediaInfo;
         }
 
-        public string GetPlaybackUrl(Video vid)
+        public string GetPlaybackUrl(Video vid, SubtitleStream sub)
         {
             ServiceType serviceType = ServiceType.PlaybackService;
 
-            var reqData = GetFormData(serviceType, ActionType.InitPlayback, vid.Id);
+            var reqData = GetFormData(serviceType, ActionType.InitPlayback, vid.Id, sub);
 
             var response = _webClient.UploadData(this._endpoint, reqData);
 
@@ -243,11 +248,11 @@ namespace aairvid.Model
             }
         }
 
-        internal string GetPlayWithConvUrl(Video vid)
+        internal string GetPlayWithConvUrl(Video vid, SubtitleStream sub)
         {
             ServiceType serviceType = ServiceType.PlayWithConvService;
 
-            var reqData = GetFormData(serviceType, ActionType.InitPlaybackWithConv, vid.Id);
+            var reqData = GetFormData(serviceType, ActionType.InitPlaybackWithConv, vid.Id, sub);
 
             var response = _webClient.UploadData(this._endpoint, reqData);
 

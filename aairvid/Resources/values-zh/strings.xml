@@ -5,4 +5,5 @@
   <string name="ApplicationName">aairvid</string>
   <string name="ThanksForClickingAds">感谢点击广告. 祝观赏愉快!</string>
   <string name="ThanksForClickingAdsBigDay">感谢点击广告. 祝你好运!</string>
+  <string name="Subtitle">字幕</string>
 </resources>

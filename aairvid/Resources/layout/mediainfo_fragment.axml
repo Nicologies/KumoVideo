@@ -46,6 +46,20 @@
           android:id="@+id/tvVideoSize" />
     </LinearLayout>
 
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content">
+      <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Subtitle"/>
+      <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cmbSubtitle"/>
+    </LinearLayout>
+
     <aairvid.UIUtils.AspectRatioImageView
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"

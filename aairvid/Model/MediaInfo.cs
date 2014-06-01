@@ -34,6 +34,7 @@ namespace aairvid
         public byte[] Thumbnail = null;
         public List<VideoStream> VideoStreams = new List<VideoStream>();
         public List<AudioStream> AudioStreams = new List<AudioStream>();
+        public List<SubtitleStream> Subtitles = new List<SubtitleStream>();
 
         public override int DescribeContents()
         {

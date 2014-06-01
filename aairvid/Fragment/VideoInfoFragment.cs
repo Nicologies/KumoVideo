@@ -1,3 +1,5 @@
+using aairvid.Adapter;
+using aairvid.Model;
 using aairvid.Utils;
 using Android.App;
 using Android.Graphics;
@@ -6,7 +8,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using System;
-
+using System.Linq;
 namespace aairvid
 {
     public class VideoInfoFragment : Fragment
@@ -78,18 +80,33 @@ namespace aairvid
             {
                 btnPlay.Visibility = ViewStates.Gone;
             }
+
+            var cmbSubtitle = view.FindViewById<Spinner>(Resource.Id.cmbSubtitle);
+            var adp = new SubtitleAdapter(Activity);
+
+            _mediaInfo.Subtitles.OrderByDescending(r => RecentLans.Instance.GetLanWeight(Activity, r.Language));
+            adp.AddRange(_mediaInfo.Subtitles);
+            cmbSubtitle.Adapter = adp;
         }
 
         void btnPlay_Click(object sender, EventArgs e)
         {
+            var sub = GetSelectedSub();
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideo(_videoInfo);
+            listener.OnPlayVideo(_videoInfo, sub);
+        }
+
+        private SubtitleStream GetSelectedSub()
+        {
+            var cmbSubtitle = this.View.FindViewById<Spinner>(Resource.Id.cmbSubtitle);
+            return cmbSubtitle.SelectedItem as SubtitleStream;
         }
 
         void btnPlayWithConv_Click(object sender, EventArgs e)
         {
+            var sub = GetSelectedSub();
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideoWithConv(_videoInfo);
+            listener.OnPlayVideoWithConv(_videoInfo, sub);
         }
     }
 }

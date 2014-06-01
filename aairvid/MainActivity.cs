@@ -235,22 +235,22 @@ namespace aairvid
                 _adsLayout.ResetAdsClickStatus();
             }
         }
-        public void OnPlayVideoWithConv(Video vid)
+        public void OnPlayVideoWithConv(Video vid, SubtitleStream sub)
         {
-            DoPlayVideo(vid.GetPlayWithConvUrl, vid);
+            DoPlayVideo(vid.GetPlayWithConvUrl, vid, sub);
         }
-        public void OnPlayVideo(Video vid)
+        public void OnPlayVideo(Video vid, SubtitleStream sub)
         {
-            DoPlayVideo(vid.GetPlaybackUrl, vid);
+            DoPlayVideo(vid.GetPlaybackUrl, vid, sub);
         }
 
-        private async void DoPlayVideo(Func<string> funcGetUrl, Video vid)
+        private async void DoPlayVideo(Func<SubtitleStream, string> funcGetUrl, Video vid, SubtitleStream sub)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
-            string mediaInfo = await Task.Run(funcGetUrl);
+            string mediaInfo = await Task.Run(() => funcGetUrl(sub));
 
             if (killed)
             {

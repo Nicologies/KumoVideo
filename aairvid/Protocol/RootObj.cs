@@ -1,5 +1,6 @@
 ﻿using aairvid.Model;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace aairvid.Protocol
@@ -215,6 +216,83 @@ namespace aairvid.Protocol
                                     if (o != null)
                                     {
                                         var li = o.Value as EncodableList;
+                                        foreach (var obj in li)
+                                        {
+                                            var rootObj = obj as RootObj;
+                                            if (rootObj != null && rootObj._objType == EmObjType.SubtitleInfo)
+                                            {
+                                                SubtitleStream sub = new SubtitleStream();
+                                                string loaderId = "";
+                                                string path = "";
+
+                                                sub.SubtitleInfoFromServer = rootObj;
+
+                                                foreach (var child in rootObj.Children)
+                                                {
+                                                    var subItem = child as KeyValueBase;
+                                                    var key = subItem.Key.ToUpper();
+                                                    
+                                                    if (key == "LOADERID")
+                                                    {
+                                                        if (subItem is StringValue)
+                                                        {
+                                                            loaderId = ((subItem) as StringValue).Value;
+                                                        }
+                                                        else if (subItem is IntValue)
+                                                        {
+                                                            loaderId = ((subItem) as IntValue).Value.ToString();
+                                                        }
+                                                    }
+                                                    else if (key == "LANGUAGE")
+                                                    {
+                                                        if (subItem is StringValue)
+                                                        {
+                                                            sub.Language = ((subItem) as StringValue).Value;
+                                                        }
+                                                        else if (subItem is IntValue)
+                                                        {
+                                                            sub.Language = ((subItem) as IntValue).Value.ToString();
+                                                        }
+                                                    }
+                                                    else if (key == "PATH")
+                                                    {
+                                                        if (subItem is StringValue)
+                                                        {
+                                                            path = ((subItem) as StringValue).Value;
+                                                        }
+                                                        else if (subItem is IntValue)
+                                                        {
+                                                            path = ((subItem) as IntValue).Value.ToString();
+                                                        }
+                                                    }
+                                                }
+
+                                                if(string.IsNullOrWhiteSpace(sub.Language))
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(path))
+                                                    {
+                                                        var name = Path.GetFileNameWithoutExtension(path);
+                                                        if (name == null)
+                                                        {
+                                                            if (!string.IsNullOrWhiteSpace(loaderId))
+                                                            {
+                                                                sub.Language = loaderId;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            var subName = name.Split('.').LastOrDefault();
+                                                            if (!string.IsNullOrWhiteSpace(subName))
+                                                            {
+                                                                sub.Language = subName;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                avMediaInfo.Subtitles.Add(sub);
+                                            }
+                                        }
                                     }
                                 }
 

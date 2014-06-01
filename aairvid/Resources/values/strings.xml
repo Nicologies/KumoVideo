@@ -5,4 +5,5 @@
     <string name="ApplicationName">aairvid</string>
     <string name="ThanksForClickingAds">Thks for ADs. Enjoy your movies!</string>
     <string name="ThanksForClickingAdsBigDay">Thks for ADs. Enjoy your big day!</string>
+  <string name="Subtitle">Subtitle</string>
 </resources>
