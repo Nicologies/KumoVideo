@@ -271,8 +271,8 @@ namespace aairvid.Protocol
                                                 {
                                                     if (!string.IsNullOrWhiteSpace(path))
                                                     {
-                                                        var name = Path.GetFileNameWithoutExtension(path);
-                                                        if (name == null)
+                                                        var subFilename = Path.GetFileNameWithoutExtension(path);
+                                                        if (subFilename == null)
                                                         {
                                                             if (!string.IsNullOrWhiteSpace(loaderId))
                                                             {
@@ -281,10 +281,10 @@ namespace aairvid.Protocol
                                                         }
                                                         else
                                                         {
-                                                            var subName = name.Split('.').LastOrDefault();
+                                                            var subName = subFilename.Split('.').LastOrDefault();
                                                             if (!string.IsNullOrWhiteSpace(subName))
                                                             {
-                                                                sub.Language = subName;
+                                                                sub.Language = subName + "-extern file";
                                                             }
                                                         }
                                                     }
