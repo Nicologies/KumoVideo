@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+  <ListView
+    android:layout_weight=".7"
+      android:divider="@android:color/transparent"
+      android:dividerHeight="2.0sp"
+      android:minWidth="25px"
+      android:minHeight="40px"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/lvResources" />
+  <LinearLayout
+    android:layout_marginLeft="2dip"
+    android:layout_weight=".3"
+    android:background="@drawable/round_corner_bkground"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
+    <ScrollView
+      android:layout_margin="10dip"
+      android:id="@+id/mediaDetailView"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent">
+      <include layout="@layout/mediainfo_fragment_part"/>
+    </ScrollView>
+
+    <ImageView
+        android:layout_margin="2dip"
+        android:src="@drawable/logo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/imgEmptyMediaInfo" />
+  </LinearLayout>
+
+</LinearLayout>

@@ -99,6 +99,10 @@ namespace aairvid.UIUtils
 
         public void LoadAds()
         {
+            if (IsAdsLoaded)
+            {
+                return;
+            }
             var pref = PreferenceManager.GetDefaultSharedPreferences(Context);
             var resumeFromAdsClicked = pref.GetBoolean(AdsLayout.RESUME_FROM_AD_CLICKED, false);
             if (resumeFromAdsClicked)
@@ -176,6 +180,19 @@ namespace aairvid.UIUtils
             }
             return true;
         }
+
+        private bool _IsAdsLoaded = false;
+        public bool IsAdsLoaded
+        {
+            get
+            {
+                return _IsAdsLoaded;
+            }
+            set
+            {
+                _IsAdsLoaded = value;
+            }
+        }
     }
 
     public class AdListenerImpl : AdListener, IDisposable
@@ -191,6 +208,12 @@ namespace aairvid.UIUtils
         {
             _adContainer.RemoveAllViews();
             _adContainer.AddView(_ad);
+            _adContainer.IsAdsLoaded = true;
+        }
+
+        public override void OnAdFailedToLoad(int p0)
+        {
+            base.OnAdFailedToLoad(p0);
         }
 
         void IDisposable.Dispose()
