@@ -26,6 +26,8 @@ namespace aairvid.UIUtils
             42,
         };
 
+        AdView ad;
+
         private bool _adsMightClicked = false;
         public AdsLayout(Context context)
             : base(context)
@@ -87,6 +89,14 @@ namespace aairvid.UIUtils
             }
         }
 
+        protected override void OnDetachedFromWindow()
+        {
+            var listener = ad.AdListener as AdListenerImpl;
+            listener.Dispose();
+            ad = null;
+            base.OnDetachedFromWindow();
+        }
+
         public void LoadAds()
         {
             var pref = PreferenceManager.GetDefaultSharedPreferences(Context);
@@ -100,23 +110,26 @@ namespace aairvid.UIUtils
             {
                 if (this.ChildCount == 0)
                 {
-                    var ad = new AdView(Context);
-                    ad.AdSize = AdSize.SmartBanner;
-                    ad.AdUnitId = "ca-app-pub-3312616311449672/9767882743";
-                    ad.Id = Resource.Id.adView;
+                    if (ad == null)
+                    {
+                        ad = new AdView(Context);
 
-                    var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.FillParent);
+                        ad.AdSize = AdSize.SmartBanner;
+                        ad.AdUnitId = "ca-app-pub-3312616311449672/9767882743";
+                        ad.Id = Resource.Id.adView;
 
-                    ad.LayoutParameters = layoutParams;
+                        var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.FillParent);
 
-                    this.RemoveAllViews();
-                    this.AddView(ad);
+                        ad.LayoutParameters = layoutParams;
 
-                    AdRequest adRequest = new AdRequest.Builder()
-                        .AddTestDevice(AdRequest.DeviceIdEmulator)
-                        .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
-                        .Build();
-                    ad.LoadAd(adRequest);
+                        AdRequest adRequest = new AdRequest.Builder()
+                            .AddTestDevice(AdRequest.DeviceIdEmulator)
+                            .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                            .Build();
+
+                        ad.AdListener = new AdListenerImpl(this, ad);
+                        ad.LoadAd(adRequest);
+                    }
                 }
             }
             else
@@ -148,6 +161,9 @@ namespace aairvid.UIUtils
 
         private bool ShouldShowAds(ISharedPreferences pref)
         {
+#if DEBUG
+            return true;
+#endif
             var noAdsHours = pref.GetInt(NO_ADS_HOURS, 0);
             var noAdsFromStr = pref.GetString(NO_ADS_FROM, DateTime.Now.ToString(NO_ADS_DATE_FMT));
             var noAdsFrom = DateTime.ParseExact(noAdsFromStr, NO_ADS_DATE_FMT, CultureInfo.InvariantCulture);
@@ -159,6 +175,28 @@ namespace aairvid.UIUtils
                 return false;
             }
             return true;
+        }
+    }
+
+    public class AdListenerImpl : AdListener, IDisposable
+    {
+        private AdsLayout _adContainer;
+        private AdView _ad;
+        public AdListenerImpl(AdsLayout adContainer, AdView ad)
+        {
+            _adContainer = adContainer;
+            _ad = ad;
+        }
+        public override void OnAdLoaded()
+        {
+            _adContainer.RemoveAllViews();
+            _adContainer.AddView(_ad);
+        }
+
+        void IDisposable.Dispose()
+        {
+            _ad = null;
+            _adContainer = null;
         }
     }
 }

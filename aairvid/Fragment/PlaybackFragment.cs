@@ -103,11 +103,18 @@ namespace aairvid
         public override void OnAttach(Activity activity)
         {
             base.OnAttach(activity);
+
+            var adsLayout = activity.FindViewById<View>(Resource.Id.adsLayout);
+            adsLayout.Visibility = ViewStates.Gone;
             activity.ActionBar.Hide();
         }
         public override void OnDetach()
         {
-            this.Activity.ActionBar.Show();
+            Activity.ActionBar.Show();
+
+            var adsLayout = Activity.FindViewById<View>(Resource.Id.adsLayout);
+            adsLayout.Visibility = ViewStates.Visible;
+
             base.OnDetach();            
         }
 
