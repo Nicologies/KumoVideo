@@ -44,7 +44,10 @@ namespace aairvid
             {
                 progressDetectingServer.Dismiss();
             }
-            this.Activity.RunOnUiThread(() => this.AddServer(item));
+            if (Activity != null)
+            {
+                Activity.RunOnUiThread(() => this.AddServer(item));
+            }
         }
 
         public override void OnSaveInstanceState(Bundle outState)
@@ -75,13 +78,21 @@ namespace aairvid
                 if (_serverDetector == null)
                 {
                     _serverDetector = new Network.Bonjour.BonjourServiceResolver();
-                    _serverDetector.ServiceFound += new Network.ZeroConf.ObjectEvent<Network.ZeroConf.IService>(OnServiceFound);
+                    _serverDetector.ServiceFound += OnServiceFound;
                     _serverDetector.Resolve("_airvideoserver._tcp.local.");
                 }
             }
             return view;
         }
 
+        public override void OnDestroyView()
+        {
+            if (_serverDetector != null)
+            {
+                _serverDetector.ServiceFound -= OnServiceFound;
+            }
+            base.OnDestroyView();
+        }
         void lvServers_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             var listener = this.Activity as IServerSelectedListener;
