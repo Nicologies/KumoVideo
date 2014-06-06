@@ -195,7 +195,15 @@ namespace aairvid.Model
                 convReq.Add(new IntValue("cropBottom", 0));
                 convReq.Add(new IntValue("cropTop", 0));
                 convReq.Add(new DoubleValue("quality", 0.7));
-                convReq.Add(new EncodableValue("subtitleInfo", sub.SubtitleInfoFromServer));
+                if (sub == null)
+                {
+                    convReq.Add(new StringValue("subtitleInfo", null));
+                }
+                else
+                {
+                    convReq.Add(new EncodableValue("subtitleInfo", sub.SubtitleInfoFromServer));
+                }
+                
                 convReq.Add(new DoubleValue("offset", 0.0));
                 convReq.Add(new IntValue("resolutionHeight", profile.Height));
                 DeviceInfoValue devInfo = new DeviceInfoValue("metaData");
