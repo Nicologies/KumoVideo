@@ -69,8 +69,9 @@ namespace aairvid
 #if NON_FREE_VERSION
 #else
             _adsLayout = this.FindViewById<AdsLayout>(Resource.Id.adsLayout);
-            if (_adsLayout != null)
+            if (_adsLayout != null && !_adsLayout.IsAdsLoaded)
             {
+                _adsLayout.Visibility = Android.Views.ViewStates.Visible;
                 _adsLayout.LoadAds();
             }
 #endif
@@ -86,8 +87,12 @@ namespace aairvid
             {
                 return;
             }
-
-            LoadAds();
+            var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
+            bool isPlaying = fragment != null && fragment.Name == typeof(PlaybackFragment).Name;
+            if (!isPlaying)
+            {
+                LoadAds();
+            }            
         }
         private AlertDialog _wifiAlertDialog;
         private bool CheckWifiState()
@@ -269,8 +274,8 @@ namespace aairvid
 
             var transaction = FragmentManager.BeginTransaction();
 
-            transaction.Replace(Resource.Id.fragmentPlaceholder, playbackFragment);
-            transaction.AddToBackStack(null);
+            transaction.Replace(Resource.Id.fragmentPlaceholder, playbackFragment, tag);
+            transaction.AddToBackStack(tag);
             transaction.Commit();
             progress.Dismiss();
         }
@@ -284,6 +289,7 @@ namespace aairvid
         {
             this.OnBackPressed();
             Toast.MakeText(this, Resource.String.CannotPlay, ToastLength.Short).Show();
+            LoadAds();
         }
 
         public void OnVideoFinished(int playedMinutes)
@@ -295,6 +301,7 @@ namespace aairvid
                     _fullScreenAds.Show();
                 }
             }
+            LoadAds();
         }
     }
 }
