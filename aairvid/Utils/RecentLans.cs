@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Preferences;
+using aairvid.Model;
 
 namespace aairvid.Utils
 {
@@ -23,7 +24,7 @@ namespace aairvid.Utils
         {
             RetrieveRecentLansFromPref(ctx);
 
-            return _recentLans.IndexOf(lan);
+            return _recentLans.IndexOf(lan.ToUpperInvariant());
         }
 
         private void RetrieveRecentLansFromPref(Context ctx)
@@ -51,6 +52,24 @@ namespace aairvid.Utils
                 var editor = pref.Edit();
                 editor.PutString(RECENT_LANS, string.Join(";", _recentLans.ToArray()));
                 editor.Commit();
+            }
+            else
+            {
+                _recentLans.Remove(lan);
+                _recentLans.Add(lan);
+
+                var pref = PreferenceManager.GetDefaultSharedPreferences(ctx);
+                var editor = pref.Edit();
+                editor.PutString(RECENT_LANS, string.Join(";", _recentLans.ToArray()));
+                editor.Commit();
+            }
+        }
+
+        public void UpdateRecentLan(Context ctx, SubtitleStream sub)
+        {
+            if (sub != null && !string.IsNullOrWhiteSpace(sub.Language))
+            {
+                UpdateRecentLan(ctx, sub.Language);
             }
         }
     }

@@ -92,6 +92,7 @@ namespace aairvid
         void btnPlay_Click(object sender, EventArgs e)
         {
             var sub = GetSelectedSub();
+            RecentLans.Instance.UpdateRecentLan(Activity, sub);
             var listener = this.Activity as IPlayVideoListener;
             listener.OnPlayVideo(_videoInfo, sub);
         }

@@ -85,8 +85,8 @@ namespace aairvid
             var cmbSubtitle = view.FindViewById<Spinner>(Resource.Id.cmbSubtitle);
             var adp = new SubtitleAdapter(Activity);
 
-            _mediaInfo.Subtitles.OrderByDescending(r => RecentLans.Instance.GetLanWeight(Activity, r.Language));
-            adp.AddRange(_mediaInfo.Subtitles);
+            var subs = _mediaInfo.Subtitles.OrderByDescending(r => RecentLans.Instance.GetLanWeight(Activity, r.Language));
+            adp.AddRange(subs);
             cmbSubtitle.Adapter = adp;
         }
 
@@ -95,6 +95,9 @@ namespace aairvid
             _wasPlaying = true;
             
             var sub = GetSelectedSub();
+
+            RecentLans.Instance.UpdateRecentLan(Activity, sub);
+
             var listener = this.Activity as IPlayVideoListener;
             listener.OnPlayVideo(_videoInfo, sub);
         }
