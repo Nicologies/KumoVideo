@@ -75,31 +75,39 @@ namespace aairvid
 
             LoadAds();
         }
-
+        private AlertDialog _wifiAlertDialog;
         private bool CheckWifiState()
         {
             var connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
             var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi).GetState();
             if (wifiState != NetworkInfo.State.Connected)
             {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
-                // Setting Dialog Title
-                alertDialogBuilder.SetTitle("Wifi Required");
-
-                // Setting Dialog Message
-                alertDialogBuilder
-                        .SetMessage("Wifi is not connected.");
-
-                // On pressing Settings button
-                alertDialogBuilder.SetPositiveButton("OK", (sender, arg) =>
+                if (_wifiAlertDialog == null)
                 {
-                    Intent intent = new Intent(
-                            Settings.ActionWifiSettings);
-                    StartActivity(intent);
-                });
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-                alertDialogBuilder.Show();
+                    // Setting Dialog Title
+                    alertDialogBuilder.SetTitle("Wifi Required");
+
+                    // Setting Dialog Message
+                    alertDialogBuilder
+                            .SetMessage("Wifi is not connected.");
+
+                    // On pressing Settings button
+                    alertDialogBuilder.SetPositiveButton("OK", (sender, arg) =>
+                    {
+                        Intent intent = new Intent(
+                                Settings.ActionWifiSettings);
+                        StartActivity(intent);
+                    });
+
+                    _wifiAlertDialog = alertDialogBuilder.Create();
+                }
+
+                if (!_wifiAlertDialog.IsShowing)
+                {
+                    _wifiAlertDialog.Show();
+                }
                 return false;
             }
             return true;
