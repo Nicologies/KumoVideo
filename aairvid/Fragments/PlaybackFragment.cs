@@ -68,6 +68,15 @@ namespace aairvid
             }
         }
 
+        public override void OnPause()
+        {
+            if (playbackView != null)
+            {
+                _lastPos = playbackView.CurrentPosition;
+            }
+            base.OnPause();
+        }
+
         public override void OnDestroyView()
         {
             if (playbackView != null && _mediaId != null)
