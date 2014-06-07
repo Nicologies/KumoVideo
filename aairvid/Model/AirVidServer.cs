@@ -19,7 +19,6 @@ namespace aairvid.Model
         public string PasswordDigest = "";
 
         private IService _service;
-        private WebClient _webClient;
         private string _endpoint;
         public string Name
         {
@@ -65,7 +64,7 @@ namespace aairvid.Model
             var str = addr.Addresses[0].ToString();
             _endpoint = string.Format("http://{0}:{1}/service", str, addr.Port);
 
-            InitWebClientAndHeaders();
+            CreateWebClient();
         }
 
         public AirVidServer(Parcel source)
@@ -88,15 +87,16 @@ namespace aairvid.Model
         {
         }
 
-        private void InitWebClientAndHeaders()
+        private WebClient CreateWebClient()
         {
-            _webClient = new WebClient();
-            var headers = _webClient.Headers;
+            var webClient = new WebClient();
+            var headers = webClient.Headers;
             headers.Add("User-Agent", "AirVideo/2.4.13 CFNetwork/548.1.4 Darwin/11.0.0");
             headers.Add("Accept", "*/*");
             headers.Add("Accept-Language", "en-us");
             headers.Add("Accept-Encoding", "gzip, deflate");
             headers.Add("Content-Type", "application/x-www-form-urlencoded");
+            return webClient;
         }
 
         public List<AirVidResource> GetResources(string path, ActionType actionType = ActionType.GetResources)
@@ -105,7 +105,9 @@ namespace aairvid.Model
 
             var reqData = GetFormData(serviceType, actionType, path);
 
-            var response = _webClient.UploadData(this._endpoint, reqData);
+            var webClient = CreateWebClient();
+
+            var response = webClient.UploadData(this._endpoint, reqData);
 
             using (var stream = new MemoryStream(response))
             {
@@ -241,7 +243,8 @@ namespace aairvid.Model
 
             var reqData = GetFormData(serviceType, ActionType.InitPlayback, vid.Id, sub);
 
-            var response = _webClient.UploadData(this._endpoint, reqData);
+            var webClient = CreateWebClient();
+            var response = webClient.UploadData(this._endpoint, reqData);
 
             using (var stream = new MemoryStream(response))
             {
@@ -262,7 +265,8 @@ namespace aairvid.Model
 
             var reqData = GetFormData(serviceType, ActionType.InitPlaybackWithConv, vid.Id, sub);
 
-            var response = _webClient.UploadData(this._endpoint, reqData);
+            var webClient = CreateWebClient();
+            var response = webClient.UploadData(this._endpoint, reqData);
 
             using (var stream = new MemoryStream(response))
             {
