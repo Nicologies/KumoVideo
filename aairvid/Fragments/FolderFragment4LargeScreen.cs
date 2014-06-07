@@ -49,10 +49,16 @@ namespace aairvid
             var view = this.View;
 
             var imgEmptyMediaInfo = view.FindViewById<ImageView>(Resource.Id.imgEmptyMediaInfo);
-            imgEmptyMediaInfo.Visibility = ViewStates.Gone;
+            if (imgEmptyMediaInfo != null)
+            {
+                imgEmptyMediaInfo.Visibility = ViewStates.Gone;
+            }
 
             var dtView = view.FindViewById(Resource.Id.mediaDetailView);
-            dtView.Visibility = ViewStates.Visible;
+            if (dtView != null)
+            {
+                dtView.Visibility = ViewStates.Visible;
+            }
 
             var tvVidName = view.FindViewById<TextView>(Resource.Id.tvVideoName);
             tvVidName.Text = _videoInfo.Name;

@@ -69,7 +69,10 @@ namespace aairvid
 #if NON_FREE_VERSION
 #else
             _adsLayout = this.FindViewById<AdsLayout>(Resource.Id.adsLayout);
-            _adsLayout.LoadAds();
+            if (_adsLayout != null)
+            {
+                _adsLayout.LoadAds();
+            }
 #endif
         }
 
