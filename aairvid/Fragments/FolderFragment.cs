@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace aairvid
 {
-    public class FolderFragment : Fragment
+    public class FolderFragment : Fragment, IMediaDetailDisplayer
     {
-        private AirVidResourcesAdapter _resources;
+        protected AirVidResourcesAdapter _resources;
 
         private static readonly string PARCEL_RESOURCES = "FolderFragment.Resources";
 
@@ -65,8 +65,21 @@ namespace aairvid
             }
             else
             {
-                listener.OnMediaSelected(res as Video);
+                listener.OnMediaSelected(res as Video, this);
             }
+        }
+
+        public virtual void DisplayDetail(Video vid, MediaInfo mediaInfo)
+        {
+            var tag = typeof(VideoInfoFragment).Name;
+
+            var mediaInfoFragment = Activity.FragmentManager.FindFragmentByTag<VideoInfoFragment>(tag);
+            if (mediaInfoFragment == null)
+            {
+                mediaInfoFragment = new VideoInfoFragment(mediaInfo, vid);
+            }
+
+            FragmentHelper.AddFragment(Activity, mediaInfoFragment, tag);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using aairvid.Adapter;
+using aairvid.Fragments;
 using aairvid.Model;
 using aairvid.UIUtils;
 using aairvid.Utils;
@@ -48,18 +49,10 @@ namespace aairvid
                     _serverFragment = new ServersFragment();
                 }
 
-                AddFragment(_serverFragment, tag);
+                FragmentHelper.AddFragment(this, _serverFragment, tag);
             }
         }
-
-        private void AddFragment(Fragment fragment, string tag)
-        {
-            var transaction = this.FragmentManager.BeginTransaction();
-            transaction.Replace(Resource.Id.fragmentPlaceholder, fragment, tag);
-            transaction.AddToBackStack(tag);
-            transaction.Commit();
-        }
-
+        
         private void LoadAds()
         {
 #if NON_FREE_VERSION
@@ -128,7 +121,7 @@ namespace aairvid
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
-            var folderFragment = new FolderFragment(adp);
+            var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, Resources.Configuration.ScreenLayout);
             var transaction = FragmentManager.BeginTransaction();
 
             transaction.Replace(Resource.Id.fragmentPlaceholder, folderFragment);
@@ -153,7 +146,7 @@ namespace aairvid
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
-            var folderFragment = new FolderFragment(adp);
+            var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, Resources.Configuration.ScreenLayout);
 
             var transaction = FragmentManager.BeginTransaction();
 
@@ -163,7 +156,7 @@ namespace aairvid
             progress.Dismiss();            
         }
 
-        public async void OnMediaSelected(Video video)
+        public async void OnMediaSelected(Video video, IMediaDetailDisplayer dtDisp)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
@@ -175,18 +168,9 @@ namespace aairvid
             {
                 return;
             }
+            dtDisp.DisplayDetail(video, mediaInfo);
 
-            var tag = typeof(VideoInfoFragment).Name;
-
-            var mediaInfoFragment = FragmentManager.FindFragmentByTag<VideoInfoFragment>(tag);
-            if (mediaInfoFragment == null)
-            {
-                mediaInfoFragment = new VideoInfoFragment(mediaInfo, video);
-            }
-
-            AddFragment(mediaInfoFragment, tag);
-
-            progress.Dismiss();
+            progress.Dismiss();            
         }
 
         public override bool DispatchTouchEvent(Android.Views.MotionEvent ev)

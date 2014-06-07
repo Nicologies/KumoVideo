@@ -122,8 +122,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapter\SubtitleAdapter.cs" />
-    <Compile Include="Fragment\VideoInfoFragment.cs" />
-    <Compile Include="Fragment\PlaybackFragment.cs" />
+    <Compile Include="Fragments\FolderFragment4LargeScreen.cs" />
+    <Compile Include="Fragments\FolderFragment4SmallScreen.cs" />
+    <Compile Include="Fragments\FolderFragmentFactory.cs" />
+    <Compile Include="Fragments\FragmentHelper.cs" />
+    <Compile Include="Fragments\VideoInfoFragment.cs" />
+    <Compile Include="Fragments\PlaybackFragment.cs" />
+    <Compile Include="IMediaDetailDisplayer.cs" />
     <Compile Include="IPlayVideoListener.cs" />
     <Compile Include="IResourceSelectedListener.cs" />
     <Compile Include="IServerSelectedListener.cs" />
@@ -158,13 +163,14 @@
     <Compile Include="SplashActivity.cs" />
     <Compile Include="UIUtils\AdsLayout.cs" />
     <Compile Include="UIUtils\AspectRatioImageView.cs" />
+    <Compile Include="UIUtils\ScreenProperty.cs" />
     <Compile Include="Utils\CodecProfile.cs" />
     <Compile Include="Utils\PropertyHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Fragment\FolderFragment.cs" />
+    <Compile Include="Fragments\FolderFragment.cs" />
     <Compile Include="Adapter\ServerListAdapter.cs" />
-    <Compile Include="Fragment\ServersFragment.cs" />
+    <Compile Include="Fragments\ServersFragment.cs" />
     <Compile Include="Utils\RecentLans.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +178,7 @@
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\drawable\logo.png" />
     <AndroidResource Include="Resources\layout\folder_fragment.axml">
-      <SubType>AndroidResource</SubType>
+      <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\servers_fragment.axml">
       <SubType>AndroidResource</SubType>
@@ -185,6 +191,12 @@
     </AndroidResource>
     <AndroidResource Include="Resources\layout\playback_fragment.axml">
       <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout-large\folder_fragment.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\mediainfo_fragment_part.axml">
+      <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
