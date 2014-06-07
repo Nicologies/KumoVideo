@@ -8,5 +8,7 @@ namespace aairvid
         void OnPlayVideo(Video vid, SubtitleStream sub);
 
         void OnPlayVideoWithConv(Video vid, SubtitleStream sub);
+
+        void OnVideoFinished(int playedMinutes);
     }
 }

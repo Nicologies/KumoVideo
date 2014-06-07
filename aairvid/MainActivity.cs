@@ -5,6 +5,7 @@ using aairvid.UIUtils;
 using aairvid.Utils;
 using Android.App;
 using Android.Content;
+using Android.Gms.Ads;
 using Android.Net;
 using Android.OS;
 using Android.Preferences;
@@ -27,6 +28,8 @@ namespace aairvid
 
         private AdsLayout _adsLayout;
 
+        private InterstitialAd _fullScreenAds;
+
         protected override void OnDestroy()
         {
             killed = true;
@@ -38,6 +41,14 @@ namespace aairvid
             base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.main);
+
+            if (_fullScreenAds == null)
+            {
+                _fullScreenAds = new InterstitialAd(this);
+                _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
+                var adRequest = new AdRequest.Builder().Build();
+                _fullScreenAds.LoadAd(adRequest);
+            }
 
             if (FragmentManager.BackStackEntryCount == 0)
             {
@@ -270,6 +281,17 @@ namespace aairvid
         {
             this.OnBackPressed();
             Toast.MakeText(this, Resource.String.CannotPlay, ToastLength.Short).Show();
+        }
+
+        public void OnVideoFinished(int playedMinutes)
+        {
+            if (playedMinutes > 5)
+            {
+                if (_fullScreenAds != null && _fullScreenAds.IsLoaded)
+                {
+                    _fullScreenAds.Show();
+                }
+            }
         }
     }
 }

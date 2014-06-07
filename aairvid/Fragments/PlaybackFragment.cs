@@ -104,6 +104,8 @@ namespace aairvid
         {
             base.OnAttach(activity);
 
+            _startPlayTime = DateTime.MaxValue;
+
             var adsLayout = activity.FindViewById<View>(Resource.Id.adsLayout);
             adsLayout.Visibility = ViewStates.Gone;
             activity.ActionBar.Hide();
@@ -115,10 +117,21 @@ namespace aairvid
             var adsLayout = Activity.FindViewById<View>(Resource.Id.adsLayout);
             adsLayout.Visibility = ViewStates.Visible;
 
+            var listner = Activity as IPlayVideoListener;
+            if (listner != null
+                && !_failedToPlay)
+            {
+                listner.OnVideoFinished((int)(DateTime.Now - _startPlayTime).TotalMinutes);
+            }
+
             base.OnDetach();            
         }
 
         private int _lastPos = 0;
+
+        private bool _failedToPlay = false;
+
+        private DateTime _startPlayTime = DateTime.MaxValue;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -137,6 +150,7 @@ namespace aairvid
 
         void playbackView_Error(object sender, Android.Media.MediaPlayer.ErrorEventArgs e)
         {
+            _failedToPlay = true;
             var listner = Activity as IVideoNotPlayableListener;
             if (listner != null)
             {
@@ -145,7 +159,7 @@ namespace aairvid
         }
 
         VideoView playbackView;
-
+        
         private void StartPlay(View view)
         {
             try
@@ -181,6 +195,8 @@ namespace aairvid
             {
                 playbackView.SeekTo(_lastPos);
             }
+
+            _startPlayTime = DateTime.Now;
 
             playbackView.Start();
 
