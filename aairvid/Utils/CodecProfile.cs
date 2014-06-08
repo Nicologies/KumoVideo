@@ -1,7 +1,7 @@
 ﻿using Android.App;
-using Android.Media;
 using Android.Util;
 using System;
+using System.Text.RegularExpressions;
 
 namespace aairvid.Utils
 {
@@ -13,15 +13,33 @@ namespace aairvid.Utils
             if(profile ==null)
             {
                 profile = new CodecProfile();
+                profile.Bitrate = 1024;
+
+                try
+                {
+                    // hack to get the real device metrics
+                    var dispStr = activity.WindowManager.DefaultDisplay.ToString();
+                    //"Display id 0: DisplayInfo{\"Built-in Screen\", app 800 x 1216, real 800 x 1280, largest app 1280 x 1183, smallest app 800 x 703, 60.
+                    Regex regex = new Regex(@".*real (\d+) x (\d+),.*", RegexOptions.IgnoreCase);
+                    var matches = regex.Match(dispStr);
+                    if (matches.Success)
+                    {
+                        // self, height, width
+                        profile.DeviceHeight = int.Parse(matches.Groups[1].Value);
+                        profile.DeviceWidth = int.Parse(matches.Groups[2].Value);
+                        return profile;
+                    }
+                }
+                catch
+                {// fall through to use the DisplayMetrics if any exception.
+                }
 
                 DisplayMetrics localDisplayMetrics = activity.Resources.DisplayMetrics;
                 int height = Math.Min(localDisplayMetrics.WidthPixels, localDisplayMetrics.HeightPixels);
-                profile.Height = height;
+                profile.DeviceHeight = height;
 
                 int width = Math.Max(localDisplayMetrics.HeightPixels, localDisplayMetrics.WidthPixels);
-                profile.Width = width;
-
-                profile.Bitrate = 1024;
+                profile.DeviceWidth = width;
             }
             return profile;
         }
@@ -31,12 +49,12 @@ namespace aairvid.Utils
             return profile;
         }
 
-        public int Height
+        public int DeviceHeight
         {
             get;
             private set;
         }
-        public int Width
+        public int DeviceWidth
         {
             get;
             private set;
@@ -46,50 +64,6 @@ namespace aairvid.Utils
         {
             get;
             private set;
-        }
-        private static CamcorderProfile GetDevProfile()
-        {
-            var profile = CamcorderProfile.Get(CamcorderQuality.High);
-            if (profile != null)
-            {
-                return profile;
-            }
-            profile = CamcorderProfile.Get(CamcorderQuality.Q1080p);
-            if (profile != null)
-            {
-                return profile;
-            }
-
-            profile = CamcorderProfile.Get(CamcorderQuality.Q720p);
-            if (profile != null)
-            {
-                return profile;
-            }
-
-            profile = CamcorderProfile.Get(CamcorderQuality.Q480p);
-            if (profile != null)
-            {
-                return profile;
-            }
-
-            profile = CamcorderProfile.Get(CamcorderQuality.Cif);
-            if (profile != null)
-            {
-                return profile;
-            }
-
-            profile = CamcorderProfile.Get(CamcorderQuality.Qcif);
-            if (profile != null)
-            {
-                return profile;
-            }
-            profile = CamcorderProfile.Get(CamcorderQuality.Low);
-            if (profile != null)
-            {
-                return profile;
-            }
-
-            return null;
         }
     }
 }

@@ -87,7 +87,7 @@ namespace aairvid
             
             var profile = CodecProfile.GetProfile();
             var stream = _mediaInfo.VideoStreams[0];
-            var needConv = stream.Height > profile.Height || stream.Width > profile.Width;
+            var needConv = stream.Height > profile.DeviceHeight || stream.Width > profile.DeviceWidth;
             var btnPlay = view.FindViewById<Button>(Resource.Id.btnPlay);
             btnPlay.Visibility = needConv? ViewStates.Gone : ViewStates.Visible;
 

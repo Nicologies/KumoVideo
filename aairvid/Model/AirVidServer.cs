@@ -192,7 +192,7 @@ namespace aairvid.Model
                 convReq.Add(new DoubleValue("audioBoost", 0));
                 convReq.Add(new IntValue("cropRight", 0));
                 convReq.Add(new IntValue("cropLeft", 0));
-                convReq.Add(new IntValue("resolutionWidth", profile.Width));
+                convReq.Add(new IntValue("resolutionWidth", profile.DeviceWidth));
                 convReq.Add(new IntValue("videoStream", 0));
                 convReq.Add(new IntValue("cropBottom", 0));
                 convReq.Add(new IntValue("cropTop", 0));
@@ -207,7 +207,7 @@ namespace aairvid.Model
                 }
                 
                 convReq.Add(new DoubleValue("offset", 0.0));
-                convReq.Add(new IntValue("resolutionHeight", profile.Height));
+                convReq.Add(new IntValue("resolutionHeight", profile.DeviceHeight));
                 DeviceInfoValue devInfo = new DeviceInfoValue("metaData");
                 devInfo.Add(new StringValue(null, "device"));
                 devInfo.Add(new StringValue(null, "iPad"));
