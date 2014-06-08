@@ -22,5 +22,11 @@ namespace aairvid.Fragments
             : base(adp)
         {
         }
+
+        protected override Android.Views.View InflateView(LayoutInflater inflater, ViewGroup container)
+        {
+            View view = inflater.Inflate(Resource.Layout.folder_fragment_small, container, false);
+            return view;
+        }
     }
 }

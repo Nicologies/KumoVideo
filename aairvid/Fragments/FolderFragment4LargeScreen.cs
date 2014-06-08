@@ -123,5 +123,11 @@ namespace aairvid
             var listener = this.Activity as IPlayVideoListener;
             listener.OnPlayVideoWithConv(_videoInfo, sub);
         }
+
+        protected override Android.Views.View InflateView(LayoutInflater inflater, ViewGroup container)
+        {
+            View view = inflater.Inflate(Resource.Layout.folder_fragment_large, container, false);
+            return view;
+        }
     }
 }

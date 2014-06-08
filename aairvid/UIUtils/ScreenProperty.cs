@@ -15,9 +15,9 @@ namespace aairvid.UIUtils
 {
     public static class ScreenProperty
     {
-        public static bool IsLargeScreen(ScreenLayout screenLayout)
+        public static bool IsLargeScreen(int width)
         {
-            return (screenLayout & ScreenLayout.SizeMask) >= ScreenLayout.SizeLarge;
+            return width >= 1024;
         }
     }
 }

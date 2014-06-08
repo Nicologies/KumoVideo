@@ -17,9 +17,9 @@ namespace aairvid.Fragments
 {
     public static class FolderFragmentFactory
     {
-        public static FolderFragment GetFolderFragment(AirVidResourcesAdapter adp, ScreenLayout screenLayout)
+        public static FolderFragment GetFolderFragment(AirVidResourcesAdapter adp, Display disp)
         {
-            if (ScreenProperty.IsLargeScreen(screenLayout))
+            if (ScreenProperty.IsLargeScreen(disp.Width))
             {
                 return new FolderFragment4LargeScreen(adp);
             }

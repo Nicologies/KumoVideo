@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace aairvid
 {
-    public class FolderFragment : Fragment, IMediaDetailDisplayer
+    public abstract class FolderFragment : Fragment, IMediaDetailDisplayer
     {
         protected AirVidResourcesAdapter _resources;
 
@@ -46,7 +46,7 @@ namespace aairvid
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            View view = inflater.Inflate(Resource.Layout.folder_fragment, container, false);
+            View view = InflateView(inflater, container);
 
             var lvResources = view.FindViewById<ListView>(Resource.Id.lvResources);
             lvResources.FastScrollEnabled = true;
@@ -54,6 +54,8 @@ namespace aairvid
             lvResources.ItemClick += OnItemClick;
             return view;
         }
+
+        protected abstract Android.Views.View InflateView(LayoutInflater inflater, ViewGroup container);
 
         void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {

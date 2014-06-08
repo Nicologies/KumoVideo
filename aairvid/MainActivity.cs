@@ -206,7 +206,7 @@ namespace aairvid
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
-            var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, Resources.Configuration.ScreenLayout);
+            var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, WindowManager.DefaultDisplay);
             var transaction = FragmentManager.BeginTransaction();
 
             transaction.Replace(Resource.Id.fragmentPlaceholder, folderFragment);
@@ -231,7 +231,7 @@ namespace aairvid
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
-            var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, Resources.Configuration.ScreenLayout);
+            var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, WindowManager.DefaultDisplay);
 
             var transaction = FragmentManager.BeginTransaction();
 

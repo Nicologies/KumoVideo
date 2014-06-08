@@ -177,7 +177,7 @@
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\drawable\logo.png" />
-    <AndroidResource Include="Resources\layout\folder_fragment.axml">
+    <AndroidResource Include="Resources\layout\folder_fragment_small.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\servers_fragment.axml">
@@ -192,7 +192,7 @@
     <AndroidResource Include="Resources\layout\playback_fragment.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout-large\folder_fragment.axml">
+    <AndroidResource Include="Resources\layout\folder_fragment_large.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\mediainfo_fragment_part.axml">
