@@ -227,6 +227,7 @@
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\splash.xml" />
     <AndroidResource Include="Resources\values-zh\strings.xml" />
+    <AndroidResource Include="Resources\xml\ga_global_tracker.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bonjour.NET\Bonjour.NET.csproj">
