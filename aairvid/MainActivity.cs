@@ -60,10 +60,13 @@ namespace aairvid
 
             if (_fullScreenAds == null)
             {
+#if NON_FREE_VERSION
+#else
                 _fullScreenAds = new InterstitialAd(this);
                 _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
                 var adRequest = new AdRequest.Builder().Build();
                 _fullScreenAds.LoadAd(adRequest);
+#endif
             }
 
             if (FragmentManager.BackStackEntryCount == 0)
