@@ -64,7 +64,9 @@ namespace aairvid
 #else
                 _fullScreenAds = new InterstitialAd(this);
                 _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
-                var adRequest = new AdRequest.Builder().Build();
+                var adRequest = new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build();
+
+                _fullScreenAds.AdListener = new InterstitialAdImpl(_fullScreenAds);
                 _fullScreenAds.LoadAd(adRequest);
 #endif
             }
@@ -358,14 +360,43 @@ namespace aairvid
 
         public void OnVideoFinished(int playedMinutes)
         {
-            if (playedMinutes > 5)
+            var adsCriterionMinutes = 5;
+#if DEBUG
+            adsCriterionMinutes = -1;
+#endif
+            if (playedMinutes > adsCriterionMinutes)
             {
                 if (_fullScreenAds != null && _fullScreenAds.IsLoaded)
                 {
                     _fullScreenAds.Show();
                 }
             }
+
+            FragmentManager.PopBackStack(typeof(PlaybackFragment).Name, PopBackStackFlags.Inclusive);
             LoadAds();
+        }
+    }
+
+    public class InterstitialAdImpl : AdListener
+    {
+        InterstitialAd _ad;
+        public InterstitialAdImpl(InterstitialAd ad)
+        {
+            _ad = ad;
+        }
+        public override void OnAdClosed()
+        {
+            _ad.LoadAd(new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build());
+            base.OnAdClosed();
+        }
+        public override void OnAdLoaded()
+        {
+            base.OnAdLoaded();
+        }
+        public override void OnAdFailedToLoad(int p0)
+        {
+            _ad.LoadAd(new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build());
+            base.OnAdFailedToLoad(p0);
         }
     }
 }

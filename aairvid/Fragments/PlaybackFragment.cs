@@ -163,9 +163,21 @@ namespace aairvid
 
             playbackView.Error += playbackView_Error;
 
+            playbackView.Completion += playbackView_Completion;
+
             StartPlay(view);
 
             return view;
+        }
+
+        void playbackView_Completion(object sender, EventArgs e)
+        {
+            var listner = Activity as IPlayVideoListener;
+            if (listner != null
+                && !_failedToPlay)
+            {
+                listner.OnVideoFinished((int)(DateTime.Now - _startPlayTime).TotalMinutes);
+            }
         }
 
         void playbackView_Error(object sender, Android.Media.MediaPlayer.ErrorEventArgs e)
