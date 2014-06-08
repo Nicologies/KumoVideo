@@ -211,7 +211,10 @@ namespace aairvid
 
         void playbackView_Prepared(object sender, EventArgs e)
         {
-            if (_lastPos != 0)
+            var distanceToEnd = TimeSpan.FromMilliseconds(playbackView.Duration - _lastPos).TotalMinutes;
+            if (_lastPos != 0
+                && _lastPos < playbackView.Duration
+                && distanceToEnd > 3)
             {
                 playbackView.SeekTo(_lastPos);
             }
