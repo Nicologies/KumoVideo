@@ -326,7 +326,15 @@ namespace aairvid
 
             var tag = typeof(PlaybackFragment).Name;
 
-            var playbackFragment = new PlaybackFragment(mediaInfo, vid.Id);
+            var playbackFragment = FragmentManager.FindFragmentByTag<PlaybackFragment>(tag);
+            if (playbackFragment == null)
+            {
+                playbackFragment = new PlaybackFragment(mediaInfo, vid.Id);
+            }
+            else
+            {
+                playbackFragment.SetPlaybackSource(mediaInfo, vid.Id);
+            }
 
             var transaction = FragmentManager.BeginTransaction();
 

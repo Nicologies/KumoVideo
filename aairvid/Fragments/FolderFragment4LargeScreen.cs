@@ -42,6 +42,17 @@ namespace aairvid
             RetainInstance = true;
             base.OnCreate(savedInstanceState);
         }
+
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            var view =  base.OnCreateView(inflater, container, savedInstanceState);
+            var btnPlay = view.FindViewById<Button>(Resource.Id.btnPlay);
+            btnPlay.Click += btnPlay_Click;
+
+            var btnPlayWithConv = view.FindViewById<Button>(Resource.Id.btnPlayWithConv);
+            btnPlayWithConv.Click += btnPlayWithConv_Click;
+            return view;
+        }
         public override void DisplayDetail(Video videoInfo, MediaInfo mediaInfo)
         {
             _videoInfo = videoInfo;
@@ -73,20 +84,12 @@ namespace aairvid
 
             var tvVideoSize = view.FindViewById<TextView>(Resource.Id.tvVideoSize);
             tvVideoSize.Text = "File Size: " + VideoInfoFragment.ReadableFileSize(_mediaInfo.FileSize);
-
-            var btnPlay = view.FindViewById<Button>(Resource.Id.btnPlay);
-            btnPlay.Click += btnPlay_Click;
-
-            var btnPlayWithConv = view.FindViewById<Button>(Resource.Id.btnPlayWithConv);
-            btnPlayWithConv.Click += btnPlayWithConv_Click;
-
+            
             var profile = CodecProfile.GetProfile();
             var stream = _mediaInfo.VideoStreams[0];
             var needConv = stream.Height > profile.Height || stream.Width > profile.Width;
-            if (needConv)
-            {
-                btnPlay.Visibility = ViewStates.Gone;
-            }
+            var btnPlay = view.FindViewById<Button>(Resource.Id.btnPlay);
+            btnPlay.Visibility = needConv? ViewStates.Gone : ViewStates.Visible;
 
             var cmbSubtitle = view.FindViewById<Spinner>(Resource.Id.cmbSubtitle);
             var adp = new SubtitleAdapter(Activity);

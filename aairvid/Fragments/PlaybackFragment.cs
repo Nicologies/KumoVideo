@@ -23,8 +23,7 @@ namespace aairvid
 
         public PlaybackFragment(string playbackUrl, string mediaId)
         {
-            this._playbackUrl = playbackUrl;
-            _mediaId = mediaId.Split('\\').LastOrDefault();
+            SetPlaybackSource(playbackUrl, mediaId);
 
             if(_history.Count() == 0)
             {
@@ -37,6 +36,12 @@ namespace aairvid
                     }
                 }
             }
+        }
+
+        public void SetPlaybackSource(string playbackUrl, string mediaId)
+        {
+            this._playbackUrl = playbackUrl;
+            _mediaId = mediaId.Split('\\').LastOrDefault();
         }
 
         public override void OnCreate(Bundle savedInstanceState)
