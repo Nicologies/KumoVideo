@@ -91,8 +91,11 @@ namespace aairvid.UIUtils
 
         protected override void OnDetachedFromWindow()
         {
-            var listener = ad.AdListener as AdListenerImpl;
-            listener.Dispose();
+            if (ad != null && ad.AdListener != null)
+            {
+                var listener = ad.AdListener as AdListenerImpl;
+                listener.Dispose();
+            }
             ad = null;
             base.OnDetachedFromWindow();
         }
