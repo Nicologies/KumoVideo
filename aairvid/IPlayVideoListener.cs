@@ -10,5 +10,7 @@ namespace aairvid
         void OnPlayVideoWithConv(Video vid, SubtitleStream sub);
 
         void OnVideoFinished(int playedMinutes);
+
+        void ReloadInterstitialAd();
     }
 }

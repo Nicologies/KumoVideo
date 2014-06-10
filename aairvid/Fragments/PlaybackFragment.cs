@@ -150,6 +150,13 @@ namespace aairvid
 
             playbackView.Completion += playbackView_Completion;
 
+            var listner = Activity as IPlayVideoListener;
+            if (listner != null
+                && !_failedToPlay)
+            {
+                listner.ReloadInterstitialAd();
+            }
+
             StartPlay(view);
 
             return view;
