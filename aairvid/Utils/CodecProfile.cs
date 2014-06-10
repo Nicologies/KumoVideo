@@ -24,9 +24,11 @@ namespace aairvid.Utils
                     var matches = regex.Match(dispStr);
                     if (matches.Success)
                     {
+                        var w = int.Parse(matches.Groups[1].Value);
+                        var h = int.Parse(matches.Groups[2].Value);
                         // self, height, width
-                        profile.DeviceHeight = int.Parse(matches.Groups[1].Value);
-                        profile.DeviceWidth = int.Parse(matches.Groups[2].Value);
+                        profile.DeviceHeight = Math.Min(w, h); ;
+                        profile.DeviceWidth = Math.Max(w, h);
                         return profile;
                     }
                 }
