@@ -129,21 +129,6 @@ namespace aairvid
         }
         public override void OnDetach()
         {
-            Activity.ActionBar.Show();
-
-            var adsLayout = Activity.FindViewById<View>(Resource.Id.adsLayout);
-            if (adsLayout != null)
-            {
-                adsLayout.Visibility = ViewStates.Visible;
-            }
-
-            var listner = Activity as IPlayVideoListener;
-            if (listner != null
-                && !_failedToPlay)
-            {
-                listner.OnVideoFinished((int)(DateTime.Now - _startPlayTime).TotalMinutes);
-            }
-
             base.OnDetach();            
         }
 
@@ -168,6 +153,25 @@ namespace aairvid
             StartPlay(view);
 
             return view;
+        }
+
+        public override void OnDestroy()
+        {
+            Activity.ActionBar.Show();
+
+            var adsLayout = Activity.FindViewById<View>(Resource.Id.adsLayout);
+            if (adsLayout != null)
+            {
+                adsLayout.Visibility = ViewStates.Visible;
+            }
+
+            var listner = Activity as IPlayVideoListener;
+            if (listner != null
+                && !_failedToPlay)
+            {
+                listner.OnVideoFinished((int)(DateTime.Now - _startPlayTime).TotalMinutes);
+            }
+            base.OnDestroy();
         }
 
         void playbackView_Completion(object sender, EventArgs e)
