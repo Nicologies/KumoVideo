@@ -56,20 +56,7 @@ namespace aairvid
 
             InitGATrackers();
 
-            SetContentView(Resource.Layout.main);
-
-            if (_fullScreenAds == null)
-            {
-#if NON_FREE_VERSION
-#else
-                _fullScreenAds = new InterstitialAd(this);
-                _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
-                var adRequest = new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build();
-
-                _fullScreenAds.AdListener = new InterstitialAdImpl(_fullScreenAds);
-                _fullScreenAds.LoadAd(adRequest);
-#endif
-            }
+            SetContentView(Resource.Layout.main);            
 
             if (FragmentManager.BackStackEntryCount == 0)
             {
@@ -321,6 +308,26 @@ namespace aairvid
 
             string mediaInfo = await Task.Run(() => funcGetUrl(sub));
 
+            if (_fullScreenAds == null)
+            {
+
+                _fullScreenAds = new InterstitialAd(this);
+                _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
+            }
+            
+#if NON_FREE_VERSION
+#else
+            var adRequest = new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build();
+
+            if (_fullScreenAds != null && _fullScreenAds.AdListener == null)
+            {
+                _fullScreenAds.AdListener = new InterstitialAdImpl(_fullScreenAds);
+            }
+            if (!_fullScreenAds.IsLoaded)
+            {
+                _fullScreenAds.LoadAd(adRequest);
+            }
+#endif
             if (killed)
             {
                 return;
