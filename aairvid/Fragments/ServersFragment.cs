@@ -65,24 +65,48 @@ namespace aairvid
             lvServers.Adapter = _servers;
             lvServers.ItemClick += lvServers_ItemClick;
 
+            var btnRefreshServer = view.FindViewById<ImageButton>(Resource.Id.btnRefreshServer);
+            btnRefreshServer.Click += btnRefreshServer_Click;
+
             if (_servers == null)
             {
                 _servers = new ServerListAdapter(Activity);
             }
-            if (_servers.Count == 0)
+
+            if (_serverDetector == null)
+            {
+                _serverDetector = new Network.Bonjour.BonjourServiceResolver();
+                _serverDetector.ServiceFound += OnServiceFound;
+            }
+
+            if (progressDetectingServer == null)
             {
                 progressDetectingServer = new ProgressDialog(Activity);
                 progressDetectingServer.SetMessage("Detecting Servers...");
-                progressDetectingServer.Show();
+            }
 
-                if (_serverDetector == null)
-                {
-                    _serverDetector = new Network.Bonjour.BonjourServiceResolver();
-                    _serverDetector.ServiceFound += OnServiceFound;
-                    _serverDetector.Resolve("_airvideoserver._tcp.local.");
-                }
+            if (_servers.Count == 0)
+            {
+                RefreshServers();
             }
             return view;
+        }
+
+        private void RefreshServers()
+        {
+            if (progressDetectingServer != null && !progressDetectingServer.IsShowing)
+            {
+                progressDetectingServer.Show();
+            }
+            _serverDetector.Resolve("_airvideoserver._tcp.local.");
+        }
+
+        void btnRefreshServer_Click(object sender, System.EventArgs e)
+        {
+            if (_serverDetector != null)
+            {
+                RefreshServers();
+            }
         }
 
         public override void OnDestroyView()
