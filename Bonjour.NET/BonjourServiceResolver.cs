@@ -46,7 +46,10 @@ namespace Network.Bonjour
                 if (!protocol.EndsWith("local."))
                     protocol += "local.";
             }
-            protocols.Add(protocol);
+            if (!protocols.Contains(protocol))
+            {
+                protocols.Add(protocol);
+            }
             if (client == null)
             {
                 client = new MDnsServer();

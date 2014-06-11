@@ -73,11 +73,14 @@ namespace aairvid
                 _servers = new ServerListAdapter(Activity);
             }
 
-            if (_serverDetector == null)
+            if (_serverDetector != null)
             {
-                _serverDetector = new Network.Bonjour.BonjourServiceResolver();
-                _serverDetector.ServiceFound += OnServiceFound;
+                _serverDetector.ServiceFound -= OnServiceFound;
+                _serverDetector = null;
             }
+
+            _serverDetector = new Network.Bonjour.BonjourServiceResolver();
+            _serverDetector.ServiceFound += OnServiceFound;
 
             if (progressDetectingServer == null)
             {
