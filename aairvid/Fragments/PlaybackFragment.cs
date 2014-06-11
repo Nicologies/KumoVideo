@@ -119,12 +119,13 @@ namespace aairvid
             base.OnAttach(activity);
 
             _startPlayTime = DateTime.MaxValue;
-
+#if false
             var adsLayout = activity.FindViewById<View>(Resource.Id.adsLayout);
             if (adsLayout != null)
             {
                 adsLayout.Visibility = ViewStates.Gone;
             }
+#endif
             activity.ActionBar.Hide();
         }
         public override void OnDetach()
@@ -165,13 +166,13 @@ namespace aairvid
         public override void OnDestroy()
         {
             Activity.ActionBar.Show();
-
+#if false
             var adsLayout = Activity.FindViewById<View>(Resource.Id.adsLayout);
             if (adsLayout != null)
             {
                 adsLayout.Visibility = ViewStates.Visible;
             }
-
+#endif
             var listner = Activity as IPlayVideoListener;
             if (listner != null
                 && !_failedToPlay)
