@@ -132,7 +132,7 @@ namespace aairvid.UIUtils
 
                         AdRequest adRequest = new AdRequest.Builder()
                             .AddTestDevice(AdRequest.DeviceIdEmulator)
-                            .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                            //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
                             .Build();
 
                         ad.AdListener = new AdListenerImpl(this, ad, adRequest);

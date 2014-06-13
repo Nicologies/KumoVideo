@@ -334,7 +334,9 @@ namespace aairvid
 
 #if NON_FREE_VERSION
 #else
-            var adRequest = new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build();
+            var adRequest = new AdRequest.Builder()
+                //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                .Build();
 
             if (_fullScreenAds != null && _fullScreenAds.AdListener == null)
             {
@@ -357,7 +359,9 @@ namespace aairvid
         }
         public override void OnAdClosed()
         {
-            _ad.LoadAd(new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build());
+            _ad.LoadAd(new AdRequest.Builder()
+                //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                .Build());
             base.OnAdClosed();
         }
         public override void OnAdLoaded()
@@ -367,12 +371,15 @@ namespace aairvid
         public override void OnAdFailedToLoad(int p0)
         {
             base.OnAdFailedToLoad(p0);
+            ReloadAds();
         }
 
         private async void ReloadAds()
         {
             await Task.Delay(5000);
-            _ad.LoadAd(new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build());
+            _ad.LoadAd(new AdRequest.Builder()
+                //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                .Build());
         }
     }
 }
