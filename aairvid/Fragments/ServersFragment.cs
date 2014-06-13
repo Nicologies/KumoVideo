@@ -1,5 +1,7 @@
 using aairvid.Model;
 using Android.App;
+using Android.Content;
+using Android.Net;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -73,43 +75,52 @@ namespace aairvid
                 _servers = new ServerListAdapter(Activity);
             }
 
-            if (_serverDetector != null)
-            {
-                _serverDetector.ServiceFound -= OnServiceFound;
-                _serverDetector = null;
-            }
-
-            _serverDetector = new Network.Bonjour.BonjourServiceResolver();
-            _serverDetector.ServiceFound += OnServiceFound;
-
             if (progressDetectingServer == null)
             {
                 progressDetectingServer = new ProgressDialog(Activity);
                 progressDetectingServer.SetMessage("Detecting Servers...");
             }
 
-            if (_servers.Count == 0)
+            Activity.RunOnUiThread(() =>
             {
-                RefreshServers();
-            }
+                if (_servers.Count == 0)
+                {
+                    RefreshServers();
+                }
+            });
             return view;
         }
 
         private void RefreshServers()
         {
-            if (progressDetectingServer != null && !progressDetectingServer.IsShowing)
+            if (_serverDetector != null)
             {
-                progressDetectingServer.Show();
+                _serverDetector.ServiceFound -= this.OnServiceFound;
+                _serverDetector = null;
             }
-            _serverDetector.Resolve("_airvideoserver._tcp.local.");
+
+            _serverDetector = new BonjourServiceResolver();
+            _serverDetector.ServiceFound += this.OnServiceFound;
+            
+            var connectivityManager = (ConnectivityManager)Activity.GetSystemService(Context.ConnectivityService);
+            var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi).GetState();
+            if (wifiState == NetworkInfo.State.Connected)
+            {
+                if (progressDetectingServer != null && !progressDetectingServer.IsShowing)
+                {
+                    progressDetectingServer.Show();
+                }
+                _serverDetector.Resolve("_airvideoserver._tcp.local.");
+            }
+            else
+            {
+                Toast.MakeText(Activity, "Wifi is not connected.", ToastLength.Long).Show();
+            }
         }
 
         void btnRefreshServer_Click(object sender, System.EventArgs e)
         {
-            if (_serverDetector != null)
-            {
-                RefreshServers();
-            }
+            RefreshServers();
         }
 
         public override void OnDestroyView()
@@ -117,6 +128,7 @@ namespace aairvid
             if (_serverDetector != null)
             {
                 _serverDetector.ServiceFound -= OnServiceFound;
+                _serverDetector = null;
             }
             base.OnDestroyView();
         }

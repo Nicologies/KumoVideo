@@ -128,10 +128,6 @@ namespace aairvid
 
             CodecProfile.InitProfile(this);
 
-            if (!CheckWifiState())
-            {
-                return;
-            }
             var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
             bool isPlaying = fragment != null && fragment.Name == typeof(PlaybackFragment).Name;
             if (!isPlaying)
@@ -139,43 +135,6 @@ namespace aairvid
                 LoadAds();
             }            
         }
-        private AlertDialog _wifiAlertDialog;
-        private bool CheckWifiState()
-        {
-            var connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
-            var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi).GetState();
-            if (wifiState != NetworkInfo.State.Connected)
-            {
-                if (_wifiAlertDialog == null)
-                {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
-                    // Setting Dialog Title
-                    alertDialogBuilder.SetTitle("Wifi Required");
-
-                    // Setting Dialog Message
-                    alertDialogBuilder
-                            .SetMessage("Wifi is not connected.");
-
-                    // On pressing Settings button
-                    alertDialogBuilder.SetPositiveButton("OK", (sender, arg) =>
-                    {
-                        Intent intent = new Intent(
-                                Settings.ActionWifiSettings);
-                        StartActivity(intent);
-                    });
-
-                    _wifiAlertDialog = alertDialogBuilder.Create();
-                }
-
-                if (!_wifiAlertDialog.IsShowing)
-                {
-                    _wifiAlertDialog.Show();
-                }
-                return false;
-            }
-            return true;
-        }        
 
         public async void OnServerSelected(AirVidServer selectedServer)
         {
