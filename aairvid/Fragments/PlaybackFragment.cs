@@ -166,6 +166,8 @@ namespace aairvid
         public override void OnDestroy()
         {
             Activity.ActionBar.Show();
+
+            Activity.Window.ClearFlags(WindowManagerFlags.Fullscreen);
 #if false
             var adsLayout = Activity.FindViewById<View>(Resource.Id.adsLayout);
             if (adsLayout != null)
