@@ -366,8 +366,13 @@ namespace aairvid
         }
         public override void OnAdFailedToLoad(int p0)
         {
-            _ad.LoadAd(new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build());
             base.OnAdFailedToLoad(p0);
+        }
+
+        private async void ReloadAds()
+        {
+            await Task.Delay(5000);
+            _ad.LoadAd(new AdRequest.Builder().AddTestDevice("421746E519013F2F4FF3B62742A642D1").Build());
         }
     }
 }

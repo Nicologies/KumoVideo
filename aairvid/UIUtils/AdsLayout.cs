@@ -7,6 +7,7 @@ using Android.Views;
 using System;
 using System.Linq;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace aairvid.UIUtils
 {
@@ -134,7 +135,7 @@ namespace aairvid.UIUtils
                             .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
                             .Build();
 
-                        ad.AdListener = new AdListenerImpl(this, ad);
+                        ad.AdListener = new AdListenerImpl(this, ad, adRequest);
                         ad.LoadAd(adRequest);
                     }
                 }
@@ -202,10 +203,13 @@ namespace aairvid.UIUtils
     {
         private AdsLayout _adContainer;
         private AdView _ad;
-        public AdListenerImpl(AdsLayout adContainer, AdView ad)
+        private AdRequest _adRequest;
+
+        public AdListenerImpl(AdsLayout adsLayout, AdView ad, AdRequest adRequest)
         {
-            _adContainer = adContainer;
-            _ad = ad;
+            this._adContainer = adsLayout;
+            this._ad = ad;
+            this._adRequest = adRequest;
         }
         public override void OnAdLoaded()
         {
@@ -217,6 +221,14 @@ namespace aairvid.UIUtils
         public override void OnAdFailedToLoad(int p0)
         {
             base.OnAdFailedToLoad(p0);
+
+            ReloadWithDelay();
+        }
+
+        private async void ReloadWithDelay()
+        {
+            await Task.Delay(5000);
+            _ad.LoadAd(_adRequest);
         }
 
         void IDisposable.Dispose()
