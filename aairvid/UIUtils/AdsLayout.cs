@@ -95,6 +95,7 @@ namespace aairvid.UIUtils
             if (ad != null && ad.AdListener != null)
             {
                 var listener = ad.AdListener as AdListenerImpl;
+                ad.AdListener = null;
                 listener.Dispose();
             }
             ad = null;
