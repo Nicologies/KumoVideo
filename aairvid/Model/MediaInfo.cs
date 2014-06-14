@@ -15,7 +15,7 @@ namespace aairvid
         public MediaInfo(Parcel source) : base(source)
         {
             FileSize = source.ReadLong();
-            Duration = source.ReadDouble();
+            DurationSeconds = source.ReadDouble();
             Bitrate = source.ReadInt();
             var thumbnailLen = source.ReadInt();
             if (thumbnailLen > 0)
@@ -29,7 +29,7 @@ namespace aairvid
         }
 
         public long FileSize = 0L;
-        public double Duration = 0f;
+        public double DurationSeconds = 0f;
         public int Bitrate = 0;
         public byte[] Thumbnail = null;
         public List<VideoStream> VideoStreams = new List<VideoStream>();
@@ -45,7 +45,7 @@ namespace aairvid
         {
             base.WriteToParcel(dest, flags);
             dest.WriteLong(FileSize);
-            dest.WriteDouble(Duration);
+            dest.WriteDouble(DurationSeconds);
             dest.WriteInt(Bitrate);
             dest.WriteInt(Thumbnail.Length);
             if (Thumbnail.Length > 0)

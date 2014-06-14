@@ -57,7 +57,7 @@ namespace aairvid
             tvVidName.Text = _videoInfo.Name;
 
             var tvDuration = view.FindViewById<TextView>(Resource.Id.tvVideoDuration);
-            var duration = TimeSpan.FromSeconds(_mediaInfo.Duration);
+            var duration = TimeSpan.FromSeconds(_mediaInfo.DurationSeconds);
             tvDuration.Text = string.Format("Duration: {0}:{1}:{2}", duration.Hours, duration.Minutes, duration.Seconds);
             var imageBitmap = BitmapFactory.DecodeByteArray(_mediaInfo.Thumbnail, 0, _mediaInfo.Thumbnail.Length);
 
@@ -94,7 +94,7 @@ namespace aairvid
             var sub = GetSelectedSub();
             RecentLans.Instance.UpdateRecentLan(Activity, sub);
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideo(_videoInfo, sub);
+            listener.OnPlayVideo(_videoInfo, _mediaInfo, sub);
         }
 
         private SubtitleStream GetSelectedSub()
@@ -107,7 +107,7 @@ namespace aairvid
         {
             var sub = GetSelectedSub();
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideoWithConv(_videoInfo, sub);
+            listener.OnPlayVideoWithConv(_videoInfo, _mediaInfo, sub);
         }
     }
 }

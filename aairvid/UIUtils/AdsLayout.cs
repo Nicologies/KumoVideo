@@ -187,6 +187,7 @@ namespace aairvid.UIUtils
         }
 
         private bool _IsAdsLoaded = false;
+        public static readonly bool SHOW_ADS_WHEN_PLAYING = false; 
         public bool IsAdsLoaded
         {
             get

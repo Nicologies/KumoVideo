@@ -130,7 +130,7 @@ namespace aairvid
 
             var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
             bool isPlaying = fragment != null && fragment.Name == typeof(PlaybackFragment).Name;
-            if (!isPlaying)
+            if (!isPlaying || AdsLayout.SHOW_ADS_WHEN_PLAYING)
             {
                 LoadAds();
             }            
@@ -250,22 +250,25 @@ namespace aairvid
                 _adsLayout.ResetAdsClickStatus();
             }
         }
-        public void OnPlayVideoWithConv(Video vid, SubtitleStream sub)
+        public void OnPlayVideoWithConv(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
         {
-            DoPlayVideo(vid.GetPlayWithConvUrl, vid, sub);
+            DoPlayVideo(vid.GetPlayWithConvUrl, vid, mediaInfo, sub);
         }
-        public void OnPlayVideo(Video vid, SubtitleStream sub)
+        public void OnPlayVideo(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
         {
-            DoPlayVideo(vid.GetPlaybackUrl, vid, sub);
+            DoPlayVideo(vid.GetPlaybackUrl, vid, mediaInfo, sub);
         }
 
-        private async void DoPlayVideo(Func<SubtitleStream, string> funcGetUrl, Video vid, SubtitleStream sub)
+        private async void DoPlayVideo(Func<SubtitleStream, string> funcGetUrl,
+            Video vid,
+            MediaInfo mediaInfo,
+            SubtitleStream sub)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
-            string mediaInfo = await Task.Run(() => funcGetUrl(sub));
+            string playbackUrl = await Task.Run(() => funcGetUrl(sub));
 
             if (killed)
             {
@@ -277,11 +280,11 @@ namespace aairvid
             var playbackFragment = FragmentManager.FindFragmentByTag<PlaybackFragment>(tag);
             if (playbackFragment == null)
             {
-                playbackFragment = new PlaybackFragment(mediaInfo, vid.Id);
+                playbackFragment = new PlaybackFragment(playbackUrl, vid.Id, mediaInfo);
             }
             else
             {
-                playbackFragment.SetPlaybackSource(mediaInfo, vid.Id);
+                playbackFragment.SetPlaybackSource(playbackUrl, vid.Id, mediaInfo);
             }
 
             var transaction = FragmentManager.BeginTransaction();
