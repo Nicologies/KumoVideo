@@ -43,6 +43,19 @@ namespace aairvid
         protected override void OnDestroy()
         {
             killed = true;
+            if (_fullScreenAds != null)
+            {
+                var listener = _fullScreenAds.AdListener as InterstitialAdImpl;
+                _fullScreenAds.AdListener = null;
+                _fullScreenAds = null;
+
+                if (listener != null)
+                {
+                    listener.Dispose();
+                    listener = null;
+                }
+            }
+
             base.OnDestroy();
         }
         
@@ -353,7 +366,7 @@ namespace aairvid
         }
     }
 
-    public class InterstitialAdImpl : AdListener
+    public class InterstitialAdImpl : AdListener, IDisposable
     {
         InterstitialAd _ad;
         public InterstitialAdImpl(InterstitialAd ad)
@@ -362,9 +375,6 @@ namespace aairvid
         }
         public override void OnAdClosed()
         {
-            _ad.LoadAd(new AdRequest.Builder()
-                //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
-                .Build());
             base.OnAdClosed();
         }
         public override void OnAdLoaded()
@@ -380,9 +390,17 @@ namespace aairvid
         private async void ReloadAds()
         {
             await Task.Delay(5000);
-            _ad.LoadAd(new AdRequest.Builder()
-                //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
-                .Build());
+            if (_ad != null)
+            {
+                _ad.LoadAd(new AdRequest.Builder()
+                    //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                   .Build());
+            }
+        }
+
+        void Dispose()
+        {
+            _ad = null;
         }
     }
 }
