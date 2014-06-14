@@ -120,6 +120,7 @@ namespace aairvid
         void btnPlayWithConv_Click(object sender, EventArgs e)
         {
             var sub = GetSelectedSub();
+            RecentLans.Instance.UpdateRecentLan(Activity, sub);
             var listener = this.Activity as IPlayVideoListener;
             listener.OnPlayVideoWithConv(_videoInfo, _mediaInfo, sub);
         }

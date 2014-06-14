@@ -22,10 +22,11 @@ namespace aairvid.Utils
         private static readonly int MAX_LAN = 10;
         public int GetLanWeight(Context ctx, string lan)
         {
-            if (string.IsNullOrWhiteSpace(lan))
+            if (string.IsNullOrWhiteSpace(lan) || lan.ToUpperInvariant() == "DISABLED")
             {
-                return int.MaxValue;
+                return int.MinValue;
             }
+
             RetrieveRecentLansFromPref(ctx);
 
             return _recentLans.IndexOf(lan.ToUpperInvariant());
@@ -37,7 +38,7 @@ namespace aairvid.Utils
             {
                 var pref = PreferenceManager.GetDefaultSharedPreferences(ctx);
                 var lans = pref.GetString(RECENT_LANS, "");
-                _recentLans.AddRange(lans.Split(';'));
+                _recentLans.AddRange(lans.Split(';').Where(r => !string.IsNullOrWhiteSpace(r)));
             }
         }
 
