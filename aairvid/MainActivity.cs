@@ -322,7 +322,7 @@ namespace aairvid
 
         public void OnVideoFinished(int playedMinutes)
         {
-            var adsCriterionMinutes = 30;
+            var adsCriterionMinutes = 10;
 #if DEBUG
             adsCriterionMinutes = -1;
 #endif
