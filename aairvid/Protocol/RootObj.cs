@@ -190,7 +190,7 @@ namespace aairvid.Protocol
                                 else if (keyValue.Key == "duration")
                                 {
                                     var durationObj = keyValue as DoubleValue;
-                                    avMediaInfo.Duration = durationObj.Value;
+                                    avMediaInfo.DurationSeconds = durationObj.Value;
                                 }
                                 else if (keyValue.Key == "bitrate")
                                 {
@@ -215,82 +215,84 @@ namespace aairvid.Protocol
                                     var o = keyValue as EncodableValue;
                                     if (o != null)
                                     {
-                                        var li = o.Value as EncodableList;
-                                        foreach (var obj in li)
+                                        var subObjs = (o.Value as EncodableList).Where(r => r is RootObj
+                                            && (r as RootObj)._objType == EmObjType.SubtitleInfo).ToList();
+
+                                        List<SubtitleStream> subNeedResolveRef = new List<SubtitleStream>();
+                                        foreach (RootObj obj in subObjs)
                                         {
-                                            var rootObj = obj as RootObj;
-                                            if (rootObj != null && rootObj._objType == EmObjType.SubtitleInfo)
+                                            SubtitleStream sub = new SubtitleStream();
+
+                                            foreach (var child in obj.Children)
                                             {
-                                                SubtitleStream sub = new SubtitleStream();
-                                                string loaderId = "";
-                                                string path = "";
+                                                var subItem = child as KeyValueBase;
+                                                var key = subItem.Key.ToUpper();
 
-                                                sub.SubtitleInfoFromServer = rootObj;
-
-                                                foreach (var child in rootObj.Children)
+                                                if (key == "LOADERID")
                                                 {
-                                                    var subItem = child as KeyValueBase;
-                                                    var key = subItem.Key.ToUpper();
-                                                    
-                                                    if (key == "LOADERID")
+                                                    if (subItem is StringValue)
                                                     {
-                                                        if (subItem is StringValue)
-                                                        {
-                                                            loaderId = ((subItem) as StringValue).Value;
-                                                        }
-                                                        else if (subItem is IntValue)
-                                                        {
-                                                            loaderId = ((subItem) as IntValue).Value.ToString();
-                                                        }
+                                                        sub.LoaderId = ((subItem) as StringValue);
                                                     }
-                                                    else if (key == "LANGUAGE")
+                                                    else if (subItem is IntValue)
                                                     {
-                                                        if (subItem is StringValue)
-                                                        {
-                                                            sub.Language = ((subItem) as StringValue).Value;
-                                                        }
-                                                        else if (subItem is IntValue)
-                                                        {
-                                                            sub.Language = ((subItem) as IntValue).Value.ToString();
-                                                        }
-                                                    }
-                                                    else if (key == "PATH")
-                                                    {
-                                                        if (subItem is StringValue)
-                                                        {
-                                                            path = ((subItem) as StringValue).Value;
-                                                        }
-                                                        else if (subItem is IntValue)
-                                                        {
-                                                            path = ((subItem) as IntValue).Value.ToString();
-                                                        }
+                                                        sub.LoaderId = new StringValue("", null, (subItem as IntValue).Value);
+                                                        subNeedResolveRef.Add(sub);
                                                     }
                                                 }
-
-                                                if(string.IsNullOrWhiteSpace(sub.Language))
+                                                else if (key == "LANGUAGE")
                                                 {
-                                                    if (!string.IsNullOrWhiteSpace(path))
+                                                    if (subItem is StringValue)
                                                     {
-                                                        var subFilename = Path.GetFileNameWithoutExtension(path);
-                                                        if (subFilename == null)
-                                                        {
-                                                            if (!string.IsNullOrWhiteSpace(loaderId))
-                                                            {
-                                                                sub.Language = loaderId;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            var subName = subFilename.Split('.').LastOrDefault();
-                                                            if (!string.IsNullOrWhiteSpace(subName))
-                                                            {
-                                                                sub.Language = subName + "-extern file";
-                                                            }
-                                                        }
+                                                        sub.Language = ((subItem) as StringValue);
+                                                    }
+                                                    else if (subItem is IntValue)
+                                                    {
+                                                        sub.Language = new StringValue("", null, (subItem as IntValue).Value);
+                                                        subNeedResolveRef.Add(sub);
                                                     }
                                                 }
+                                                else if (key == "PATH")
+                                                {
+                                                    if (subItem is StringValue)
+                                                    {
+                                                        sub.Path = ((subItem) as StringValue);
+                                                    }
+                                                    else if (subItem is IntValue)
+                                                    {
+                                                        sub.Path = new StringValue("", null, (subItem as IntValue).Value);
+                                                        subNeedResolveRef.Add(sub);
+                                                    }
+                                                }
+                                                else if (key == "LOADERDATA")
+                                                {
+                                                    sub.LoaderData = subItem;
+                                                }
+                                            }
 
-                                                avMediaInfo.Subtitles.Add(sub);
+                                            avMediaInfo.Subtitles.Add(sub);
+                                        }
+                                        foreach (var toResolveRef in subNeedResolveRef)
+                                        {
+                                            if (toResolveRef.Language.Value == null && toResolveRef.Language.Id != 0)
+                                            {
+                                                var refSub = avMediaInfo.Subtitles.FirstOrDefault(r => r.Language.Id == toResolveRef.Language.Id
+                                                    && r.Language.Value != null);
+                                                toResolveRef.Language = refSub.Language;
+                                            }
+
+                                            if (toResolveRef.LoaderId.Value == null && toResolveRef.LoaderId.Id != 0)
+                                            {
+                                                var refSub = avMediaInfo.Subtitles.FirstOrDefault(r => r.LoaderId.Id == toResolveRef.LoaderId.Id
+                                                    && r.LoaderId.Value != null);
+                                                toResolveRef.LoaderId = refSub.LoaderId;
+                                            }
+
+                                            if (toResolveRef.Path.Value == null && toResolveRef.Path.Id != 0)
+                                            {
+                                                var refSub = avMediaInfo.Subtitles.FirstOrDefault(r => r.Path.Id == toResolveRef.Path.Id
+                                                    && r.Path.Value != null);
+                                                toResolveRef.Path = refSub.Path;
                                             }
                                         }
                                     }

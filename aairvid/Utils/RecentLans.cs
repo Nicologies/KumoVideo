@@ -22,6 +22,10 @@ namespace aairvid.Utils
         private static readonly int MAX_LAN = 10;
         public int GetLanWeight(Context ctx, string lan)
         {
+            if (string.IsNullOrWhiteSpace(lan))
+            {
+                return int.MaxValue;
+            }
             RetrieveRecentLansFromPref(ctx);
 
             return _recentLans.IndexOf(lan.ToUpperInvariant());
@@ -67,9 +71,9 @@ namespace aairvid.Utils
 
         public void UpdateRecentLan(Context ctx, SubtitleStream sub)
         {
-            if (sub != null && !string.IsNullOrWhiteSpace(sub.Language))
+            if (sub != null && !string.IsNullOrWhiteSpace(sub.Language.Value))
             {
-                UpdateRecentLan(ctx, sub.Language);
+                UpdateRecentLan(ctx, sub.Language.Value);
             }
         }
     }

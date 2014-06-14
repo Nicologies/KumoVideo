@@ -40,7 +40,7 @@ namespace aairvid.Adapter
             var textView = convertView as TextView;
             
             var item = this[position];
-            textView.Text = item.Language;
+            textView.Text = item.DisplayableLan;
             return convertView;
         }
 

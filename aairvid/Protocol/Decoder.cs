@@ -37,9 +37,9 @@ namespace aairvid.Protocol
                     }
                 case 's': // string
                     {
-                        var unknow = r.ReadInt32();
+                        var id = IPAddress.NetworkToHostOrder(r.ReadInt32());
                         var payloadLen = IPAddress.NetworkToHostOrder(r.ReadInt32());
-                        return new StringValue(key, DecodeString(r, payloadLen));
+                        return new StringValue(key, DecodeString(r, payloadLen), id);
                     }
 
                 case 'i':

@@ -7,6 +7,14 @@ namespace aairvid.Protocol
         {
             Value = v;
         }
+
+        public StringValue(string key, string v, int id)
+            : base(key)
+        {
+            Value = v;
+            Id = id;
+        }
+
         public string Value
         {
             get;
@@ -15,6 +23,12 @@ namespace aairvid.Protocol
         public override void Encode(Encoder encoder)
         {
             encoder.Encode(this);
+        }
+
+        public int Id
+        {
+            get;
+            set;
         }
     }
 }

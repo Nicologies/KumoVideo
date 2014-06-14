@@ -84,8 +84,8 @@ namespace aairvid
             var cmbSubtitle = view.FindViewById<Spinner>(Resource.Id.cmbSubtitle);
             var adp = new SubtitleAdapter(Activity);
 
-            _mediaInfo.Subtitles.OrderByDescending(r => RecentLans.Instance.GetLanWeight(Activity, r.Language));
-            adp.AddRange(_mediaInfo.Subtitles);
+            var ordered = _mediaInfo.Subtitles.OrderByDescending(r => RecentLans.Instance.GetLanWeight(Activity, r.Language.Value));
+            adp.AddRange(ordered);
             cmbSubtitle.Adapter = adp;
         }
 
