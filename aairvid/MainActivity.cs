@@ -398,7 +398,7 @@ namespace aairvid
             }
         }
 
-        void Dispose()
+        void IDisposable.Dispose()
         {
             _ad = null;
         }
