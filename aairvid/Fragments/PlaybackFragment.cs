@@ -72,7 +72,7 @@ namespace aairvid
             base.OnSaveInstanceState(outState);
             if (playbackView != null)
             {
-                SaveLastPos();
+               // SaveLastPos();
             }
         }
 
@@ -89,12 +89,7 @@ namespace aairvid
         {
             if (playbackView != null && _mediaId != null)
             {
-                SaveLastPos();
-
-                using (var stream = File.OpenWrite(HISTORY_FILE))
-                {
-                    new BinaryFormatter().Serialize(stream, _history);
-                }
+                //SaveLastPos();
             }
 
             base.OnDestroyView();
@@ -250,6 +245,11 @@ namespace aairvid
                     LastPlayDate = DateTime.Now
                 };
                 _history.Add(_mediaId, hisItem);
+            }
+
+            using (var stream = File.OpenWrite(HISTORY_FILE))
+            {
+                new BinaryFormatter().Serialize(stream, _history);
             }
         }
         private int GetLastPos()
