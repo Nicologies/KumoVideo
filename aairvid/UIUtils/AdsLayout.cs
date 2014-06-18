@@ -62,6 +62,21 @@ namespace aairvid.UIUtils
             _adsMightClicked = false;
         }
 
+        private void ResetAdsStatus()
+        {
+            if (ad != null)
+            {
+                if (ad.AdListener != null)
+                {
+                    var listener = ad.AdListener as AdListenerImpl;
+                    ad.AdListener = null;
+                    listener.Dispose();
+                }
+            }
+            ad = null;
+            IsAdsLoaded = false;
+        }
+
         protected override Android.OS.IParcelable OnSaveInstanceState()
         {
             if (_adsMightClicked)
@@ -77,7 +92,7 @@ namespace aairvid.UIUtils
         public static void SaveNoAdsPref(ISharedPreferences pref)
         {
             var rand = new Random().Next();
-            System.Diagnostics.Trace.TraceInformation("rand, {0}", rand%100);
+            System.Diagnostics.Trace.TraceInformation("rand, {0}", rand % 100);
             bool hit = rand % 100 <= 5;
             if (hit)
             {
@@ -92,13 +107,7 @@ namespace aairvid.UIUtils
 
         protected override void OnDetachedFromWindow()
         {
-            if (ad != null && ad.AdListener != null)
-            {
-                var listener = ad.AdListener as AdListenerImpl;
-                ad.AdListener = null;
-                listener.Dispose();
-            }
-            ad = null;
+            ResetAdsStatus();
             base.OnDetachedFromWindow();
         }
 
@@ -117,28 +126,25 @@ namespace aairvid.UIUtils
 
             if (ShouldShowAds(pref))
             {
-                if (this.ChildCount == 0)
+                if (ad == null)
                 {
-                    if (ad == null)
-                    {
-                        ad = new AdView(Context);
+                    ad = new AdView(Context);
 
-                        ad.AdSize = AdSize.SmartBanner;
-                        ad.AdUnitId = "ca-app-pub-3312616311449672/9767882743";
-                        ad.Id = Resource.Id.adView;
+                    ad.AdSize = AdSize.SmartBanner;
+                    ad.AdUnitId = "ca-app-pub-3312616311449672/9767882743";
+                    ad.Id = Resource.Id.adView;
 
-                        var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.FillParent);
+                    var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.FillParent);
 
-                        ad.LayoutParameters = layoutParams;
+                    ad.LayoutParameters = layoutParams;
 
-                        AdRequest adRequest = new AdRequest.Builder()
-                            .AddTestDevice(AdRequest.DeviceIdEmulator)
-                            //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
-                            .Build();
+                    AdRequest adRequest = new AdRequest.Builder()
+                        .AddTestDevice(AdRequest.DeviceIdEmulator)
+                        //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                        .Build();
 
-                        ad.AdListener = new AdListenerImpl(this, ad, adRequest);
-                        ad.LoadAd(adRequest);
-                    }
+                    ad.AdListener = new AdListenerImpl(this, ad, adRequest);
+                    ad.LoadAd(adRequest);
                 }
             }
             else
@@ -159,7 +165,7 @@ namespace aairvid.UIUtils
                     {
                         var thanks = this.Resources.GetString(aairvid.Resource.String.ThanksForClickingAds);
                         string txt = noAdsMin.ToString() + ": " + thanks;
-                        Toast.MakeText(Context, 
+                        Toast.MakeText(Context,
                             txt,
                             ToastLength.Long).Show();
                     }
@@ -187,7 +193,7 @@ namespace aairvid.UIUtils
         }
 
         private bool _IsAdsLoaded = false;
-        public static readonly bool SHOW_ADS_WHEN_PLAYING = false; 
+        public static readonly bool SHOW_ADS_WHEN_PLAYING = false;
         public bool IsAdsLoaded
         {
             get

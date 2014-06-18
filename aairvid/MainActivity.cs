@@ -19,10 +19,17 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Text;
 using Android.Runtime;
+using Android.Util;
 
 namespace aairvid
 {
-    [Activity(Label = "aairvid", MainLauncher = false, Icon = "@drawable/icon", NoHistory = false)]
+    [Activity(Label = "aairvid"
+        , MainLauncher = false
+        ,Icon = "@drawable/icon"
+        ,NoHistory = false
+        ,ScreenOrientation= Android.Content.PM.ScreenOrientation.SensorLandscape
+        ,ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize
+        )]
     public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener
     {
         ServersFragment _serverFragment;        
@@ -43,6 +50,13 @@ namespace aairvid
         protected override void OnDestroy()
         {
             killed = true;
+            ResetFullScreenAds();
+
+            base.OnDestroy();
+        }
+
+        private void ResetFullScreenAds()
+        {
             if (_fullScreenAds != null)
             {
                 var listener = _fullScreenAds.AdListener as InterstitialAdImpl;
@@ -55,8 +69,6 @@ namespace aairvid
                     listener = null;
                 }
             }
-
-            base.OnDestroy();
         }
         
         protected override void OnCreate(Bundle bundle)
@@ -83,6 +95,7 @@ namespace aairvid
 
                 FragmentHelper.AddFragment(this, _serverFragment, tag);
             }
+            ReloadInterstitialAd();
         }
         
         private void InitGATrackers()
@@ -141,12 +154,18 @@ namespace aairvid
 
             CodecProfile.InitProfile(this);
 
-            var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
-            bool isPlaying = fragment != null && fragment.Name == typeof(PlaybackFragment).Name;
+            bool isPlaying = IsPlaying();
             if (!isPlaying || AdsLayout.SHOW_ADS_WHEN_PLAYING)
             {
                 LoadAds();
             }            
+        }
+
+        private bool IsPlaying()
+        {
+            var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
+            bool isPlaying = fragment != null && fragment.Name == typeof(PlaybackFragment).Name;
+            return isPlaying;
         }
 
         public async void OnServerSelected(AirVidServer selectedServer)
@@ -286,7 +305,7 @@ namespace aairvid
             if (killed)
             {
                 return;
-            }
+            }            
 
             var tag = typeof(PlaybackFragment).Name;
 
@@ -299,7 +318,7 @@ namespace aairvid
             {
                 playbackFragment.SetPlaybackSource(playbackUrl, vid.Id, mediaInfo);
             }
-
+            
             var transaction = FragmentManager.BeginTransaction();
 
             transaction.Replace(Resource.Id.fragmentPlaceholder, playbackFragment, tag);
@@ -307,7 +326,7 @@ namespace aairvid
             transaction.Commit();
             progress.Dismiss();
         }
-
+        
         protected override void OnSaveInstanceState(Bundle outState)
         {
             base.OnSaveInstanceState(outState);
@@ -338,30 +357,22 @@ namespace aairvid
             LoadAds();
         }
 
-
         public void ReloadInterstitialAd()
         {
-            if (_fullScreenAds == null)
-            {
-
-                _fullScreenAds = new InterstitialAd(this);
-                _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
-            }
-
 #if NON_FREE_VERSION
 #else
-            var adRequest = new AdRequest.Builder()
-                //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
-                .Build();
+            ResetFullScreenAds();
+            _fullScreenAds = new InterstitialAd(this);
+            _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
 
-            if (_fullScreenAds != null && _fullScreenAds.AdListener == null)
-            {
-                _fullScreenAds.AdListener = new InterstitialAdImpl(_fullScreenAds);
-            }
-            if (!_fullScreenAds.IsLoaded)
-            {
-                _fullScreenAds.LoadAd(adRequest);
-            }
+            var adRequest = new AdRequest.Builder()
+                .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                .AddTestDevice("61B125201311D25A92623D5862F94D9A")
+                .Build();
+            
+            _fullScreenAds.AdListener = new InterstitialAdImpl(_fullScreenAds);
+            
+            _fullScreenAds.LoadAd(adRequest);
 #endif
         }
     }
@@ -376,6 +387,7 @@ namespace aairvid
         public override void OnAdClosed()
         {
             base.OnAdClosed();
+            ReloadAds();
         }
         public override void OnAdLoaded()
         {
@@ -393,7 +405,8 @@ namespace aairvid
             if (_ad != null)
             {
                 _ad.LoadAd(new AdRequest.Builder()
-                    //.AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                   .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                   .AddTestDevice("61B125201311D25A92623D5862F94D9A")
                    .Build());
             }
         }

@@ -109,6 +109,7 @@ namespace aairvid
                     adsLayout.Visibility = ViewStates.Gone;
                 }
             }
+            activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Landscape;
             activity.ActionBar.Hide();
         }
         public override void OnDetach()
@@ -147,6 +148,8 @@ namespace aairvid
         public override void OnDestroy()
         {
             Activity.ActionBar.Show();
+
+            Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Sensor;
 
             Activity.Window.ClearFlags(WindowManagerFlags.Fullscreen);
             if (!AdsLayout.SHOW_ADS_WHEN_PLAYING)
