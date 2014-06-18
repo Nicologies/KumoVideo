@@ -14,19 +14,19 @@ namespace aairvid.Model
 {
     public class AirVidServer : Java.Lang.Object, IParcelable
     {
-        private Guid _clientId = Guid.NewGuid();
+        public Guid _clientId = Guid.NewGuid();
 
         public string PasswordDigest = "";
 
         private IService _service;
-        private string _endpoint;
+        public string _endpoint;
         public string Name
         {
             get;
             private set;
         }
 
-        private enum ServiceType
+        public enum ServiceType
         {
             Browser,
             PlaybackService,
@@ -41,14 +41,14 @@ namespace aairvid.Model
             InitPlaybackWithConv,
         }
 
-        private static Dictionary<ServiceType, string> ServiceTypeDesc = new Dictionary<ServiceType, string>()
+        public static Dictionary<ServiceType, string> ServiceTypeDesc = new Dictionary<ServiceType, string>()
         {
             {ServiceType.Browser,  "browseService"},
             {ServiceType.PlaybackService,  "playbackService"},
             {ServiceType.PlayWithConvService,  "livePlaybackService"},
         };
 
-        private static Dictionary<ActionType, string> ActionTypeDesc = new Dictionary<ActionType, string>()
+        public static Dictionary<ActionType, string> ActionTypeDesc = new Dictionary<ActionType, string>()
         {
             {ActionType.GetResources,  "getItems"},
             {ActionType.GetNestItem, "getNestedItem"},
@@ -98,12 +98,12 @@ namespace aairvid.Model
             headers.Add("Content-Type", "application/x-www-form-urlencoded");
             return webClient;
         }
-
+        
         public List<AirVidResource> GetResources(string path, ActionType actionType = ActionType.GetResources)
         {
             ServiceType serviceType = ServiceType.Browser;
 
-            var reqData = GetFormData(serviceType, actionType, path);
+            var reqData = new FormDataGenForGetResources(this, serviceType, actionType, path).GetFormData();
 
             var webClient = CreateWebClient();
 
@@ -121,107 +121,27 @@ namespace aairvid.Model
             }
         }
 
-        private byte[] GetFormData(ServiceType serviceType, 
-            ActionType action,
-            string itemId, 
-            SubtitleStream sub = null)
+        public List<AirVidResource> GetNestItem(string path)
         {
-            using (var stream = new MemoryStream())
+            ServiceType serviceType = ServiceType.Browser;
+
+            var actionType = ActionType.GetNestItem;
+
+            var reqData = new FormDataGenForNestItem(this, serviceType, actionType, path).GetFormData();
+
+            var webClient = CreateWebClient();
+
+            var response = webClient.UploadData(this._endpoint, reqData);
+
+            using (var stream = new MemoryStream(response))
             {
-                using (var writer = new BinaryWriter(stream, Encoding.ASCII))
+                using (var read = new BinaryReader(stream))
                 {
-                    var en = new aairvid.Protocol.Encoder(writer);
-
-                    var root = new aairvid.Protocol.RootObj(Protocol.RootObj.EmObjType.ConnectRequest);
-
-                    root.Add(new StringValue("clientIdentifier", this._clientId.ToString()));
-
-                    root.Add(new StringValue("passwordDigest", this.PasswordDigest));
-
-                    root.Add(new StringValue("methodName", ActionTypeDesc[action]));
-
-                    root.Add(new StringValue("requestURL", this._endpoint));
-
-                    var paramList = GetParamList(itemId, action, sub);
-
-                    root.Add(new EncodableValue("parameters", paramList));
-
-                    root.Add(new IntValue("clientVersion", 240));
-
-                    root.Add(new StringValue("serviceName", ServiceTypeDesc[serviceType]));
-
-                    root.Encode(en);
-
-                    return stream.ToArray();
+                    var de = new aairvid.Protocol.Decoder();
+                    var rootObj = de.Decode(read) as RootObj;
+                    var result = rootObj.GetResources(this, actionType);
+                    return result;
                 }
-            }
-        }
-        
-        private static EncodableList GetParamList(string itemId,
-            ActionType action, 
-            SubtitleStream sub = null)
-        {
-            if (action == ActionType.GetResources)
-            {
-                var paramList = new EncodableList();
-                var browserReq = new RootObj(RootObj.EmObjType.BrowserRequest);
-                browserReq.Add(new StringValue("folderId", itemId));
-                browserReq.Add(new IntValue("preloadDetails", 1));
-                browserReq.Add(new IntValue("sortField", 0));
-                browserReq.Add(new IntValue("sortDirection", 0));
-                paramList.Add(browserReq);
-                return paramList;
-            }
-            else if (action == ActionType.GetNestItem
-                || action == ActionType.InitPlayback)
-            {
-                var paramList = new EncodableList();
-                var reqMediaInfo = new StringValue(null, itemId);
-                paramList.Add(reqMediaInfo);
-                return paramList;
-            }
-            else if (action == ActionType.InitPlaybackWithConv)
-            {
-                var paramList = new EncodableList();
-                var convReq = new RootObj(RootObj.EmObjType.ConversionRequest);
-                convReq.Add(new StringValue("itemId", itemId));
-                convReq.Add(new IntValue("audioStream", 1));
-                var profile = CodecProfile.GetProfile();
-                convReq.Add(new BitratesValue("allowedBitratesLocal", profile.Bitrate.ToString()));
-                convReq.Add(new BitratesValue("allowedBitratesRemote", "256"));
-                convReq.Add(new DoubleValue("audioBoost", 0));
-                convReq.Add(new IntValue("cropRight", 0));
-                convReq.Add(new IntValue("cropLeft", 0));
-                convReq.Add(new IntValue("resolutionWidth", profile.DeviceWidth));
-                convReq.Add(new IntValue("videoStream", 0));
-                convReq.Add(new IntValue("cropBottom", 0));
-                convReq.Add(new IntValue("cropTop", 0));
-                convReq.Add(new DoubleValue("quality", 0.7));
-                if (sub == null)
-                {
-                    convReq.Add(new StringValue("subtitleInfo", null));
-                }
-                else
-                {
-                    convReq.Add(new EncodableValue("subtitleInfo", sub.SubtitleInfoFromServer));
-                }
-                
-                convReq.Add(new DoubleValue("offset", 0.0));
-                convReq.Add(new IntValue("resolutionHeight", profile.DeviceHeight));
-                DeviceInfoValue devInfo = new DeviceInfoValue("metaData");
-                devInfo.Add(new StringValue(null, "device"));
-                devInfo.Add(new StringValue(null, "iPad"));
-                devInfo.Add(new StringValue(null, "clientVersion"));
-                devInfo.Add(new StringValue(null, "2.4.13"));
-                devInfo.Add(new StringValue(null, "h264Passthrough"));
-                devInfo.Add(new StringValue(null, "0"));
-                convReq.Add(devInfo);
-                paramList.Add(convReq);
-                return paramList;
-            }
-            else
-            {
-                throw new NotImplementedException();
             }
         }
 
@@ -232,16 +152,16 @@ namespace aairvid.Model
 
         internal MediaInfo GetMediaInfo(string id)
         {
-            var res = GetResources(id, ActionType.GetNestItem);
+            var res = GetNestItem(id);
 
             return res.Single(r => r is MediaInfo) as MediaInfo;
         }
 
-        public string GetPlaybackUrl(Video vid, SubtitleStream sub)
+        public string GetPlaybackUrl(Video vid)
         {
             ServiceType serviceType = ServiceType.PlaybackService;
 
-            var reqData = GetFormData(serviceType, ActionType.InitPlayback, vid.Id, sub);
+            var reqData = new FormDataGenForPlayback(this, serviceType, ActionType.InitPlayback, vid.Id).GetFormData();
 
             var webClient = CreateWebClient();
             var response = webClient.UploadData(this._endpoint, reqData);
@@ -259,11 +179,16 @@ namespace aairvid.Model
             }
         }
 
-        internal string GetPlayWithConvUrl(Video vid, SubtitleStream sub)
+        internal string GetPlayWithConvUrl(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
         {
             ServiceType serviceType = ServiceType.PlayWithConvService;
 
-            var reqData = GetFormData(serviceType, ActionType.InitPlaybackWithConv, vid.Id, sub);
+            var reqData = new FormDataGenForPlaybackWithConv(this,
+                serviceType,
+                ActionType.InitPlaybackWithConv,
+                vid.Id, 
+                mediaInfo,
+                sub).GetFormData();
 
             var webClient = CreateWebClient();
             var response = webClient.UploadData(this._endpoint, reqData);

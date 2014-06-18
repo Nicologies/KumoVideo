@@ -138,7 +138,9 @@
     <Compile Include="Model\AudioStream.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\AirVidResourceCreator.cs" />
+    <Compile Include="Model\FormDataGen.cs" />
     <Compile Include="Model\HistoryItem.cs" />
+    <Compile Include="Model\IFormDataGen.cs" />
     <Compile Include="Model\StreamBase.cs" />
     <Compile Include="Model\SubtitleStream.cs" />
     <Compile Include="Model\Video.cs" />

@@ -20,14 +20,35 @@ namespace aairvid
             return Server.GetMediaInfo(Id);
         }
 
-        internal string GetPlaybackUrl(SubtitleStream sub)
+        internal string GetPlaybackUrl(MediaInfo mediaInfo, SubtitleStream sub)
         {
-            return Server.GetPlaybackUrl(this, sub);
+            bool noSub = true;
+
+            if(sub != null)
+            {
+                if(sub.Language == null)
+                {
+                    noSub = false;
+                }
+                else if(string.IsNullOrWhiteSpace(sub.Language.Value))
+                {
+                    noSub = false;
+                }
+                else if(sub.Language.Value.ToUpperInvariant() != "DISABLED")
+                {
+                    noSub = false;
+                }
+            }
+            if(!noSub)
+            {
+                return Server.GetPlayWithConvUrl(this, mediaInfo, sub);
+            }
+            return Server.GetPlaybackUrl(this);
         }
         
-        internal string GetPlayWithConvUrl(SubtitleStream sub)
+        internal string GetPlayWithConvUrl(MediaInfo mediaInfo, SubtitleStream sub)
         {
-            return Server.GetPlayWithConvUrl(this, sub);
+            return Server.GetPlayWithConvUrl(this, mediaInfo, sub);
         }
 
         public override int DescribeContents()

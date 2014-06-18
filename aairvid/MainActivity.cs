@@ -272,7 +272,7 @@ namespace aairvid
             DoPlayVideo(vid.GetPlaybackUrl, vid, mediaInfo, sub);
         }
 
-        private async void DoPlayVideo(Func<SubtitleStream, string> funcGetUrl,
+        private async void DoPlayVideo(Func<MediaInfo, SubtitleStream, string> funcGetUrl,
             Video vid,
             MediaInfo mediaInfo,
             SubtitleStream sub)
@@ -281,7 +281,7 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            string playbackUrl = await Task.Run(() => funcGetUrl(sub));
+            string playbackUrl = await Task.Run(() => funcGetUrl(mediaInfo, sub));
 
             if (killed)
             {
