@@ -76,10 +76,5 @@ namespace aairvid.Adapter
             this._resources.AddRange(res);
             this.NotifyDataSetChanged();
         }
-
-        public List<IParcelable> GetResources()
-        {
-            return this._resources.Cast<IParcelable>().ToList();
-        }
     }
 }

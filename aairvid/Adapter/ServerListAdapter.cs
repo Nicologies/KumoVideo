@@ -67,11 +67,6 @@ namespace aairvid
             }
         }
 
-        internal List<IParcelable> GetAllServers()
-        {
-            return this._servers.Cast<IParcelable>().ToList();
-        }
-
         internal void AddServer(IEnumerable<AirVidServer> enumerable)
         {
             _servers.AddRange(enumerable);

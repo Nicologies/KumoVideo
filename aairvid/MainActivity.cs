@@ -336,12 +336,7 @@ namespace aairvid
             transaction.AddToBackStack(tag);
             transaction.Commit();
             progress.Dismiss();
-        }
-        
-        protected override void OnSaveInstanceState(Bundle outState)
-        {
-            base.OnSaveInstanceState(outState);
-        }
+        }        
 
         public void OnVideoNotPlayable()
         {

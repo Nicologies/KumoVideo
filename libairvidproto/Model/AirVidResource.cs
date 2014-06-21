@@ -1,10 +1,8 @@
 ﻿using aairvid.Model;
-using Android.OS;
-using Java.Interop;
 
 namespace aairvid
 {
-    public class AirVidResource : Java.Lang.Object, IParcelable
+    public class AirVidResource
     {
         protected enum EmContentType
         {
@@ -35,32 +33,6 @@ namespace aairvid
             Server = server;
             Name = name;
             Id = id;
-        }
-
-        public AirVidResource(Parcel source)
-        {
-            Name = source.ReadString();
-            Id = source.ReadString();
-            Server = new AirVidServer(source);
-        }
-
-        public virtual int DescribeContents()
-        {
-            return 0;
-        }
-
-        public virtual void WriteToParcel(Parcel dest, ParcelableWriteFlags flags)
-        {
-            dest.WriteInt(DescribeContents());
-            dest.WriteString(Name);
-            dest.WriteString(Id);
-            Server.WriteToParcel(dest, flags);
-        }
-
-        [ExportField("CREATOR")]
-        public static AirVidResourceCreator InitializeCreator()
-        {
-            return new AirVidResourceCreator();
         }
     }
 }

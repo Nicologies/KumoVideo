@@ -1,5 +1,4 @@
-﻿using Android.OS;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace aairvid.Model
 {
@@ -10,17 +9,9 @@ namespace aairvid.Model
         {
         }
 
-        public Folder(Parcel source) : base(source)
-        {
-        }
         public List<AirVidResource> GetResources()
         {
             return Server.GetResources(this.Id.ToString());
-        }
-
-        public override int DescribeContents()
-        {
-            return ContentType;
         }
     }
 }

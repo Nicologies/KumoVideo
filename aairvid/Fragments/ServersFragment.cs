@@ -19,8 +19,6 @@ namespace aairvid
 
         BonjourServiceResolver _serverDetector;
 
-        private static readonly string PARCEL_SERVERS = "ServersFragment.Servers";
-
         public ServersFragment()
         {
         }
@@ -32,11 +30,6 @@ namespace aairvid
             if (_servers == null)
             {
                 _servers = new ServerListAdapter(this.Activity);
-            }
-
-            if (savedInstanceState != null)
-            {                
-                this._servers.AddServer(savedInstanceState.GetParcelableArrayList(PARCEL_SERVERS).Cast<AirVidServer>());
             }
         }
 
@@ -50,12 +43,6 @@ namespace aairvid
             {
                 Activity.RunOnUiThread(() => this.AddServer(item));
             }
-        }
-
-        public override void OnSaveInstanceState(Bundle outState)
-        {
-            base.OnSaveInstanceState(outState);
-            outState.PutParcelableArrayList(PARCEL_SERVERS, _servers.GetAllServers());
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

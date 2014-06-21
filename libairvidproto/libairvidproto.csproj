@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\AirVidResource.cs" />
-    <Compile Include="Model\AirVidResourceCreator.cs" />
     <Compile Include="Model\AirVidServer.cs" />
     <Compile Include="Model\AudioStream.cs" />
     <Compile Include="Model\Folder.cs" />
@@ -97,6 +96,7 @@
       <Name>Bonjour.NET</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

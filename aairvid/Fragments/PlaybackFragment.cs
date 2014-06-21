@@ -60,15 +60,6 @@ namespace aairvid
                 _history = _history.Skip(_history.Count()/2).ToDictionary(r => r.Key, r => r.Value);
             }
         }
-        
-        public override void OnSaveInstanceState(Bundle outState)
-        {
-            base.OnSaveInstanceState(outState);
-            if (playbackView != null)
-            {
-               // SaveLastPos();
-            }
-        }
 
         public override void OnPause()
         {

@@ -12,10 +12,6 @@ namespace aairvid
         {
         }
 
-        public Video(Android.OS.Parcel source) : base(source)
-        {
-        }
-
         public MediaInfo GetMediaInfo()
         {
             return Server.GetMediaInfo(Id);
@@ -50,11 +46,6 @@ namespace aairvid
         public string GetPlayWithConvUrl(MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
         {
             return Server.GetPlayWithConvUrl(this, mediaInfo, sub, profile);
-        }
-
-        public override int DescribeContents()
-        {
-            return ContentType;
         }
     }
 }

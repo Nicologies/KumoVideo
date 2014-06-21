@@ -1,18 +1,15 @@
 ﻿using aairvid.Protocol;
 using aairvid.Utils;
-using Android.OS;
-using Java.Interop;
 using Network.ZeroConf;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace aairvid.Model
 {
-    public class AirVidServer : Java.Lang.Object, IParcelable
+    public class AirVidServer
     {
         public Guid _clientId = Guid.NewGuid();
 
@@ -66,23 +63,7 @@ namespace aairvid.Model
 
             CreateWebClient();
         }
-
-        public AirVidServer(Parcel source)
-        {
-            this.Name = source.ReadString();
-            this._clientId = new Guid(source.ReadString());
-            this.PasswordDigest = source.ReadString();
-            this._endpoint = source.ReadString();    
-        }
-
-        public void Save(Parcel dest)
-        {
-            dest.WriteString(Name);
-            dest.WriteString(_clientId.ToString());
-            dest.WriteString(PasswordDigest);
-            dest.WriteString(_endpoint);
-        }
-
+        
         public AirVidServer()
         {
         }
@@ -205,37 +186,6 @@ namespace aairvid.Model
                     return url.Value;
                 }
             }
-        }
-
-        #region IParcelable implementation
-        public int DescribeContents()
-        {
-            return 0;
-        }
-
-        public void WriteToParcel(Parcel dest, ParcelableWriteFlags flags)
-        {
-            //dest.WriteString();
-        }
-
-        [ExportField("CREATOR")]
-        public static AVServerCreator InitializeCreator()
-        {
-            return new AVServerCreator();
-        }
-        #endregion
-    }
-
-    public class AVServerCreator : Java.Lang.Object, IParcelableCreator
-    {
-        public Java.Lang.Object CreateFromParcel(Parcel source)
-        {
-            return new AirVidServer(source);
-        }
-
-        public Java.Lang.Object[] NewArray(int size)
-        {
-            return new AirVidServer[size];
         }
     }
 }

@@ -12,8 +12,6 @@ namespace aairvid
     {
         protected AirVidResourcesAdapter _resources;
 
-        private static readonly string PARCEL_RESOURCES = "FolderFragment.Resources";
-
         public FolderFragment(AirVidResourcesAdapter adp)
         {
             _resources = adp;
@@ -31,17 +29,6 @@ namespace aairvid
             {
                 _resources = new AirVidResourcesAdapter(this.Activity);
             }
-
-            if (savedInstanceState != null)
-            {
-                _resources.AddRange(savedInstanceState.GetParcelableArrayList(PARCEL_RESOURCES).Cast<AirVidResource>());
-            }
-        }
-
-        public override void OnSaveInstanceState(Bundle outState)
-        {
-            base.OnSaveInstanceState(outState);
-            outState.PutParcelableArrayList(PARCEL_RESOURCES, _resources.GetResources());
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
