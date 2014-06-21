@@ -100,7 +100,7 @@ namespace aairvid.Protocol
             }
         }
 
-        internal static EmObjType GetType(string name)
+        public static EmObjType GetType(string name)
         {
             return OBJ_TYPE_DESC.Single(r => r.Value == name).Key;
         }
@@ -123,7 +123,7 @@ namespace aairvid.Protocol
             return null;
         }
 
-        internal List<AirVidResource> GetResources(AirVidServer server, AirVidServer.ActionType actionType)
+        public List<AirVidResource> GetResources(AirVidServer server, AirVidServer.ActionType actionType)
         {
             var res = new List<AirVidResource>();
             if (actionType == AirVidServer.ActionType.GetResources)

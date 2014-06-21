@@ -290,23 +290,28 @@ namespace aairvid
         }
         public void OnPlayVideoWithConv(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
         {
-            DoPlayVideo(vid.GetPlayWithConvUrl, vid, mediaInfo, sub);
+            DoPlayVideo(vid.GetPlayWithConvUrl, 
+                vid, mediaInfo,
+                sub, AndroidCodecProfile.GetProfile());
         }
         public void OnPlayVideo(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
         {
-            DoPlayVideo(vid.GetPlaybackUrl, vid, mediaInfo, sub);
+            DoPlayVideo(vid.GetPlaybackUrl, vid,
+                mediaInfo, sub, 
+                AndroidCodecProfile.GetProfile());
         }
 
-        private async void DoPlayVideo(Func<MediaInfo, SubtitleStream, string> funcGetUrl,
+        private async void DoPlayVideo(Func<MediaInfo, SubtitleStream, ICodecProfile, string> funcGetUrl,
             Video vid,
             MediaInfo mediaInfo,
-            SubtitleStream sub)
+            SubtitleStream sub,
+            ICodecProfile codecProfile)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
-            string playbackUrl = await Task.Run(() => funcGetUrl(mediaInfo, sub));
+            string playbackUrl = await Task.Run(() => funcGetUrl(mediaInfo, sub, codecProfile));
 
             if (killed)
             {

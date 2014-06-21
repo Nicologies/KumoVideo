@@ -7,7 +7,7 @@ namespace aairvid.Protocol
 {
     public class Decoder
     {
-        internal Encodable Decode(BinaryReader r, string key = null)
+        public Encodable Decode(BinaryReader r, string key = null)
         {
             var type = r.ReadChar();
             switch (type)

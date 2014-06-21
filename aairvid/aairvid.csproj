@@ -135,40 +135,11 @@
     <Compile Include="IVideoNotPlayableListener.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Adapter\ResourcesAdapter.cs" />
-    <Compile Include="Model\AudioStream.cs" />
-    <Compile Include="Model\Folder.cs" />
-    <Compile Include="Model\AirVidResourceCreator.cs" />
-    <Compile Include="Model\FormDataGen.cs" />
-    <Compile Include="Model\HistoryItem.cs" />
-    <Compile Include="Model\IFormDataGen.cs" />
-    <Compile Include="Model\StreamBase.cs" />
-    <Compile Include="Model\SubtitleStream.cs" />
-    <Compile Include="Model\Video.cs" />
-    <Compile Include="Model\AirVidResource.cs" />
-    <Compile Include="Model\AirVidServer.cs" />
-    <Compile Include="Model\VideoStream.cs" />
-    <Compile Include="Protocol\BigIntValue.cs" />
-    <Compile Include="Protocol\BitratesValue.cs" />
-    <Compile Include="Protocol\BytesValue.cs" />
-    <Compile Include="Protocol\Decoder.cs" />
-    <Compile Include="Protocol\DeviceInfoValue.cs" />
-    <Compile Include="Protocol\DoubleValue.cs" />
-    <Compile Include="Protocol\EncodableList.cs" />
-    <Compile Include="Protocol\IntValue.cs" />
-    <Compile Include="Protocol\KeyValueBase.cs" />
-    <Compile Include="Protocol\Encoder.cs" />
-    <Compile Include="Protocol\Encodable.cs" />
-    <Compile Include="Model\MediaInfo.cs" />
-    <Compile Include="Protocol\RootObj.cs" />
-    <Compile Include="Protocol\StringValue.cs" />
-    <Compile Include="Protocol\EncodableValue.cs" />
     <Compile Include="SplashActivity.cs" />
     <Compile Include="UIUtils\AdsLayout.cs" />
     <Compile Include="UIUtils\AspectRatioImageView.cs" />
     <Compile Include="UIUtils\ScreenProperty.cs" />
     <Compile Include="Utils\AndroidCodecProfile.cs" />
-    <Compile Include="Utils\ICodecProfile.cs" />
-    <Compile Include="Utils\PropertyHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Fragments\FolderFragment.cs" />
@@ -237,7 +208,10 @@
     <ProjectReference Include="..\Bonjour.NET\Bonjour.NET.csproj">
       <Project>{dd32db45-727c-4683-9384-affec891172b}</Project>
       <Name>Bonjour.NET</Name>
-      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\libairvidproto\libairvidproto.csproj">
+      <Project>{6af82d06-47b4-42e6-aa5b-b65ea2e80f96}</Project>
+      <Name>libairvidproto</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

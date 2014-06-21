@@ -150,7 +150,7 @@ namespace aairvid.Model
             return GetResources("");
         }
 
-        internal MediaInfo GetMediaInfo(string id)
+        public MediaInfo GetMediaInfo(string id)
         {
             var res = GetNestItem(id);
 
@@ -179,7 +179,8 @@ namespace aairvid.Model
             }
         }
 
-        internal string GetPlayWithConvUrl(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
+        public string GetPlayWithConvUrl(Video vid, MediaInfo mediaInfo,
+            SubtitleStream sub, ICodecProfile codecProfile)
         {
             ServiceType serviceType = ServiceType.PlayWithConvService;
 
@@ -188,7 +189,7 @@ namespace aairvid.Model
                 ActionType.InitPlaybackWithConv,
                 vid.Id, 
                 mediaInfo,
-                sub, AndroidCodecProfile.GetProfile()).GetFormData();
+                sub, codecProfile).GetFormData();
 
             var webClient = CreateWebClient();
             var response = webClient.UploadData(this._endpoint, reqData);

@@ -67,7 +67,7 @@ namespace aairvid.Protocol
             _writer.Write(keyBytes);
         }
 
-        internal void Encode(RootObj protoObj)
+        public void Encode(RootObj protoObj)
         {
             _writer.Write('o');
             _writer.Write(IPAddress.HostToNetworkOrder(this._fieldCounter++));
@@ -86,13 +86,13 @@ namespace aairvid.Protocol
             }
         }
 
-        internal void Encode(EncodableValue protoObj)
+        public void Encode(EncodableValue protoObj)
         {
             EncodeKey(protoObj.Key);
             protoObj.Value.Encode(this);
         }
 
-        internal void Encode(BitratesValue bitratesValue)
+        public void Encode(BitratesValue bitratesValue)
         {
             EncodeKey(bitratesValue.Key);
             _writer.Write('e');
@@ -105,7 +105,7 @@ namespace aairvid.Protocol
             }
         }
 
-        internal void Encode(DoubleValue doubleValue)
+        public void Encode(DoubleValue doubleValue)
         {
             this.EncodeKey(doubleValue.Key);
 
@@ -116,7 +116,7 @@ namespace aairvid.Protocol
             _writer.Write(IPAddress.HostToNetworkOrder(int64Value));
         }
 
-        internal void Encode(DeviceInfoValue deviceInfoValue)
+        public void Encode(DeviceInfoValue deviceInfoValue)
         {
             this.EncodeKey(deviceInfoValue.Key);
 

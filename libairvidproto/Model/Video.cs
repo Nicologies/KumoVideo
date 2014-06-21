@@ -1,4 +1,5 @@
 ﻿using aairvid.Model;
+using aairvid.Utils;
 
 namespace aairvid
 {
@@ -20,7 +21,7 @@ namespace aairvid
             return Server.GetMediaInfo(Id);
         }
 
-        internal string GetPlaybackUrl(MediaInfo mediaInfo, SubtitleStream sub)
+        public string GetPlaybackUrl(MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
         {
             bool noSub = true;
 
@@ -41,14 +42,14 @@ namespace aairvid
             }
             if(!noSub)
             {
-                return Server.GetPlayWithConvUrl(this, mediaInfo, sub);
+                return Server.GetPlayWithConvUrl(this, mediaInfo, sub, profile);
             }
             return Server.GetPlaybackUrl(this);
         }
-        
-        internal string GetPlayWithConvUrl(MediaInfo mediaInfo, SubtitleStream sub)
+
+        public string GetPlayWithConvUrl(MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
         {
-            return Server.GetPlayWithConvUrl(this, mediaInfo, sub);
+            return Server.GetPlayWithConvUrl(this, mediaInfo, sub, profile);
         }
 
         public override int DescribeContents()
