@@ -12,14 +12,17 @@ using Android.Widget;
 using aairvid.Adapter;
 using Android.Content.Res;
 using aairvid.UIUtils;
+using Android.Util;
+using aairvid.Utils;
 
 namespace aairvid.Fragments
 {
     public static class FolderFragmentFactory
     {
-        public static FolderFragment GetFolderFragment(AirVidResourcesAdapter adp, Display disp)
+        public static FolderFragment GetFolderFragment(AirVidResourcesAdapter adp, 
+            DisplayMetrics dispMetrics)
         {
-            if (ScreenProperty.IsLargeScreen(disp.Width))
+            if (ScreenProperty.IsLargeScreen(dispMetrics))
             {
                 return new FolderFragment4LargeScreen(adp);
             }

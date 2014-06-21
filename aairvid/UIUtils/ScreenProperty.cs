@@ -10,14 +10,17 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Content.Res;
+using Android.Util;
+using aairvid.Utils;
 
 namespace aairvid.UIUtils
 {
     public static class ScreenProperty
     {
-        public static bool IsLargeScreen(int width)
+        public static bool IsLargeScreen(DisplayMetrics me)
         {
-            return width >= 1024;
+            var widthInches = (float)me.WidthPixels / me.Xdpi;
+            return widthInches >= 5.3;//ipad mini width.
         }
     }
 }
