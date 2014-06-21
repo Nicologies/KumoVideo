@@ -83,7 +83,7 @@ namespace aairvid.Protocol
                     }
                 default:
                     {
-                        throw new InvalidDataException("unknow data type" + type.ToString());
+                        throw new NotSupportedException("unknow data type" + type.ToString());
                     }
             }
         }
