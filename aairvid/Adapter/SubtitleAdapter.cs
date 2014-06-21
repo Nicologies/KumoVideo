@@ -8,10 +8,10 @@ using System.Linq;
 
 namespace aairvid.Adapter
 {
-    public class SubtitleAdapter : BaseAdapter<SubtitleStream>
+    public class SubtitleAdapter : BaseAdapter<SubtitleStreamJavaAdp>
     {
         private LayoutInflater _inflater;
-        private List<SubtitleStream> _subtitles = new List<SubtitleStream>();
+        private List<SubtitleStreamJavaAdp> _subtitles = new List<SubtitleStreamJavaAdp>();
         private Context _context;
 
         public SubtitleAdapter(Context context)
@@ -40,17 +40,17 @@ namespace aairvid.Adapter
             var textView = convertView as TextView;
             
             var item = this[position];
-            textView.Text = item.DisplayableLan;
+            textView.Text = item.Subtitle.DisplayableLan;
             return convertView;
         }
 
         public void Add(SubtitleStream res)
         {
-            this._subtitles.Add(res);
+            this._subtitles.Add(new SubtitleStreamJavaAdp(res));
             this.NotifyDataSetChanged();
         }
 
-        public override SubtitleStream this[int position]
+        public override SubtitleStreamJavaAdp this[int position]
         {
             get
             {
@@ -64,7 +64,7 @@ namespace aairvid.Adapter
 
         public void AddRange(IEnumerable<SubtitleStream> res)
         {
-            this._subtitles.AddRange(res);
+            this._subtitles.AddRange(res.Select(r => new SubtitleStreamJavaAdp(r)));
             this.NotifyDataSetChanged();
         }
     }

@@ -100,7 +100,8 @@ namespace aairvid
         private SubtitleStream GetSelectedSub()
         {
             var cmbSubtitle = this.View.FindViewById<Spinner>(Resource.Id.cmbSubtitle);
-            return cmbSubtitle.SelectedItem as SubtitleStream;
+            var adp = cmbSubtitle.SelectedItem as SubtitleStreamJavaAdp;
+            return adp.Subtitle;
         }
 
         void btnPlayWithConv_Click(object sender, EventArgs e)

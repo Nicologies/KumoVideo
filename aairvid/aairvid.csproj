@@ -136,6 +136,7 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Adapter\ResourcesAdapter.cs" />
     <Compile Include="SplashActivity.cs" />
+    <Compile Include="SubtitleStreamJavaAdp.cs" />
     <Compile Include="UIUtils\AdsLayout.cs" />
     <Compile Include="UIUtils\AspectRatioImageView.cs" />
     <Compile Include="UIUtils\ScreenProperty.cs" />
