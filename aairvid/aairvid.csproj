@@ -167,7 +167,7 @@
     <Compile Include="UIUtils\AspectRatioImageView.cs" />
     <Compile Include="UIUtils\ScreenProperty.cs" />
     <Compile Include="Utils\AndroidCodecProfile.cs" />
-    <Compile Include="Utils\CodecProfile.cs" />
+    <Compile Include="Utils\ICodecProfile.cs" />
     <Compile Include="Utils\PropertyHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

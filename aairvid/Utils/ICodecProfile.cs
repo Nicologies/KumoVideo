@@ -1,7 +1,7 @@
 ﻿
 namespace aairvid.Utils
 {
-    public interface CodecProfile
+    public interface ICodecProfile
     {
         int DeviceHeight
         {

@@ -14,7 +14,7 @@ using Android.Util;
 
 namespace aairvid.Utils
 {
-    public class AndroidCodecProfile : CodecProfile
+    public class AndroidCodecProfile : ICodecProfile
     {
         private static AndroidCodecProfile profile;
         public static AndroidCodecProfile InitProfile(Activity activity)

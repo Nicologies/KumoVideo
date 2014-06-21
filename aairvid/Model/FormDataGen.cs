@@ -99,11 +99,11 @@ namespace aairvid.Model
     {
         SubtitleStream _sub;
         MediaInfo _mediaInfo;
-        CodecProfile _codecProfile;
+        ICodecProfile _codecProfile;
         public FormDataGenForPlaybackWithConv(AirVidServer server,
             AirVidServer.ServiceType serviceType,
             AirVidServer.ActionType actType,
-            string itemId, MediaInfo mediaInfo, SubtitleStream sub, CodecProfile codecProfile)
+            string itemId, MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile codecProfile)
             : base(server, serviceType, actType, itemId)
         {
             _sub = sub;
