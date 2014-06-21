@@ -60,13 +60,6 @@ namespace aairvid
             }
         }
         
-        public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
-        {
-            base.OnConfigurationChanged(newConfig);
-
-            Activity.Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
-        }
-
         public override void OnSaveInstanceState(Bundle outState)
         {
             base.OnSaveInstanceState(outState);
@@ -78,10 +71,18 @@ namespace aairvid
 
         public override void OnPause()
         {
+            Trace.TraceInformation("OnPause {0}", playbackView != null);
             if (playbackView != null)
             {
-                SaveLastPos();
+                if (playbackView.IsPlaying)
+                {
+                    SaveLastPos();
+                    playbackView.Suspend();
+                }
             }
+
+            Trace.TraceInformation("OnPause1 {0}", playbackView != null);
+            
             base.OnPause();
         }
 
@@ -123,7 +124,14 @@ namespace aairvid
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+            Trace.TraceInformation("Oncreate view");
             View view = inflater.Inflate(Resource.Layout.playback_fragment, container, false);
+
+            PowerManager powerManager = (PowerManager)Activity.GetSystemService(Context.PowerService);
+            if (!powerManager.IsScreenOn)
+            {
+                return view;
+            }
 
             Activity.Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
@@ -142,16 +150,35 @@ namespace aairvid
 
             StartPlay(view);
 
+            Trace.TraceInformation("Oncreate view1");
             return view;
         }
 
         public override void OnDestroy()
         {
+            Trace.TraceInformation("OnDestroy1");
+
+            if (playbackView != null)
+            {
+                playbackView.StopPlayback();
+                playbackView = null;
+            }
+            Trace.TraceInformation("OnDestroy2");
             Activity.ActionBar.Show();
 
-            Activity.RequestedOrientation = Android.Content.PM.ScreenOrientation.Sensor;
-
             Activity.Window.ClearFlags(WindowManagerFlags.Fullscreen);
+
+            Trace.TraceInformation("OnDestroy3");            
+
+            Trace.TraceInformation("OnDestroy4");
+
+            var pow = (PowerManager)Activity.GetSystemService(Context.PowerService);
+            if (!pow.IsScreenOn)
+            {
+                base.OnDestroy();
+                return;
+            }
+
             if (!AdsLayout.SHOW_ADS_WHEN_PLAYING)
             {
                 var adsLayout = Activity.FindViewById<View>(Resource.Id.adsLayout);
@@ -160,12 +187,16 @@ namespace aairvid
                     adsLayout.Visibility = ViewStates.Visible;
                 }
             }
+
+            Trace.TraceInformation("OnDestroy5");
             var listner = Activity as IPlayVideoListener;
             if (listner != null
                 && !_failedToPlay)
             {
                 listner.OnVideoFinished((int)(DateTime.Now - _startPlayTime).TotalMinutes);
             }
+
+            Trace.TraceInformation("OnDestroy6");
             base.OnDestroy();
         }
 
@@ -189,7 +220,16 @@ namespace aairvid
             }
         }
 
-        VideoView playbackView;        
+        VideoView playbackView;
+
+        public override void OnResume()
+        {
+            if (playbackView != null)
+            {
+                playbackView.Resume();
+            }
+            base.OnResume();
+        }
         
         private void StartPlay(View view)
         {
