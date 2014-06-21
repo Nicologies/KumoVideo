@@ -20,6 +20,7 @@ using System.Timers;
 using System.Text;
 using Android.Runtime;
 using Android.Util;
+using libairvidproto;
 
 namespace aairvid
 {
@@ -69,6 +70,11 @@ namespace aairvid
                     listener = null;
                 }
             }
+        }
+
+        public MainActivity()
+        {
+            ByteOrderConv.Instance = new ByteOrderConvAdp();
         }
         
         protected override void OnCreate(Bundle bundle)
@@ -174,7 +180,7 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var resources = await Task.Run(() => selectedServer.GetResources());
+            var resources = await Task.Run(() => selectedServer.GetResources(new WebClientAdp()));
 
             if (killed)
             {
@@ -202,7 +208,7 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var resources = await Task.Run(() => folder.GetResources());
+            var resources = await Task.Run(() => folder.GetResources(new WebClientAdp()));
 
             if (killed)
             {
@@ -231,7 +237,7 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var mediaInfo = await Task.Run(() => video.GetMediaInfo());
+            var mediaInfo = await Task.Run(() => video.GetMediaInfo(new WebClientAdp()));
 
             if (killed)
             {
@@ -301,7 +307,7 @@ namespace aairvid
                 AndroidCodecProfile.GetProfile());
         }
 
-        private async void DoPlayVideo(Func<MediaInfo, SubtitleStream, ICodecProfile, string> funcGetUrl,
+        private async void DoPlayVideo(Func<IWebClient, MediaInfo, SubtitleStream, ICodecProfile, string> funcGetUrl,
             Video vid,
             MediaInfo mediaInfo,
             SubtitleStream sub,
@@ -311,7 +317,7 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            string playbackUrl = await Task.Run(() => funcGetUrl(mediaInfo, sub, codecProfile));
+            string playbackUrl = await Task.Run(() => funcGetUrl(new WebClientAdp(), mediaInfo, sub, codecProfile));
 
             if (killed)
             {

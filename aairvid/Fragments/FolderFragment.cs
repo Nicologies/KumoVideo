@@ -28,7 +28,7 @@ namespace aairvid
             if (_resources == null)
             {
                 _resources = new AirVidResourcesAdapter(this.Activity);
-            }
+            }            
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

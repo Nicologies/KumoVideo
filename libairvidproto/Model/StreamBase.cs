@@ -1,5 +1,4 @@
-﻿using Android.OS;
-
+﻿
 namespace aairvid.Model
 {
     public class StreamBase
@@ -11,14 +10,6 @@ namespace aairvid.Model
 
         public StreamBase()
         {
-        }
-
-        public StreamBase(Parcel source)
-        {
-            index = source.ReadInt();
-            StreamType = source.ReadInt();
-            Codec = source.ReadString();
-            Language = source.ReadString();
         }
     }
 }

@@ -45,9 +45,9 @@ namespace aairvid
             return convertView;
         }
 
-        public void AddServer(IService server)
+        public void AddServer(IService service)
         {
-            var svr = new AirVidServer(server);
+            var svr = new AirVidServer(new BonjourServer(service));
             if (_servers.FirstOrDefault(r => r.Name == svr.Name) == null)
             {
                 _servers.Add(svr);

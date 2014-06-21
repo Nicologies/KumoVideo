@@ -1,4 +1,5 @@
-﻿using System;
+﻿using libairvidproto;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,9 +30,9 @@ namespace aairvid.Protocol
             else
             {
                 _writer.Write('s');
-                _writer.Write(IPAddress.HostToNetworkOrder(_fieldCounter++));
+                _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(_fieldCounter++));
                 var bytes = Encoding.UTF8.GetBytes(str);
-                _writer.Write(IPAddress.HostToNetworkOrder(bytes.Length));
+                _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(bytes.Length));
                 _writer.Write(bytes);
             }
             
@@ -42,14 +43,14 @@ namespace aairvid.Protocol
             string key = avInt.Key;
             EncodeKey(key);
             _writer.Write('i');
-            _writer.Write(IPAddress.HostToNetworkOrder((int)avInt.Value));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder((int)avInt.Value));
         }
 
         public void Encode(List<Encodable> avObjs)
         {
             _writer.Write('a'); // array
-            _writer.Write(IPAddress.HostToNetworkOrder(_fieldCounter++));
-            _writer.Write(IPAddress.HostToNetworkOrder(avObjs.Count()));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(_fieldCounter++));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(avObjs.Count()));
             foreach (var obj in avObjs)
             {
                 obj.Encode(this);
@@ -62,23 +63,23 @@ namespace aairvid.Protocol
             {
                 return;
             }
-            var keyBytes = Encoding.ASCII.GetBytes(key);
-            _writer.Write(IPAddress.HostToNetworkOrder(keyBytes.Length));
+            var keyBytes = Encoding.UTF8.GetBytes(key);
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(keyBytes.Length));
             _writer.Write(keyBytes);
         }
 
         public void Encode(RootObj protoObj)
         {
             _writer.Write('o');
-            _writer.Write(IPAddress.HostToNetworkOrder(this._fieldCounter++));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(this._fieldCounter++));
 
-            var objType = Encoding.ASCII.GetBytes(protoObj.ObjType);
-            _writer.Write(IPAddress.HostToNetworkOrder((int)objType.Length));
+            var objType = Encoding.UTF8.GetBytes(protoObj.ObjType);
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder((int)objType.Length));
             _writer.Write(objType);
 
-            _writer.Write(IPAddress.HostToNetworkOrder((int)protoObj.MValue));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder((int)protoObj.MValue));
 
-            _writer.Write(IPAddress.HostToNetworkOrder((int)protoObj.Children.Count()));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder((int)protoObj.Children.Count()));
 
             foreach (var c in protoObj.Children)
             {
@@ -96,8 +97,8 @@ namespace aairvid.Protocol
         {
             EncodeKey(bitratesValue.Key);
             _writer.Write('e');
-            _writer.Write(IPAddress.HostToNetworkOrder(this._fieldCounter++));
-            _writer.Write(IPAddress.HostToNetworkOrder(bitratesValue.Value.Count()));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(this._fieldCounter++));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(bitratesValue.Value.Count()));
             foreach (var rate in bitratesValue.Value)
             {
                 var str = new StringValue(null, rate);
@@ -113,7 +114,7 @@ namespace aairvid.Protocol
 
             var int64Value = BitConverter.DoubleToInt64Bits(doubleValue.Value);
             
-            _writer.Write(IPAddress.HostToNetworkOrder(int64Value));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(int64Value));
         }
 
         public void Encode(DeviceInfoValue deviceInfoValue)
@@ -122,8 +123,8 @@ namespace aairvid.Protocol
 
             _writer.Write('d');
 
-            _writer.Write(IPAddress.HostToNetworkOrder(this._fieldCounter++));
-            _writer.Write(IPAddress.HostToNetworkOrder(deviceInfoValue.Value.Count()/2));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(this._fieldCounter++));
+            _writer.Write(ByteOrderConv.Instance.HostToNetworkOrder(deviceInfoValue.Value.Count()/2));
 
             foreach (var en in deviceInfoValue.Value)
             {

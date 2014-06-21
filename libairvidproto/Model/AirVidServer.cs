@@ -1,6 +1,6 @@
 ﻿using aairvid.Protocol;
 using aairvid.Utils;
-using Network.ZeroConf;
+using libairvidproto;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +15,7 @@ namespace aairvid.Model
 
         public string PasswordDigest = "";
 
-        private IService _service;
+        private IServer _service;
         public string _endpoint;
         public string Name
         {
@@ -53,40 +53,37 @@ namespace aairvid.Model
             {ActionType.InitPlaybackWithConv, "initLivePlayback"},
         };
 
-        public AirVidServer(IService service)
+        public AirVidServer(IServer server)
         {
-            _service = service;
-            Name = service.Name;
-            var addr = _service.Addresses[0];
-            var str = addr.Addresses[0].ToString();
-            _endpoint = string.Format("http://{0}:{1}/service", str, addr.Port);
+            _service = server;
+            Name = server.Name;
 
-            CreateWebClient();
+            _endpoint = string.Format("http://{0}:{1}/service", _service.Address, _service.Port);
         }
         
         public AirVidServer()
         {
         }
 
-        private WebClient CreateWebClient()
+        private void FillWebClientHeader(IWebClient webClient)
         {
-            var webClient = new WebClient();
-            var headers = webClient.Headers;
-            headers.Add("User-Agent", "AirVideo/2.4.13 CFNetwork/548.1.4 Darwin/11.0.0");
-            headers.Add("Accept", "*/*");
-            headers.Add("Accept-Language", "en-us");
-            headers.Add("Accept-Encoding", "gzip, deflate");
-            headers.Add("Content-Type", "application/x-www-form-urlencoded");
-            return webClient;
+            webClient.AddHeader("User-Agent", "AirVideo/2.4.13 CFNetwork/548.1.4 Darwin/11.0.0");
+            webClient.AddHeader("Accept", "*/*");
+            webClient.AddHeader("Accept-Language", "en-us");
+            webClient.AddHeader("Accept-Encoding", "gzip, deflate");
+            webClient.AddHeader("Content-Type", "application/x-www-form-urlencoded");
         }
         
-        public List<AirVidResource> GetResources(string path, ActionType actionType = ActionType.GetResources)
+        public List<AirVidResource> GetResources(
+            IWebClient webClient,
+            string path,
+            ActionType actionType = ActionType.GetResources)
         {
             ServiceType serviceType = ServiceType.Browser;
 
             var reqData = new FormDataGenForGetResources(this, serviceType, actionType, path).GetFormData();
 
-            var webClient = CreateWebClient();
+            FillWebClientHeader(webClient);
 
             var response = webClient.UploadData(this._endpoint, reqData);
 
@@ -102,7 +99,7 @@ namespace aairvid.Model
             }
         }
 
-        public List<AirVidResource> GetNestItem(string path)
+        public List<AirVidResource> GetNestItem(IWebClient webClient, string path)
         {
             ServiceType serviceType = ServiceType.Browser;
 
@@ -110,7 +107,7 @@ namespace aairvid.Model
 
             var reqData = new FormDataGenForNestItem(this, serviceType, actionType, path).GetFormData();
 
-            var webClient = CreateWebClient();
+            FillWebClientHeader(webClient);
 
             var response = webClient.UploadData(this._endpoint, reqData);
 
@@ -126,25 +123,25 @@ namespace aairvid.Model
             }
         }
 
-        public List<AirVidResource> GetResources()
+        public List<AirVidResource> GetResources(IWebClient webClient)
         {
-            return GetResources("");
+            return GetResources(webClient, "");
         }
 
-        public MediaInfo GetMediaInfo(string id)
+        public MediaInfo GetMediaInfo(IWebClient webClient, string id)
         {
-            var res = GetNestItem(id);
+            var res = GetNestItem(webClient, id);
 
             return res.Single(r => r is MediaInfo) as MediaInfo;
         }
 
-        public string GetPlaybackUrl(Video vid)
+        public string GetPlaybackUrl(IWebClient webClient, Video vid)
         {
             ServiceType serviceType = ServiceType.PlaybackService;
 
             var reqData = new FormDataGenForPlayback(this, serviceType, ActionType.InitPlayback, vid.Id).GetFormData();
 
-            var webClient = CreateWebClient();
+            FillWebClientHeader(webClient);
             var response = webClient.UploadData(this._endpoint, reqData);
 
             using (var stream = new MemoryStream(response))
@@ -160,7 +157,7 @@ namespace aairvid.Model
             }
         }
 
-        public string GetPlayWithConvUrl(Video vid, MediaInfo mediaInfo,
+        public string GetPlayWithConvUrl(IWebClient webClient, Video vid, MediaInfo mediaInfo,
             SubtitleStream sub, ICodecProfile codecProfile)
         {
             ServiceType serviceType = ServiceType.PlayWithConvService;
@@ -172,7 +169,7 @@ namespace aairvid.Model
                 mediaInfo,
                 sub, codecProfile).GetFormData();
 
-            var webClient = CreateWebClient();
+            FillWebClientHeader(webClient);
             var response = webClient.UploadData(this._endpoint, reqData);
 
             using (var stream = new MemoryStream(response))

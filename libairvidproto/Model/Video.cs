@@ -1,5 +1,6 @@
 ﻿using aairvid.Model;
 using aairvid.Utils;
+using libairvidproto;
 
 namespace aairvid
 {
@@ -12,40 +13,40 @@ namespace aairvid
         {
         }
 
-        public MediaInfo GetMediaInfo()
+        public MediaInfo GetMediaInfo(IWebClient webClient)
         {
-            return Server.GetMediaInfo(Id);
+            return Server.GetMediaInfo(webClient, Id);
         }
 
-        public string GetPlaybackUrl(MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
+        public string GetPlaybackUrl(IWebClient webClient, MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
         {
             bool noSub = true;
 
-            if(sub != null)
+            if (sub != null)
             {
-                if(sub.Language == null)
+                if (sub.Language == null)
                 {
                     noSub = false;
                 }
-                else if(string.IsNullOrWhiteSpace(sub.Language.Value))
+                else if (string.IsNullOrWhiteSpace(sub.Language.Value))
                 {
                     noSub = false;
                 }
-                else if(sub.Language.Value.ToUpperInvariant() != "DISABLED")
+                else if (sub.Language.Value.ToUpperInvariant() != "DISABLED")
                 {
                     noSub = false;
                 }
             }
-            if(!noSub)
+            if (!noSub)
             {
-                return Server.GetPlayWithConvUrl(this, mediaInfo, sub, profile);
+                return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, profile);
             }
-            return Server.GetPlaybackUrl(this);
+            return Server.GetPlaybackUrl(webClient, this);
         }
 
-        public string GetPlayWithConvUrl(MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
+        public string GetPlayWithConvUrl(IWebClient webClient, MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
         {
-            return Server.GetPlayWithConvUrl(this, mediaInfo, sub, profile);
+            return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, profile);
         }
     }
 }

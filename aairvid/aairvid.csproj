@@ -122,12 +122,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapter\SubtitleAdapter.cs" />
+    <Compile Include="BonjourServer.cs" />
+    <Compile Include="ByteOrderConvAdp.cs" />
     <Compile Include="Fragments\FolderFragment4LargeScreen.cs" />
     <Compile Include="Fragments\FolderFragment4SmallScreen.cs" />
     <Compile Include="Fragments\FolderFragmentFactory.cs" />
     <Compile Include="Fragments\FragmentHelper.cs" />
     <Compile Include="Fragments\VideoInfoFragment.cs" />
     <Compile Include="Fragments\PlaybackFragment.cs" />
+    <Compile Include="HistoryItem.cs" />
     <Compile Include="IMediaDetailDisplayer.cs" />
     <Compile Include="IPlayVideoListener.cs" />
     <Compile Include="IResourceSelectedListener.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Adapter\ServerListAdapter.cs" />
     <Compile Include="Fragments\ServersFragment.cs" />
     <Compile Include="Utils\RecentLans.cs" />
+    <Compile Include="WebClientAdp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -209,10 +213,12 @@
     <ProjectReference Include="..\Bonjour.NET\Bonjour.NET.csproj">
       <Project>{dd32db45-727c-4683-9384-affec891172b}</Project>
       <Name>Bonjour.NET</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\libairvidproto\libairvidproto.csproj">
-      <Project>{6af82d06-47b4-42e6-aa5b-b65ea2e80f96}</Project>
+      <Project>{07b8fc28-967f-4f36-b980-fbef1ec73a82}</Project>
       <Name>libairvidproto</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

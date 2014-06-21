@@ -27,7 +27,7 @@ namespace aairvid.Model
         {
             using (var stream = new MemoryStream())
             {
-                using (var writer = new BinaryWriter(stream, Encoding.ASCII))
+                using (var writer = new BinaryWriter(stream, Encoding.UTF8))
                 {
                     var en = new aairvid.Protocol.Encoder(writer);
 

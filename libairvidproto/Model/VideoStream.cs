@@ -1,6 +1,4 @@
-﻿using Android.OS;
-using Java.Interop;
-
+﻿
 namespace aairvid.Model
 {
     public class VideoStream : StreamBase

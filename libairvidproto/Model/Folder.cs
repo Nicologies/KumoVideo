@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using libairvidproto;
+using System.Collections.Generic;
 
 namespace aairvid.Model
 {
@@ -9,9 +10,9 @@ namespace aairvid.Model
         {
         }
 
-        public List<AirVidResource> GetResources()
+        public List<AirVidResource> GetResources(IWebClient webClient)
         {
-            return Server.GetResources(this.Id.ToString());
+            return Server.GetResources(webClient, this.Id.ToString());
         }
     }
 }
