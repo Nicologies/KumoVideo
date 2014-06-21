@@ -84,8 +84,8 @@ namespace aairvid
 
             var tvVideoSize = view.FindViewById<TextView>(Resource.Id.tvVideoSize);
             tvVideoSize.Text = "File Size: " + VideoInfoFragment.ReadableFileSize(_mediaInfo.FileSize);
-            
-            var profile = CodecProfile.GetProfile();
+
+            var profile = AndroidCodecProfile.GetProfile();
             var stream = _mediaInfo.VideoStreams[0];
             var needConv = stream.Height > profile.DeviceHeight || stream.Width > profile.DeviceWidth;
             var btnPlay = view.FindViewById<Button>(Resource.Id.btnPlay);

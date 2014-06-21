@@ -32,7 +32,7 @@ namespace aairvid
         )]
     public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener
     {
-        ServersFragment _serverFragment;        
+        ServersFragment _serverFragment;
 
         private bool killed = false;
 
@@ -152,7 +152,7 @@ namespace aairvid
         {
             base.OnResume();
 
-            CodecProfile.InitProfile(this);
+            AndroidCodecProfile.InitProfile(this);
 
             bool isPlaying = IsPlaying();
             if (!isPlaying || AdsLayout.SHOW_ADS_WHEN_PLAYING)

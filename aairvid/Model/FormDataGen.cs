@@ -99,14 +99,16 @@ namespace aairvid.Model
     {
         SubtitleStream _sub;
         MediaInfo _mediaInfo;
+        CodecProfile _codecProfile;
         public FormDataGenForPlaybackWithConv(AirVidServer server,
             AirVidServer.ServiceType serviceType,
-            AirVidServer.ActionType actType, 
-            string itemId, MediaInfo mediaInfo, SubtitleStream sub)
+            AirVidServer.ActionType actType,
+            string itemId, MediaInfo mediaInfo, SubtitleStream sub, CodecProfile codecProfile)
             : base(server, serviceType, actType, itemId)
         {
             _sub = sub;
             _mediaInfo = mediaInfo;
+            _codecProfile = codecProfile;
         }
 
         protected override EncodableList GetParamList()
@@ -115,13 +117,12 @@ namespace aairvid.Model
             var convReq = new RootObj(RootObj.EmObjType.ConversionRequest);
             convReq.Add(new StringValue("itemId", _itemId));
             convReq.Add(new IntValue("audioStream", 1));
-            var profile = CodecProfile.GetProfile();
-            convReq.Add(new BitratesValue("allowedBitratesLocal", profile.Bitrate.ToString()));
+            convReq.Add(new BitratesValue("allowedBitratesLocal", _codecProfile.Bitrate.ToString()));
             convReq.Add(new BitratesValue("allowedBitratesRemote", "256"));
             convReq.Add(new DoubleValue("audioBoost", 0));
             convReq.Add(new IntValue("cropRight", 0));
             convReq.Add(new IntValue("cropLeft", 0));
-            convReq.Add(new IntValue("resolutionWidth", profile.DeviceWidth));
+            convReq.Add(new IntValue("resolutionWidth", _codecProfile.DeviceWidth));
             convReq.Add(new IntValue("videoStream", 0));
             convReq.Add(new IntValue("cropBottom", 0));
             convReq.Add(new IntValue("cropTop", 0));
@@ -137,7 +138,9 @@ namespace aairvid.Model
 
             var vidStream = _mediaInfo.VideoStreams.First();
 
-            var height = Math.Min((int)((float)profile.DeviceWidth * (float)vidStream.Height / (float)vidStream.Width), profile.DeviceHeight);
+            var height = Math.Min(
+                (int)((float)_codecProfile.DeviceWidth * (float)vidStream.Height / (float)vidStream.Width),
+                _codecProfile.DeviceHeight);
 
             convReq.Add(new DoubleValue("offset", 0.0));
             convReq.Add(new IntValue("resolutionHeight", height));

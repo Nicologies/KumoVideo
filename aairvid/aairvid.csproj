@@ -166,6 +166,7 @@
     <Compile Include="UIUtils\AdsLayout.cs" />
     <Compile Include="UIUtils\AspectRatioImageView.cs" />
     <Compile Include="UIUtils\ScreenProperty.cs" />
+    <Compile Include="Utils\AndroidCodecProfile.cs" />
     <Compile Include="Utils\CodecProfile.cs" />
     <Compile Include="Utils\PropertyHelper.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

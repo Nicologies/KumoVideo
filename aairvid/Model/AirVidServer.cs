@@ -188,7 +188,7 @@ namespace aairvid.Model
                 ActionType.InitPlaybackWithConv,
                 vid.Id, 
                 mediaInfo,
-                sub).GetFormData();
+                sub, AndroidCodecProfile.GetProfile()).GetFormData();
 
             var webClient = CreateWebClient();
             var response = webClient.UploadData(this._endpoint, reqData);

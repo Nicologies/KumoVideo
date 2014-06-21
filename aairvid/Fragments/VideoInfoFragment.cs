@@ -73,7 +73,7 @@ namespace aairvid
             var btnPlayWithConv = view.FindViewById<Button>(Resource.Id.btnPlayWithConv);
             btnPlayWithConv.Click += btnPlayWithConv_Click;
 
-            var profile = CodecProfile.GetProfile();
+            var profile = AndroidCodecProfile.GetProfile();
             var stream = _mediaInfo.VideoStreams[0];
             var needConv = stream.Height > profile.DeviceHeight || stream.Width > profile.DeviceWidth;
             if (needConv)
