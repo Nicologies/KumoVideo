@@ -1,4 +1,4 @@
-namespace aairvid.Model
+namespace libairvidproto.model
 {
     public interface IFormDataGen
     {

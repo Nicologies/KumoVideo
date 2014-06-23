@@ -1,8 +1,6 @@
-﻿using aairvid.Model;
-using aairvid.Utils;
-using libairvidproto;
+﻿using aairvid.Utils;
 
-namespace aairvid
+namespace libairvidproto.model
 {
     public class Video : AirVidResource
     {

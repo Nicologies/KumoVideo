@@ -11,7 +11,7 @@ namespace libairvidproto
         short NetworkToHostOrder(short network);
     }
 
-    public static class ByteOrderConv
+    internal static class ByteOrderConv
     {
         public static IByteOrderConv Instance;
     }

@@ -1,11 +1,11 @@
-using aairvid.Protocol;
 using aairvid.Utils;
+using libairvidproto.types;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace aairvid.Model
+namespace libairvidproto.model
 {
     public abstract class FormDataGen : IFormDataGen
     {
@@ -29,9 +29,9 @@ namespace aairvid.Model
             {
                 using (var writer = new BinaryWriter(stream, Encoding.UTF8))
                 {
-                    var en = new aairvid.Protocol.Encoder(writer);
+                    var en = new libairvidproto.types.Encoder(writer);
 
-                    var root = new aairvid.Protocol.RootObj(Protocol.RootObj.EmObjType.ConnectRequest);
+                    var root = new RootObj(RootObj.EmObjType.ConnectRequest);
 
                     root.Add(new StringValue("clientIdentifier", _server._clientId.ToString()));
 

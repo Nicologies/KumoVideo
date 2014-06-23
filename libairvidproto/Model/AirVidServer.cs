@@ -1,13 +1,11 @@
-﻿using aairvid.Protocol;
-using aairvid.Utils;
-using libairvidproto;
+﻿using aairvid.Utils;
+using libairvidproto.types;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 
-namespace aairvid.Model
+namespace libairvidproto.model
 {
     public class AirVidServer
     {
@@ -91,7 +89,7 @@ namespace aairvid.Model
             {
                 using (var read = new BinaryReader(stream))
                 {
-                    var de = new aairvid.Protocol.Decoder();
+                    var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
                     var result = rootObj.GetResources(this, actionType);
                     return result;
@@ -115,7 +113,7 @@ namespace aairvid.Model
             {
                 using (var read = new BinaryReader(stream))
                 {
-                    var de = new aairvid.Protocol.Decoder();
+                    var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
                     var result = rootObj.GetResources(this, actionType);
                     return result;
@@ -148,7 +146,7 @@ namespace aairvid.Model
             {
                 using (var read = new BinaryReader(stream))
                 {
-                    var de = new aairvid.Protocol.Decoder();
+                    var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
                     var playbackResp = rootObj.Get(RootObj.EmObjType.PlaybackInitResponse);
                     var url = playbackResp.Get("contentURL") as StringValue;
@@ -176,7 +174,7 @@ namespace aairvid.Model
             {
                 using (var read = new BinaryReader(stream))
                 {
-                    var de = new aairvid.Protocol.Decoder();
+                    var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
                     var playbackResp = rootObj.Get(RootObj.EmObjType.PlaybackInitResponse);
                     var url = playbackResp.Get("contentURL") as StringValue;

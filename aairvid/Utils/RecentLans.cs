@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Android.Preferences;
 using aairvid.Model;
+using libairvidproto.model;
 
 namespace aairvid.Utils
 {

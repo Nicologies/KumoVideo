@@ -7,6 +7,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using libairvidproto.model;
 using System;
 using System.Linq;
 

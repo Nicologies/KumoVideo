@@ -1,7 +1,7 @@
 ﻿using libairvidproto;
 using System.Collections.Generic;
 
-namespace aairvid.Model
+namespace libairvidproto.model
 {
     public class Folder : AirVidResource
     {

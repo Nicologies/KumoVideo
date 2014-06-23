@@ -1,7 +1,5 @@
-
-using aairvid.Protocol;
-
-namespace aairvid.Model
+using libairvidproto.types;
+namespace libairvidproto.model
 {
     public class SubtitleStream
     {

@@ -1,6 +1,5 @@
-﻿using aairvid.Model;
-
-namespace aairvid
+﻿
+namespace libairvidproto.model
 {
     public class AirVidResource
     {

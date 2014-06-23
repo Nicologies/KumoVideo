@@ -7,6 +7,7 @@ using Android.OS;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using libairvidproto.model;
 using System;
 using System.Linq;
 namespace aairvid

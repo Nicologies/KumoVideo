@@ -1,5 +1,6 @@
 
 using aairvid.Model;
+using libairvidproto.model;
 
 namespace aairvid
 {

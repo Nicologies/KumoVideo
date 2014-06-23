@@ -1,5 +1,5 @@
 ﻿
-namespace aairvid.Model
+namespace libairvidproto.model
 {
     public class VideoStream : StreamBase
     {

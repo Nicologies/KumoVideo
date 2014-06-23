@@ -21,6 +21,7 @@ using System.Text;
 using Android.Runtime;
 using Android.Util;
 using libairvidproto;
+using libairvidproto.model;
 
 namespace aairvid
 {
@@ -74,7 +75,7 @@ namespace aairvid
 
         public MainActivity()
         {
-            ByteOrderConv.Instance = new ByteOrderConvAdp();
+            LibIniter.Init(new ByteOrderConvAdp());
         }
         
         protected override void OnCreate(Bundle bundle)
