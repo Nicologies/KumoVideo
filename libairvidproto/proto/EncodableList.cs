@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace aairvid.Protocol
+namespace libairvidproto.types
 {
     public class EncodableList : Encodable, IEnumerable<Encodable>
     {

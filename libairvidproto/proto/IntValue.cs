@@ -1,12 +1,11 @@
 ﻿
-namespace aairvid.Protocol
+namespace libairvidproto.types
 {
-
-    public class DoubleValue : KeyValueBase
+    public class IntValue : KeyValueBase
     {
-        public DoubleValue(string key, double v)
+        public IntValue(string key, int v)
             : base(key)
-        {
+        { 
             Value = v;
         }
         public override void Encode(Encoder encoder)
@@ -14,7 +13,7 @@ namespace aairvid.Protocol
             encoder.Encode(this);
         }
 
-        public double Value
+        public int Value
         {
             get;
             private set;

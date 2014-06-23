@@ -1,9 +1,9 @@
-﻿using aairvid.Model;
+﻿using libairvidproto.model;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace aairvid.Protocol
+namespace libairvidproto.types
 {
     public class RootObj : Encodable
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace aairvid.Protocol
+namespace libairvidproto.types
 {
     public class BitratesValue: KeyValueBase
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace aairvid.Protocol
+namespace libairvidproto.types
 {
     public abstract class KeyValueBase : Encodable
     {

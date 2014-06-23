@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace aairvid.Protocol
+namespace libairvidproto.types
 {
     public class BytesValue : KeyValueBase
     {

@@ -1,10 +1,9 @@
-﻿using libairvidproto;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text;
 
-namespace aairvid.Protocol
+namespace libairvidproto.types
 {
     public class Decoder
     {
