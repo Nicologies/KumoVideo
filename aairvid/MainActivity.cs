@@ -188,6 +188,13 @@ namespace aairvid
                 return;
             }
 
+            if (resources.Count == 1 && resources[0] is Folder)
+            {
+                progress.Dismiss();
+                OnFolderSelected(resources[0] as Folder);
+                return;
+            }
+
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
@@ -216,6 +223,13 @@ namespace aairvid
                 return;
             }
 
+            if (resources.Count == 1 && resources[0] is Folder)
+            {
+                progress.Dismiss();
+                OnFolderSelected(resources[0] as Folder);
+                return;
+            }            
+
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
@@ -229,7 +243,12 @@ namespace aairvid
             transaction.Replace(Resource.Id.fragmentPlaceholder, folderFragment);
             transaction.AddToBackStack(null);
             transaction.Commit();
-            progress.Dismiss();            
+            progress.Dismiss();
+
+            if (resources.Count == 1 && resources[0] is Video)
+            {
+                OnMediaSelected(resources[0] as Video, folderFragment);
+            }
         }
 
         public async void OnMediaSelected(Video video, IMediaDetailDisplayer dtDisp)
