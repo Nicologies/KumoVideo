@@ -88,14 +88,23 @@ namespace aairvid
             var ordered = _mediaInfo.Subtitles.OrderByDescending(r => RecentLans.Instance.GetLanWeight(Activity, r.Language.Value));
             adp.AddRange(ordered);
             cmbSubtitle.Adapter = adp;
+
+            var cmbAudioStream = view.FindViewById<Spinner>(Resource.Id.cmbAudioStream);
+            var audioStreamadp = new AudioStreamAdapter(Activity);
+            audioStreamadp.AddRange(_mediaInfo.AudioStreams);
+            cmbAudioStream.Adapter = audioStreamadp;
+            cmbAudioStream.SetSelection(audioStreamadp.GetDefaultAudioStream());
         }
 
         void btnPlay_Click(object sender, EventArgs e)
         {
             var sub = GetSelectedSub();
             RecentLans.Instance.UpdateRecentLan(Activity, sub);
+
+            var audio = GetSelectedAudioStream();
+
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideo(_videoInfo, _mediaInfo, sub);
+            listener.OnPlayVideo(_videoInfo, _mediaInfo, sub, audio);
         }
 
         private SubtitleStream GetSelectedSub()
@@ -112,12 +121,28 @@ namespace aairvid
             }
         }
 
+        private AudioStream GetSelectedAudioStream()
+        {
+            var cmbAudioStream = this.View.FindViewById<Spinner>(Resource.Id.cmbAudioStream);
+            var adp = cmbAudioStream.SelectedItem as AudioStreamJavaAdp;
+            if (adp != null)
+            {
+                return adp.Stream;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         void btnPlayWithConv_Click(object sender, EventArgs e)
         {
             var sub = GetSelectedSub();
             RecentLans.Instance.UpdateRecentLan(Activity, sub);
+
+            var audio = GetSelectedAudioStream();
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideoWithConv(_videoInfo, _mediaInfo, sub);
+            listener.OnPlayVideoWithConv(_videoInfo, _mediaInfo, sub, audio);
         }
     }
 }

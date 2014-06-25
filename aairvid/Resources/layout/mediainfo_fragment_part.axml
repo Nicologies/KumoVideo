@@ -11,18 +11,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
       <Button
-          android:layout_weight=".5"
-          android:text="Play"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/btnPlay" />
+        android:layout_weight=".5"
+        android:text="Play"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnPlay" />
       <Button
-          android:layout_weight=".5"
-          android:layout_marginLeft="6sp"
-          android:text="PlayWithConv"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:id="@+id/btnPlayWithConv" />
+        android:layout_weight=".5"
+        android:layout_marginLeft="6sp"
+        android:text="PlayWithConv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnPlayWithConv" />
     </LinearLayout>
     <TextView
       android:layout_width="wrap_content"
@@ -33,29 +33,50 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content">
       <TextView
-          android:layout_weight=".5"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:id="@+id/tvVideoDuration" />
+        android:layout_weight=".5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvVideoDuration" />
       <TextView
-          android:layout_weight=".5"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:id="@+id/tvVideoSize" />
+        android:layout_weight=".5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvVideoSize" />
     </LinearLayout>
 
     <LinearLayout
       android:orientation="horizontal"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content">
-      <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Subtitle"/>
-      <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/cmbSubtitle"/>
+      <LinearLayout
+        android:layout_weight=".5"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/Subtitle"/>
+        <Spinner
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/cmbSubtitle"/>
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_weight=".5"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/AudioStream"/>
+        <Spinner
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/cmbAudioStream"/>
+      </LinearLayout>
     </LinearLayout>
 
     <aairvid.UIUtils.AspectRatioImageView

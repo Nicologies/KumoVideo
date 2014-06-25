@@ -295,30 +295,30 @@ namespace aairvid
                 _adsLayout.ResetAdsClickStatus();
             }
         }
-        public void OnPlayVideoWithConv(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
+        public void OnPlayVideoWithConv(Video vid, MediaInfo mediaInfo, SubtitleStream sub, AudioStream audio)
         {
             DoPlayVideo(vid.GetPlayWithConvUrl, 
                 vid, mediaInfo,
-                sub, AndroidCodecProfile.GetProfile());
+                sub, audio, AndroidCodecProfile.GetProfile());
         }
-        public void OnPlayVideo(Video vid, MediaInfo mediaInfo, SubtitleStream sub)
+        public void OnPlayVideo(Video vid, MediaInfo mediaInfo, SubtitleStream sub, AudioStream audio)
         {
             DoPlayVideo(vid.GetPlaybackUrl, vid,
-                mediaInfo, sub, 
+                mediaInfo, sub, audio,
                 AndroidCodecProfile.GetProfile());
         }
 
-        private async void DoPlayVideo(Func<IWebClient, MediaInfo, SubtitleStream, ICodecProfile, string> funcGetUrl,
+        private async void DoPlayVideo(Func<IWebClient, MediaInfo, SubtitleStream, AudioStream, ICodecProfile, string> funcGetUrl,
             Video vid,
             MediaInfo mediaInfo,
-            SubtitleStream sub,
+            SubtitleStream sub, AudioStream audio, 
             ICodecProfile codecProfile)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
-            string playbackUrl = await Task.Run(() => funcGetUrl(new WebClientAdp(), mediaInfo, sub, codecProfile));
+            string playbackUrl = await Task.Run(() => funcGetUrl(new WebClientAdp(), mediaInfo, sub,audio, codecProfile));
 
             if (killed)
             {

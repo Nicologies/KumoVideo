@@ -155,8 +155,9 @@ namespace libairvidproto.model
             }
         }
 
-        public string GetPlayWithConvUrl(IWebClient webClient, Video vid, MediaInfo mediaInfo,
-            SubtitleStream sub, ICodecProfile codecProfile)
+        public string GetPlayWithConvUrl(IWebClient webClient, Video vid,
+            MediaInfo mediaInfo,
+            SubtitleStream sub, AudioStream audio, ICodecProfile codecProfile)
         {
             ServiceType serviceType = ServiceType.PlayWithConvService;
 
@@ -165,7 +166,7 @@ namespace libairvidproto.model
                 ActionType.InitPlaybackWithConv,
                 vid.Id, 
                 mediaInfo,
-                sub, codecProfile).GetFormData();
+                sub, audio, codecProfile).GetFormData();
 
             FillWebClientHeader(webClient);
             var response = webClient.UploadData(this._endpoint, reqData);

@@ -98,8 +98,26 @@ namespace aairvid
             var subs = _mediaInfo.Subtitles.OrderByDescending(r => RecentLans.Instance.GetLanWeight(Activity, r.Language.Value));
             adp.AddRange(subs);
             cmbSubtitle.Adapter = adp;
+            
+            var cmbAudioStream = view.FindViewById<Spinner>(Resource.Id.cmbAudioStream);
+            var audioStreamadp = new AudioStreamAdapter(Activity);
+            audioStreamadp.AddRange(_mediaInfo.AudioStreams);
+            cmbAudioStream.Adapter = audioStreamadp;
+            cmbAudioStream.SetSelection(audioStreamadp.GetDefaultAudioStream());
         }
-
+        private AudioStream GetSelectedAudioStream()
+        {
+            var cmbAudioStream = this.View.FindViewById<Spinner>(Resource.Id.cmbAudioStream);
+            var adp = cmbAudioStream.SelectedItem as AudioStreamJavaAdp;
+            if (adp != null)
+            {
+                return adp.Stream;
+            }
+            else
+            {
+                return null;
+            }
+        }
         void btnPlay_Click(object sender, EventArgs e)
         {
             _wasPlaying = true;
@@ -109,7 +127,7 @@ namespace aairvid
             RecentLans.Instance.UpdateRecentLan(Activity, sub);
 
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideo(_videoInfo, _mediaInfo, sub);
+            listener.OnPlayVideo(_videoInfo, _mediaInfo, sub, GetSelectedAudioStream());
         }
 
         private SubtitleStream GetSelectedSub()
@@ -131,7 +149,7 @@ namespace aairvid
             var sub = GetSelectedSub();
             RecentLans.Instance.UpdateRecentLan(Activity, sub);
             var listener = this.Activity as IPlayVideoListener;
-            listener.OnPlayVideoWithConv(_videoInfo, _mediaInfo, sub);
+            listener.OnPlayVideoWithConv(_videoInfo, _mediaInfo, sub, GetSelectedAudioStream());
         }
 
         protected override Android.Views.View InflateView(LayoutInflater inflater, ViewGroup container)

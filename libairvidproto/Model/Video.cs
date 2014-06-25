@@ -16,7 +16,11 @@ namespace libairvidproto.model
             return Server.GetMediaInfo(webClient, Id);
         }
 
-        public string GetPlaybackUrl(IWebClient webClient, MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
+        public string GetPlaybackUrl(IWebClient webClient,
+            MediaInfo mediaInfo,
+            SubtitleStream sub,
+            AudioStream audio, 
+            ICodecProfile profile)
         {
             bool noSub = true;
 
@@ -37,14 +41,20 @@ namespace libairvidproto.model
             }
             if (!noSub)
             {
-                return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, profile);
+                return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, audio, profile);
+            }
+
+            if(audio != null && audio.index != 1)
+            {
+                return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, audio, profile);
             }
             return Server.GetPlaybackUrl(webClient, this);
         }
 
-        public string GetPlayWithConvUrl(IWebClient webClient, MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile profile)
+        public string GetPlayWithConvUrl(IWebClient webClient, MediaInfo mediaInfo, 
+            SubtitleStream sub, AudioStream audio, ICodecProfile profile)
         {
-            return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, profile);
+            return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, audio, profile);
         }
     }
 }

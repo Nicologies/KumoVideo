@@ -92,15 +92,19 @@ namespace libairvidproto.model
         SubtitleStream _sub;
         MediaInfo _mediaInfo;
         ICodecProfile _codecProfile;
+        AudioStream _audio;
         public FormDataGenForPlaybackWithConv(AirVidServer server,
             AirVidServer.ServiceType serviceType,
             AirVidServer.ActionType actType,
-            string itemId, MediaInfo mediaInfo, SubtitleStream sub, ICodecProfile codecProfile)
+            string itemId, MediaInfo mediaInfo, SubtitleStream sub, 
+            AudioStream audio,
+            ICodecProfile codecProfile)
             : base(server, serviceType, actType, itemId)
         {
             _sub = sub;
             _mediaInfo = mediaInfo;
             _codecProfile = codecProfile;
+            _audio = audio;
         }
 
         protected override EncodableList GetParamList()
@@ -108,7 +112,8 @@ namespace libairvidproto.model
             var paramList = new EncodableList();
             var convReq = new RootObj(RootObj.EmObjType.ConversionRequest);
             convReq.Add(new StringValue("itemId", _itemId));
-            convReq.Add(new IntValue("audioStream", 1));
+            var audioIndex = _audio == null? 1 : _audio.index;
+            convReq.Add(new IntValue("audioStream", audioIndex));
             convReq.Add(new BitratesValue("allowedBitratesLocal", _codecProfile.Bitrate.ToString()));
             convReq.Add(new BitratesValue("allowedBitratesRemote", "256"));
             convReq.Add(new DoubleValue("audioBoost", 0));

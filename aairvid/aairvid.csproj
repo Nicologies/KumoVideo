@@ -121,7 +121,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapter\AudioStreamAdapter.cs" />
     <Compile Include="Adapter\SubtitleAdapter.cs" />
+    <Compile Include="AudioStreamJavaAdp.cs" />
     <Compile Include="BonjourServer.cs" />
     <Compile Include="ByteOrderConvAdp.cs" />
     <Compile Include="Fragments\FolderFragment4LargeScreen.cs" />
