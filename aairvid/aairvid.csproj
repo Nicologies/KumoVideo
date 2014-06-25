@@ -131,6 +131,7 @@
     <Compile Include="Fragments\FolderFragmentFactory.cs" />
     <Compile Include="Fragments\FragmentHelper.cs" />
     <Compile Include="Fragments\MediaInfoFragment.cs" />
+    <Compile Include="Fragments\MediaInfoFragmentHelper.cs" />
     <Compile Include="Fragments\PlaybackFragment.cs" />
     <Compile Include="HistoryItem.cs" />
     <Compile Include="IMediaDetailDisplayer.cs" />
