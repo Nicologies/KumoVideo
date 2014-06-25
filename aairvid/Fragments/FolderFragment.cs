@@ -61,12 +61,12 @@ namespace aairvid
 
         public virtual void DisplayDetail(Video vid, MediaInfo mediaInfo)
         {
-            var tag = typeof(VideoInfoFragment).Name;
+            var tag = typeof(MediaInfoFragment).Name;
 
-            var mediaInfoFragment = Activity.FragmentManager.FindFragmentByTag<VideoInfoFragment>(tag);
+            var mediaInfoFragment = Activity.FragmentManager.FindFragmentByTag<MediaInfoFragment>(tag);
             if (mediaInfoFragment == null)
             {
-                mediaInfoFragment = new VideoInfoFragment(mediaInfo, vid);
+                mediaInfoFragment = new MediaInfoFragment(mediaInfo, vid);
             }
 
             FragmentHelper.AddFragment(Activity, mediaInfoFragment, tag);

@@ -12,18 +12,18 @@ using System;
 using System.Linq;
 namespace aairvid
 {
-    public class VideoInfoFragment : Fragment
+    public class MediaInfoFragment : Fragment
     {
         private MediaInfo _mediaInfo;
         private Video _videoInfo;
 
-        public VideoInfoFragment(MediaInfo mediaInfo, Video vid)
+        public MediaInfoFragment(MediaInfo mediaInfo, Video vid)
         {
             this._mediaInfo = mediaInfo;
             _videoInfo = vid;
         }
 
-        public VideoInfoFragment()
+        public MediaInfoFragment()
         {
         }
         public override void OnCreate(Bundle savedInstanceState)

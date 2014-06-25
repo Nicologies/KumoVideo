@@ -130,7 +130,7 @@
     <Compile Include="Fragments\FolderFragment4SmallScreen.cs" />
     <Compile Include="Fragments\FolderFragmentFactory.cs" />
     <Compile Include="Fragments\FragmentHelper.cs" />
-    <Compile Include="Fragments\VideoInfoFragment.cs" />
+    <Compile Include="Fragments\MediaInfoFragment.cs" />
     <Compile Include="Fragments\PlaybackFragment.cs" />
     <Compile Include="HistoryItem.cs" />
     <Compile Include="IMediaDetailDisplayer.cs" />

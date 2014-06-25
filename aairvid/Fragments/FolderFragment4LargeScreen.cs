@@ -84,7 +84,7 @@ namespace aairvid
             imgThumbnail.SetImageBitmap(imageBitmap);
 
             var tvVideoSize = view.FindViewById<TextView>(Resource.Id.tvVideoSize);
-            tvVideoSize.Text = "File Size: " + VideoInfoFragment.ReadableFileSize(_mediaInfo.FileSize);
+            tvVideoSize.Text = "File Size: " + MediaInfoFragment.ReadableFileSize(_mediaInfo.FileSize);
 
             var profile = AndroidCodecProfile.GetProfile();
             var stream = _mediaInfo.VideoStreams[0];
