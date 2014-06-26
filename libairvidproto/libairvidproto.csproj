@@ -63,10 +63,10 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IByteOrderConv.cs" />
-    <Compile Include="IServer.cs" />
-    <Compile Include="IWebClient.cs" />
-    <Compile Include="LibIniter.cs" />
+    <Compile Include="Utils\IByteOrderConv.cs" />
+    <Compile Include="Utils\IServer.cs" />
+    <Compile Include="Utils\IWebClient.cs" />
+    <Compile Include="Utils\LibIniter.cs" />
     <Compile Include="model\AirVidResource.cs" />
     <Compile Include="model\AirVidServer.cs" />
     <Compile Include="model\AudioStream.cs" />
