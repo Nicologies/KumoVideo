@@ -1,20 +1,8 @@
 $ErrorActionPreference = "Stop"
+$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
+Set-Location $scriptPath
 
-function DoLibBuild([string]$projPath, [string]$architech)
-{
-    write-host building $architech version of $projPath -ForegroundColor DarkGreen
-    $config = "/p:Configuration=" + $architech;
-    $collectionOfArgs = @($projPath, "/t:Clean", "/t:Build", "/fileLogger", "/noconsolelogger", "/verbosity:minimal", $config)
-    
-    msbuild $collectionOfArgs | Out-Null
-    
-    if($LastExitCode -ne 0)
-    {
-        Write-Error "Failed to build " + $architech + " version of " + $projPath 
-        return;
-    }
-    write-host sucessfully built $architech version  of $projPath -ForegroundColor DarkGreen
-}
+. .\buildlib.ps1
 
 function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True)
 {
@@ -58,8 +46,7 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
     Move-Item  -Path  $alignedApk -Destination $distApk -Force
 }
 
-$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
-Set-Location $scriptPath
+
 (New-Item -ItemType Directory -Force -Path "dist") | Out-Null
 
 (Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'aairvidpro', 'aairvid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml

@@ -101,6 +101,10 @@
     <BundleAssemblies>True</BundleAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bonjour.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\$(Configuration)\Bonjour.NET.dll</HintPath>
+    </Reference>
     <Reference Include="GooglePlayServicesLib">
       <HintPath>..\Components\googleplayservices-16.0\lib\android\GooglePlayServicesLib.dll</HintPath>
     </Reference>
