@@ -1,8 +1,24 @@
 $ErrorActionPreference = "Stop"
 
-function DoBuild ([string]$architech, [bool]$isFreeVer = $True)
+function DoLibBuild([string]$projPath, [string]$architech)
 {
-    write-host building $architech version -ForegroundColor DarkGreen
+    write-host building $architech version of $projPath -ForegroundColor DarkGreen
+    $config = "/p:Configuration=" + $architech;
+    $collectionOfArgs = @($projPath, "/t:Clean", "/t:Build", "/fileLogger", "/noconsolelogger", "/verbosity:minimal", $config)
+    
+    msbuild $collectionOfArgs | Out-Null
+    
+    if($LastExitCode -ne 0)
+    {
+        Write-Error "Failed to build " + $architech + " version of " + $projPath 
+        return;
+    }
+    write-host sucessfully built $architech version  of $projPath -ForegroundColor DarkGreen
+}
+
+function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True)
+{
+    write-host building $architech version of APK -ForegroundColor DarkGreen
     ApkVerIncrease.exe -m .\aairvid\Properties\AndroidManifest.xml
     $toRemove =".\bin\" + $architech + "\*.apk"
     Remove-Item $toRemove -Force -ErrorAction SilentlyContinue
@@ -21,7 +37,7 @@ function DoBuild ([string]$architech, [bool]$isFreeVer = $True)
         Write-Error "Failed to build " + $architech + " version." 
         return;
     }
-    write-host sucessfully built $architech version -ForegroundColor DarkGreen
+    write-host sucessfully built $architech version  of APK -ForegroundColor DarkGreen
 }
 
 function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
@@ -35,7 +51,7 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
     $apktosign = ".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".apk";
     $signedApk = ".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-Signed.apk";
     $alignedApk = ".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-aligned.apk";
-    (jarsigner -certs -verbose:summary -signedjar $signedApk -sigalg SHA1withRSA -digestalg SHA1 -keystore e:\mydoc\release-key.keystore -storepass xxxxxx -keypass xxxxxx  $apktosign googkey) | Out-Null
+    (jarsigner -certs -verbose:summary -signedjar $signedApk -sigalg SHA1withRSA -digestalg SHA1 -keystore e:\mydoc\release-key.keystore -storepass IlyZrnXl169254 -keypass IlyZrnXl169254  $apktosign googkey) | Out-Null
     (zipalign -v 4 $signedApk $alignedApk) | Out-Null       
     
     $distApk = "dist\com.ezhang.aairvid" + $suffix + ".signed" +$architch+ ".apk"
@@ -48,9 +64,17 @@ Set-Location $scriptPath
 
 (Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'aairvidpro', 'aairvid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml
 
-DoBuild -architech arm
-DoBuild -architech armv7
-DoBuild -architech x86
+DoLibBuild -architech arm -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
+DoLibBuild -architech armv7 -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
+DoLibBuild -architech x86 -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
+
+DoLibBuild -architech arm -projPath ".\libairvidproto\libairvidproto.csproj"
+DoLibBuild -architech armv7 -projPath ".\libairvidproto\libairvidproto.csproj"
+DoLibBuild -architech x86 -projPath ".\libairvidproto\libairvidproto.csproj"
+
+DoApkBuild -architech arm
+DoApkBuild -architech armv7
+DoApkBuild -architech x86
 
 SignAndAlignAndDist -architch arm
 SignAndAlignAndDist -architch armv7
@@ -59,9 +83,9 @@ SignAndAlignAndDist -architch x86
 $c = ((Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace "android:label=`"aairvid`"", "android:label=`"aairvidpro`"" -replace "package=`"com.ezhang.aairvid`"", "package=`"com.ezhang.aairvidpro`"" } )
 Set-Content .\aairvid\Properties\AndroidManifest.xml -Value $c
     
-DoBuild -architech arm -isFreeVer $False
-DoBuild -architech armv7 -isFreeVer $False
-DoBuild -architech x86 -isFreeVer $False
+DoApkBuild -architech arm -isFreeVer $False
+DoApkBuild -architech armv7 -isFreeVer $False
+DoApkBuild -architech x86 -isFreeVer $False
 
 SignAndAlignAndDist -architch arm -isFreeVer $False
 SignAndAlignAndDist -architch armv7 -isFreeVer $False
