@@ -1,5 +1,6 @@
 
 using Android.App;
+using Android.Content;
 using Android.OS;
 
 namespace aairvid
@@ -11,7 +12,8 @@ namespace aairvid
         {
             base.OnCreate(bundle);
 
-            StartActivity(typeof(MainActivity));
+            Intent intent = new Intent(this, typeof(MainActivity));
+            StartActivityForResult(intent, -1);
             this.Finish();
         }
     }
