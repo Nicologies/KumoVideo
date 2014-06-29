@@ -2,12 +2,18 @@ $ErrorActionPreference = "Stop"
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 Set-Location $scriptPath
 
+. .\IncreaseApkVer.ps1
 . .\buildlib.ps1
+
+$manifestPath = ".\aairvid\Properties\AndroidManifest.xml"
 
 function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True)
 {
     write-host building $architech version of APK -ForegroundColor DarkGreen
-    ApkVerIncrease.exe -m .\aairvid\Properties\AndroidManifest.xml
+    $manifest = [IO.File]::ReadAllText($manifestPath)
+    $manifest = IncreaseVerNum($manifest)
+    [IO.File]::WriteAllText($manifestPath, $manifest)
+    
     $toRemove =".\bin\" + $architech + "\*.apk"
     Remove-Item $toRemove -Force -ErrorAction SilentlyContinue
     $config = "/p:Configuration=" + $architech;
@@ -59,6 +65,10 @@ DoLibBuild -architech arm -projPath ".\libairvidproto\libairvidproto.csproj"
 DoLibBuild -architech armv7 -projPath ".\libairvidproto\libairvidproto.csproj"
 DoLibBuild -architech x86 -projPath ".\libairvidproto\libairvidproto.csproj"
 
+$manifest = [IO.File]::ReadAllText($manifestPath)
+$manifest = IncreaseVerName($manifest)
+[IO.File]::WriteAllText($manifestPath, $manifest)
+    
 DoApkBuild -architech arm
 DoApkBuild -architech armv7
 DoApkBuild -architech x86
