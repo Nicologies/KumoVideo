@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ExitPrompt">Press again to exit.</string>
-    <string name="CannotPlay">cannot play this video</string>
-    <string name="ApplicationName">aairvid</string>
-    <string name="ThanksForClickingAds">Thks for ADs. Enjoy your movies!</string>
-    <string name="ThanksForClickingAdsBigDay">Thks for ADs. Enjoy your big day!</string>
+  <string name="ExitPrompt">Press again to exit.</string>
+  <string name="CannotPlay">cannot play this video</string>
+  <string name="ApplicationName">aairvid</string>
+  <string name="ThanksForClickingAds">Thks for ADs. Enjoy your movies!</string>
+  <string name="ThanksForClickingAdsBigDay">Thks for ADs. Enjoy your big day!</string>
   <string name="Subtitle">Subtitle</string>
   <string name="AudioStream">AudioStream</string>
+  <string name="PasswordRequired">Password required</string>
 </resources>

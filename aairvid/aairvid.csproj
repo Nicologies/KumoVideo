@@ -129,6 +129,7 @@
     <Compile Include="Media\SubtitleAdapter.cs" />
     <Compile Include="Media\AudioStreamJavaAdp.cs" />
     <Compile Include="ServerAndFolder\BonjourServer.cs" />
+    <Compile Include="ServerAndFolder\ServerPwdItem.cs" />
     <Compile Include="Utils\ByteOrderConvAdp.cs" />
     <Compile Include="ServerAndFolder\FolderFragment4LargeScreen.cs" />
     <Compile Include="ServerAndFolder\FolderFragment4SmallScreen.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="ServerAndFolder\ServerListAdapter.cs" />
     <Compile Include="ServerAndFolder\ServersFragment.cs" />
     <Compile Include="Media\RecentLans.cs" />
+    <Compile Include="Utils\SHA1Calculator.cs" />
     <Compile Include="Utils\WebClientAdp.cs" />
   </ItemGroup>
   <ItemGroup>

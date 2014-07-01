@@ -7,4 +7,5 @@
   <string name="ThanksForClickingAdsBigDay">感谢点击广告. 祝你好运!</string>
   <string name="Subtitle">字幕</string>
   <string name="AudioStream">音频</string>
+  <string name="PasswordRequired">请输入密码</string>
 </resources>

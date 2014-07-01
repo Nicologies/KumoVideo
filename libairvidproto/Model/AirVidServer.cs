@@ -1,5 +1,6 @@
 ﻿using aairvid.Utils;
 using libairvidproto.types;
+using libairvidproto.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,12 @@ namespace libairvidproto.model
     {
         public Guid _clientId = Guid.NewGuid();
 
-        public string PasswordDigest = "";
+        internal string PasswordDigest = "";
+
+        public void SetPassword(string pwd)
+        {
+            PasswordDigest = PasswordDigestHelper.GetPasswordHexString("S@17" + pwd + "@1r").ToUpperInvariant();
+        }
 
         private IServer _service;
         public string _endpoint;
@@ -91,6 +97,12 @@ namespace libairvidproto.model
                 {
                     var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
+
+                    var err = rootObj.Children.SingleOrDefault(r => r is StringValue && (r as StringValue).Key == "errorMessage") as StringValue;
+                    if (err != null && err.Value != null && err.Value.ToString().ToUpperInvariant().StartsWith("INVALID PASSWORD"))
+                    {
+                        throw new InvalidPasswordException();
+                    }
                     var result = rootObj.GetResources(this, actionType);
                     return result;
                 }

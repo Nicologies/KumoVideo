@@ -63,8 +63,11 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils\BytesToHexString.cs" />
     <Compile Include="Utils\IByteOrderConv.cs" />
+    <Compile Include="Utils\InvalidPasswordException.cs" />
     <Compile Include="Utils\IServer.cs" />
+    <Compile Include="Utils\ISHA1Calculator.cs" />
     <Compile Include="Utils\IWebClient.cs" />
     <Compile Include="Utils\LibIniter.cs" />
     <Compile Include="model\AirVidResource.cs" />
@@ -94,6 +97,7 @@
     <Compile Include="proto\RootObj.cs" />
     <Compile Include="proto\StringValue.cs" />
     <Compile Include="Utils\ICodecProfile.cs" />
+    <Compile Include="Utils\PasswordDigestHelper.cs" />
     <Compile Include="Utils\PropertyHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

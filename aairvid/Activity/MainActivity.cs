@@ -7,15 +7,20 @@ using Android.Gms.Ads;
 using Android.Gms.Analytics;
 using Android.OS;
 using Android.Runtime;
+using Android.Text.Method;
 using Android.Util;
 using Android.Widget;
 using libairvidproto;
 using libairvidproto.model;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using ServerPwdContainer = System.Collections.Generic.Dictionary<string, aairvid.ServerAndFolder.ServerPwdItem>;
 
 namespace aairvid
 {
@@ -28,6 +33,11 @@ namespace aairvid
         )]
     public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener
     {
+        private static ServerPwdContainer _serverPwds = new ServerPwdContainer();
+        private static readonly string SERVER_PWD_FILE_NAME = "./serverpwd.bin";
+        private static readonly string SERVER_PWD_FILE = Path.Combine(
+            System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal),
+            SERVER_PWD_FILE_NAME);
         ServersFragment _serverFragment;
 
         private bool killed = false;
@@ -69,12 +79,30 @@ namespace aairvid
 
         public MainActivity()
         {
-            LibIniter.Init(new ByteOrderConvAdp());
+            LibIniter.Init(new ByteOrderConvAdp(), new SHA1Calculator());
         }
         
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            if (_serverPwds == null || _serverPwds.Count() == 0)
+            {
+                if (File.Exists(SERVER_PWD_FILE))
+                {
+                    using (var stream = File.OpenRead(SERVER_PWD_FILE))
+                    {
+                        var fmt = new BinaryFormatter();
+                        _serverPwds = fmt.Deserialize(stream) as ServerPwdContainer;
+                    }
+                }
+            }
+
+            if (_serverPwds.Count() > 200)
+            {
+                var temp = _serverPwds.OrderBy(r => r.Value.LastUsedTime);
+                _serverPwds = temp.Skip(temp.Count() / 2).ToDictionary(r => r.Key, r => r.Value);
+            }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
@@ -175,33 +203,96 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var resources = await Task.Run(() => selectedServer.GetResources(new WebClientAdp()));
-
-            if (killed)
+            ServerAndFolder.ServerPwdItem pwd;
+            if(_serverPwds.TryGetValue(selectedServer.Name, out pwd))
             {
-                return;
+                selectedServer.SetPassword(pwd.ServerPassword);
             }
 
-            if (resources.Count == 1 && resources[0] is Folder)
+            try
+            {
+                var resources = await Task.Run(() => selectedServer.GetResources(new WebClientAdp()));
+
+                if (killed)
+                {
+                    return;
+                }
+                if (resources.Count == 1 && resources[0] is Folder)
+                {
+                    progress.Dismiss();
+                    OnFolderSelected(resources[0] as Folder);
+                    return;
+                }
+
+                var adp = new AirVidResourcesAdapter(this);
+                adp.AddRange(resources);
+
+                DisplayMetrics dispMetrics = new DisplayMetrics();
+                WindowManager.DefaultDisplay.GetMetrics(dispMetrics);
+
+                var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, dispMetrics);
+                var transaction = FragmentManager.BeginTransaction();
+
+                transaction.Replace(Resource.Id.fragmentPlaceholder, folderFragment);
+                transaction.AddToBackStack(null);
+                transaction.Commit();
+                progress.Dismiss();
+            }
+            catch (InvalidPasswordException)
             {
                 progress.Dismiss();
-                OnFolderSelected(resources[0] as Folder);
-                return;
+
+                EditText passwdView = new EditText(this);
+                passwdView.InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextVariationPassword;
+                passwdView.TransformationMethod = PasswordTransformationMethod.Instance;
+                passwdView.SetMaxLines(1);
+                
+                passwdView.LayoutParameters = new Android.Views.ViewGroup.LayoutParams(-1, 22);
+                AlertDialog passwordDlg = new AlertDialog.Builder(this)
+                    .SetTitle(Resource.String.PasswordRequired)
+                    .SetCancelable(true)
+                    .SetView(passwdView)
+                    .SetPositiveButton(Android.Resource.String.Ok, delegate
+                    {
+                        var passwd = passwdView.Text;
+
+                        OnPasswordInputed(selectedServer, passwd);
+                    })
+                    .Create();
+
+                passwdView.KeyPress += (v, k) => passwdView_KeyPress(v, k, selectedServer, passwordDlg);
+
+                passwordDlg.Show();
             }
+        }
 
-            var adp = new AirVidResourcesAdapter(this);
-            adp.AddRange(resources);
+        private void OnPasswordInputed(AirVidServer selectedServer, string passwd)
+        {
+            selectedServer.SetPassword(passwd);
 
-            DisplayMetrics dispMetrics = new DisplayMetrics();
-            WindowManager.DefaultDisplay.GetMetrics(dispMetrics);
+            OnServerSelected(selectedServer);
+        }
 
-            var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, dispMetrics);
-            var transaction = FragmentManager.BeginTransaction();
+        void passwdView_KeyPress(object sender, Android.Views.View.KeyEventArgs e, AirVidServer server, AlertDialog dlg)
+        {
+            e.Handled = false;
+            if (e.KeyCode == Android.Views.Keycode.Enter && e.Event.Action == Android.Views.KeyEventActions.Down)
+            {
+                e.Handled = true;
 
-            transaction.Replace(Resource.Id.fragmentPlaceholder, folderFragment);
-            transaction.AddToBackStack(null);
-            transaction.Commit();
-            progress.Dismiss();
+                var passwd = (sender as EditText).Text;
+                server.SetPassword(passwd);
+
+                _serverPwds[server.Name] = new ServerAndFolder.ServerPwdItem()
+                {
+                     ServerPassword = passwd,
+                     LastUsedTime = DateTime.Now
+                };
+
+                dlg.Dismiss();
+
+                OnServerSelected(server);
+            }
         }
 
         public async void OnFolderSelected(Folder folder)
@@ -287,7 +378,12 @@ namespace aairvid
                 }
                 else
                 {
-                    exitCounter = 1;                   
+                    using (var stream = File.OpenWrite(SERVER_PWD_FILE))
+                    {
+                        new BinaryFormatter().Serialize(stream, _serverPwds);
+                    }
+
+                    exitCounter = 1;
                     
                     Timer t = new Timer();
                     t.Interval = 5000;
