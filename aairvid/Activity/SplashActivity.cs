@@ -5,7 +5,11 @@ using Android.OS;
 
 namespace aairvid
 {
-    [Activity(Theme = "@style/Theme.Splash", MainLauncher = true, NoHistory = true)]
+    [Activity(Theme = "@style/Theme.Splash"
+        , MainLauncher = true
+        , ScreenOrientation= Android.Content.PM.ScreenOrientation.SensorLandscape
+        , NoHistory = true
+        )]
     public class SplashActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)
