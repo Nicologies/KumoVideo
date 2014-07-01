@@ -1,27 +1,21 @@
 ﻿using aairvid.Adapter;
 using aairvid.Fragments;
-using aairvid.Model;
 using aairvid.UIUtils;
 using aairvid.Utils;
 using Android.App;
-using Android.Content;
 using Android.Gms.Ads;
 using Android.Gms.Analytics;
-using Android.Net;
 using Android.OS;
-using Android.Preferences;
-using Android.Provider;
-using Android.Widget;
-using System.Linq;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Text;
 using Android.Runtime;
 using Android.Util;
+using Android.Widget;
 using libairvidproto;
 using libairvidproto.model;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace aairvid
 {
