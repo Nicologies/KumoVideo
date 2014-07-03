@@ -57,8 +57,8 @@ namespace aairvid
 
             if (_history.Count() > maxHis)
             {
-                _history.OrderBy(r => r.Value.LastPlayDate);
-                _history = _history.Skip(_history.Count()/2).ToDictionary(r => r.Key, r => r.Value);
+                var temp = _history.OrderBy(r => r.Value.LastPlayDate);
+                _history = temp.Skip(temp.Count() / 2).ToDictionary(r => r.Key, r => r.Value);
             }
         }
 
