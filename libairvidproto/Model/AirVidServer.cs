@@ -27,6 +27,14 @@ namespace libairvidproto.model
             private set;
         }
 
+        public string ID
+        {
+            get
+            {
+                return Name + _service.Address + _service.Port.ToString();
+            }
+        }
+
         public enum ServiceType
         {
             Browser,

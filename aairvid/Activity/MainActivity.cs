@@ -204,7 +204,7 @@ namespace aairvid
             progress.Show();
 
             ServerAndFolder.ServerPwdItem pwd;
-            if(_serverPwds.TryGetValue(selectedServer.Name, out pwd))
+            if (_serverPwds.TryGetValue(selectedServer.ID, out pwd))
             {
                 selectedServer.SetPassword(pwd.ServerPassword);
             }
@@ -255,7 +255,6 @@ namespace aairvid
                     .SetPositiveButton(Android.Resource.String.Ok, delegate
                     {
                         var passwd = passwdView.Text;
-
                         OnPasswordInputed(selectedServer, passwd);
                     })
                     .Create();
@@ -283,7 +282,7 @@ namespace aairvid
                 var passwd = (sender as EditText).Text;
                 server.SetPassword(passwd);
 
-                _serverPwds[server.Name] = new ServerAndFolder.ServerPwdItem()
+                _serverPwds[server.ID] = new ServerAndFolder.ServerPwdItem()
                 {
                      ServerPassword = passwd,
                      LastUsedTime = DateTime.Now
