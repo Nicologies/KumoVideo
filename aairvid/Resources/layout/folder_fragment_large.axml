@@ -6,7 +6,7 @@
   <ListView
     android:layout_weight=".7"
       android:divider="@android:color/transparent"
-      android:dividerHeight="2.0sp"
+      android:dividerHeight="6.0dp"
       android:minWidth="25px"
       android:minHeight="40px"
       android:layout_width="fill_parent"
