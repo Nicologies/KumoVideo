@@ -197,7 +197,9 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\values\strings.xml" />
+    <AndroidResource Include="Resources\values\strings.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\Icon.png" />
@@ -210,7 +212,9 @@
       <TransformOnBuild>true</TransformOnBuild>
       <SubType>Designer</SubType>
     </Content>
-    <AndroidResource Include="Resources\layout\server_item.axml" />
+    <AndroidResource Include="Resources\layout\server_item.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <AndroidResource Include="Resources\drawable\folder.png" />
     <AndroidResource Include="Resources\drawable\video.png" />
     <AndroidResource Include="Resources\values\ids.xml" />

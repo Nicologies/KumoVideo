@@ -14,6 +14,7 @@
   <string name="InvalidPort">Invalid Port</string>
   <string name="Edit">Edit</string>
   <string name="Delete">Delete</string>
+  <string name="EmptyNotAllowed">Cannot Be Empty</string>
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>
