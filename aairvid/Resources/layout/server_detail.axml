@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:useDefaultMargins="true"
+  android:alignmentMode="alignBounds"
+  android:columnOrderPreserved="false"
+  android:layout_marginLeft="10dp"
+  android:columnCount="2">
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:layout_gravity="left"
+    android:text="IP"/>
+  <EditText
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:maxLength="45"
+    android:layout_marginLeft="10dp"
+    android:id="@+id/editServerIp"
+    />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:layout_gravity="left"
+    android:text="Port"/>
+  <EditText
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:inputType="number"
+    android:maxLength="5"
+    android:id="@+id/editServerPort"
+    />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:layout_gravity="left"
+    android:text="Password"/>
+  <EditText
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:inputType="textPassword"
+    android:id="@+id/editServerPwd"
+    />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:layout_gravity="left"
+    android:text="Name"/>
+  <EditText
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:inputType="text"
+    android:id="@+id/editServerName"
+    />
+</GridLayout>

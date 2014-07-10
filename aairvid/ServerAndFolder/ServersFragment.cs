@@ -1,19 +1,25 @@
 using aairvid.Model;
+using aairvid.ServerAndFolder;
 using Android.App;
 using Android.Content;
 using Android.Net;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using libairvidproto;
 using Network.Bonjour;
 using Network.ZeroConf;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace aairvid
 {
     public class ServersFragment : Fragment
     {
         ServerListAdapter _servers;
+
+        Dictionary<string, CachedServerItem> _cachedServers = null;
 
         ProgressDialog progressDetectingServer;
 
@@ -23,13 +29,42 @@ namespace aairvid
         {
         }
 
+        public ServersFragment(Dictionary<string, CachedServerItem> cachedServers)
+        {
+            SetServers(cachedServers);
+        }
+
         public override void OnCreate(Bundle savedInstanceState)
         {
+            SetHasOptionsMenu(true);
             base.OnCreate(savedInstanceState);
 
             if (_servers == null)
             {
                 _servers = new ServerListAdapter(this.Activity);
+            }
+
+            if (_cachedServers != null)
+            {
+                foreach (var ser in _cachedServers)
+                {
+                    IServer concretSer;
+                    if (ser.Value.IsManual)
+                    {
+                        concretSer = new ManualServer.ManualServerBuilder()
+                            .SetAddress(ser.Value.Addr)
+                            .SetName(ser.Value.Name)
+                            .SetPort(ser.Value.Port).Build();
+                    }
+                    else
+                    {
+                        concretSer = new BonjourServer(ser.Value.Name, 
+                            ser.Value.Addr,
+                            ser.Value.Port,
+                            ser.Value.ServerPassword);
+                    }
+                    this._servers.AddServer(concretSer);
+                }
             }
         }
 
@@ -54,8 +89,7 @@ namespace aairvid
             lvServers.Adapter = _servers;
             lvServers.ItemClick += lvServers_ItemClick;
 
-            var btnRefreshServer = view.FindViewById<ImageButton>(Resource.Id.btnRefreshServer);
-            btnRefreshServer.Click += btnRefreshServer_Click;
+            RegisterForContextMenu(lvServers);
 
             if (_servers == null)
             {
@@ -78,7 +112,88 @@ namespace aairvid
             return view;
         }
 
-        private void RefreshServers()
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            inflater.Inflate(Resource.Menu.mainmenu, menu);
+            base.OnCreateOptionsMenu(menu, inflater);
+        }
+
+        public override bool OnOptionsItemSelected(Android.Views.IMenuItem item)
+        {
+            // Handle item selection
+            switch (item.ItemId)
+            {
+                case Resource.Id.detect_servers:
+                    {
+                        RefreshServers();
+                        return true;
+                    }
+                case Resource.Id.add_server:
+                    {
+                        LayoutInflater factory = LayoutInflater.From(this.Activity);
+                        View view = factory.Inflate(Resource.Layout.server_detail, null);
+
+                        var editServerPort = view.FindViewById<EditText>(Resource.Id.editServerPort);
+                        editServerPort.Text = "45631";
+                        
+                        AlertDialog addServerDlg = new AlertDialog.Builder(this.Activity)
+                            .SetTitle(Resource.String.AddServer)
+                            .SetCancelable(true)
+                            .SetView(view)
+                            .SetPositiveButton(Android.Resource.String.Ok, (IDialogInterfaceOnClickListener)null)
+                            .Create();
+
+                        addServerDlg.ShowEvent += (obj, args) =>
+                        {
+                            addServerDlg.GetButton((int)Android.Content.DialogButtonType.Positive).Click += (se, arg) =>
+                            {
+                                var editServerName = view.FindViewById<EditText>(Resource.Id.editServerName);
+                                var editServerIp = view.FindViewById<EditText>(Resource.Id.editServerIp);
+                                var editServerPwd = view.FindViewById<EditText>(Resource.Id.editServerPwd);
+
+                                IPAddress ip;
+                                if (!IPAddress.TryParse(editServerIp.Text, out ip))
+                                {
+                                    editServerIp.RequestFocus();
+                                    Toast.MakeText(Activity, Resource.String.InvalidIP, ToastLength.Short).Show();
+                                    return;
+                                }
+                                ushort port = 0;
+                                if (!ushort.TryParse(editServerPort.Text, out port) || port <= 0 || port >= 65535)
+                                {
+                                    editServerPort.RequestFocus();
+                                    Toast.MakeText(Activity, Resource.String.InvalidPort, ToastLength.Short).Show();
+                                    return;
+                                }
+                                if (string.IsNullOrWhiteSpace(editServerName.Text))
+                                {
+                                    editServerName.RequestFocus();
+                                    Toast.MakeText(Activity, Resource.String.EmptyNotAllowed, ToastLength.Short).Show();
+                                    return;
+                                }
+                                var server = new ManualServer.ManualServerBuilder()
+                                    .SetName(editServerName.Text)
+                                    .SetAddress(editServerIp.Text)
+                                    .SetPort(port)
+                                    .SetPassword(editServerPwd.Text)
+                                    .Build();
+
+                                var addedSvr = this._servers.AddServer(server);
+                                this._cachedServers.Add(addedSvr.ID, new CachedServerItem(addedSvr.Server));
+
+                                addServerDlg.Dismiss();
+                            };
+                        };
+
+                        addServerDlg.Show();
+                        return true;
+                    }
+                default:
+                    return base.OnOptionsItemSelected(item);
+            }
+        }
+
+        public void RefreshServers()
         {
             if (_serverDetector != null)
             {
@@ -105,11 +220,6 @@ namespace aairvid
             }
         }
 
-        void btnRefreshServer_Click(object sender, System.EventArgs e)
-        {
-            RefreshServers();
-        }
-
         public override void OnDestroyView()
         {
             if (_serverDetector != null)
@@ -131,6 +241,39 @@ namespace aairvid
         internal void AddServer(IService item)
         {
             this._servers.AddServer(item);
+        }
+
+        internal void SetServers(System.Collections.Generic.Dictionary<string, CachedServerItem> cachedServers)
+        {
+            _cachedServers = cachedServers;
+        }
+
+        public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
+        {
+            if (v.Id == Resource.Id.lvServers)
+            {
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                menu.SetHeaderTitle(_servers[info.Position].Name);
+                string[] menuItems = Resources.GetStringArray(Resource.Array.server_ctx_menu);
+                for (int i = 0; i < menuItems.Length; i++)
+                {
+                    menu.Add(Menu.None, i, i, menuItems[i]);
+                }
+            }
+            base.OnCreateContextMenu(menu, v, menuInfo);
+        }
+
+        public override bool OnContextItemSelected(IMenuItem item)
+        {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.MenuInfo;
+
+            var selectedItem = item.TitleFormatted.ToString();
+
+            if (selectedItem == Resources.GetString(Resource.String.Delete))
+            {
+                this._servers.Remove(info.Position);
+            }
+            return true;
         }
     }
 }

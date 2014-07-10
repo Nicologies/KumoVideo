@@ -129,7 +129,8 @@
     <Compile Include="Media\SubtitleAdapter.cs" />
     <Compile Include="Media\AudioStreamJavaAdp.cs" />
     <Compile Include="ServerAndFolder\BonjourServer.cs" />
-    <Compile Include="ServerAndFolder\ServerPwdItem.cs" />
+    <Compile Include="ServerAndFolder\ManualServer.cs" />
+    <Compile Include="ServerAndFolder\CachedServerItem.cs" />
     <Compile Include="Utils\ByteOrderConvAdp.cs" />
     <Compile Include="ServerAndFolder\FolderFragment4LargeScreen.cs" />
     <Compile Include="ServerAndFolder\FolderFragment4SmallScreen.cs" />
@@ -159,7 +160,9 @@
     <Compile Include="ServerAndFolder\ServersFragment.cs" />
     <Compile Include="Media\RecentLans.cs" />
     <Compile Include="Utils\SHA1Calculator.cs" />
-    <Compile Include="Utils\WebClientAdp.cs" />
+    <Compile Include="Utils\WebClientAdp.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -186,6 +189,7 @@
     <AndroidResource Include="Resources\layout\mediainfo_fragment_part.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\server_detail.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\main.axml">
@@ -216,7 +220,10 @@
     <AndroidResource Include="Resources\drawable\splash.xml" />
     <AndroidResource Include="Resources\values-zh\strings.xml" />
     <AndroidResource Include="Resources\xml\ga_global_tracker.xml" />
+    <AndroidResource Include="Resources\drawable\add_plus.png" />
     <AndroidResource Include="Resources\drawable\refresh.png" />
+    <AndroidResource Include="Resources\menu\mainmenu.xml" />
+    <AndroidResource Include="Resources\drawable\search.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libairvidproto\libairvidproto.csproj">

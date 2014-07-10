@@ -14,17 +14,23 @@ using System.Net;
 
 namespace aairvid
 {
-    public class WebClientAdp : IWebClient
+    public class WebClientAdp : WebClient, IWebClient
     {
-        private WebClient _client = new WebClient();
-        public void AddHeader(string key, string value)
+        void IWebClient.AddHeader(string key, string value)
         {
-            _client.Headers.Add(key, value);
+            Headers.Add(key, value);
         }
 
-        public byte[] UploadData(string endPoint, byte[] reqData)
+        byte[] IWebClient.UploadData(string endPoint, byte[] reqData)
         {
-            return _client.UploadData(endPoint, reqData);
+            return (this as WebClient).UploadData(endPoint, reqData);
+        }
+
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            var request = base.GetWebRequest(address);
+            request.Timeout = 20 * 1000;
+            return request;
         }
     }
 }

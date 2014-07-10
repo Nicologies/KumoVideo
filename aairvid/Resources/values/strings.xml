@@ -8,4 +8,14 @@
   <string name="Subtitle">Subtitle</string>
   <string name="AudioStream">AudioStream</string>
   <string name="PasswordRequired">Password required</string>
+  <string name="AddServer">Add Server</string>
+  <string name="DetectServer">Detect Server</string>
+  <string name="InvalidIP">Invalid IP</string>
+  <string name="InvalidPort">Invalid Port</string>
+  <string name="Edit">Edit</string>
+  <string name="Delete">Delete</string>
+
+  <string-array name="server_ctx_menu">
+    <item>@string/Delete</item>
+  </string-array>
 </resources>

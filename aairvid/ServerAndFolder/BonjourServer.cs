@@ -24,6 +24,22 @@ namespace aairvid
             Address = str;
             Port = addr.Port;
         }
+        public BonjourServer(string name, string addr, ushort port, string pwd)
+        {
+            Name = name;
+            Address = addr;
+            Port = port;
+            Password = pwd;
+        }
+
+        public bool IsManual
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public string Name
         {
             get;
@@ -37,6 +53,12 @@ namespace aairvid
         }
 
         public ushort Port
+        {
+            get;
+            private set;
+        }
+
+        public string Password
         {
             get;
             private set;

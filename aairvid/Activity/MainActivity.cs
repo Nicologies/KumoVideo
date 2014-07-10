@@ -20,21 +20,21 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using ServerPwdContainer = System.Collections.Generic.Dictionary<string, aairvid.ServerAndFolder.ServerPwdItem>;
+using ServerContainer = System.Collections.Generic.Dictionary<string, aairvid.ServerAndFolder.CachedServerItem>;
 
 namespace aairvid
 {
     [Activity(Label = "aairvid"
         , MainLauncher = false
-        ,Icon = "@drawable/icon"
-        ,NoHistory = false
-        ,ScreenOrientation= Android.Content.PM.ScreenOrientation.SensorLandscape
-        ,ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize
+        , Icon = "@drawable/icon"
+        , NoHistory = false
+        , ScreenOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape
+        , ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize
         )]
     public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener
     {
-        private static ServerPwdContainer _serverPwds = new ServerPwdContainer();
-        private static readonly string SERVER_PWD_FILE_NAME = "./serverpwd.bin";
+        private static ServerContainer _cachedServers = new ServerContainer();
+        private static readonly string SERVER_PWD_FILE_NAME = "./servers.bin";
         private static readonly string SERVER_PWD_FILE = Path.Combine(
             System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal),
             SERVER_PWD_FILE_NAME);
@@ -56,6 +56,12 @@ namespace aairvid
         protected override void OnDestroy()
         {
             killed = true;
+
+            using (var stream = File.OpenWrite(SERVER_PWD_FILE))
+            {
+                new BinaryFormatter().Serialize(stream, _cachedServers);
+            }
+
             ResetFullScreenAds();
 
             base.OnDestroy();
@@ -81,27 +87,21 @@ namespace aairvid
         {
             LibIniter.Init(new ByteOrderConvAdp(), new SHA1Calculator());
         }
-        
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
-            if (_serverPwds == null || _serverPwds.Count() == 0)
+            if (_cachedServers == null || _cachedServers.Count() == 0)
             {
                 if (File.Exists(SERVER_PWD_FILE))
                 {
                     using (var stream = File.OpenRead(SERVER_PWD_FILE))
                     {
                         var fmt = new BinaryFormatter();
-                        _serverPwds = fmt.Deserialize(stream) as ServerPwdContainer;
+                        _cachedServers = fmt.Deserialize(stream) as ServerContainer;
                     }
                 }
-            }
-
-            if (_serverPwds.Count() > 200)
-            {
-                var temp = _serverPwds.OrderBy(r => r.Value.LastUsedTime);
-                _serverPwds = temp.Skip(temp.Count() / 2).ToDictionary(r => r.Key, r => r.Value);
             }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -110,7 +110,7 @@ namespace aairvid
 
             InitGATrackers();
 
-            SetContentView(Resource.Layout.main);            
+            SetContentView(Resource.Layout.main);
 
             if (FragmentManager.BackStackEntryCount == 0)
             {
@@ -119,14 +119,18 @@ namespace aairvid
                 _serverFragment = FragmentManager.FindFragmentByTag<ServersFragment>(tag);
                 if (_serverFragment == null)
                 {
-                    _serverFragment = new ServersFragment();
+                    _serverFragment = new ServersFragment(_cachedServers);
+                }
+                else
+                {
+                    _serverFragment.SetServers(_cachedServers);
                 }
 
                 FragmentHelper.AddFragment(this, _serverFragment, tag);
             }
             ReloadInterstitialAd();
         }
-        
+
         private void InitGATrackers()
         {
             if (!_trackers.ContainsKey(EmTraker.GlobalTracker))
@@ -163,7 +167,7 @@ namespace aairvid
         {
             ReportException(e.ExceptionObject.ToString());
         }
-        
+
         private void LoadAds()
         {
 #if NON_FREE_VERSION
@@ -187,7 +191,7 @@ namespace aairvid
             if (!isPlaying || AdsLayout.SHOW_ADS_WHEN_PLAYING)
             {
                 LoadAds();
-            }            
+            }
         }
 
         private bool IsPlaying()
@@ -203,10 +207,14 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            ServerAndFolder.ServerPwdItem pwd;
-            if (_serverPwds.TryGetValue(selectedServer.ID, out pwd))
+            ServerAndFolder.CachedServerItem pwd;
+            if (_cachedServers.TryGetValue(selectedServer.ID, out pwd))
             {
                 selectedServer.SetPassword(pwd.ServerPassword);
+            }
+            else
+            {
+                _cachedServers.Add(selectedServer.ID, new ServerAndFolder.CachedServerItem(selectedServer.Server));
             }
 
             try
@@ -246,7 +254,7 @@ namespace aairvid
                 passwdView.InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextVariationPassword;
                 passwdView.TransformationMethod = PasswordTransformationMethod.Instance;
                 passwdView.SetMaxLines(1);
-                
+
                 passwdView.LayoutParameters = new Android.Views.ViewGroup.LayoutParams(-1, 22);
                 AlertDialog passwordDlg = new AlertDialog.Builder(this)
                     .SetTitle(Resource.String.PasswordRequired)
@@ -269,6 +277,12 @@ namespace aairvid
         {
             selectedServer.SetPassword(passwd);
 
+            _cachedServers[selectedServer.ID] = new ServerAndFolder.CachedServerItem(selectedServer.Server)
+            {
+                ServerPassword = passwd,
+                LastUsedTime = DateTime.Now
+            };            
+
             OnServerSelected(selectedServer);
         }
 
@@ -280,17 +294,8 @@ namespace aairvid
                 e.Handled = true;
 
                 var passwd = (sender as EditText).Text;
-                server.SetPassword(passwd);
-
-                _serverPwds[server.ID] = new ServerAndFolder.ServerPwdItem()
-                {
-                     ServerPassword = passwd,
-                     LastUsedTime = DateTime.Now
-                };
-
+                OnPasswordInputed(server, passwd);
                 dlg.Dismiss();
-
-                OnServerSelected(server);
             }
         }
 
@@ -312,7 +317,7 @@ namespace aairvid
                 progress.Dismiss();
                 OnFolderSelected(resources[0] as Folder);
                 return;
-            }            
+            }
 
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
@@ -349,7 +354,7 @@ namespace aairvid
             }
             dtDisp.DisplayDetail(video, mediaInfo);
 
-            progress.Dismiss();            
+            progress.Dismiss();
         }
 
         public override bool DispatchTouchEvent(Android.Views.MotionEvent ev)
@@ -377,13 +382,8 @@ namespace aairvid
                 }
                 else
                 {
-                    using (var stream = File.OpenWrite(SERVER_PWD_FILE))
-                    {
-                        new BinaryFormatter().Serialize(stream, _serverPwds);
-                    }
-
                     exitCounter = 1;
-                    
+
                     Timer t = new Timer();
                     t.Interval = 5000;
                     t.Elapsed += (sender, arg) => this.RunOnUiThread(() => exitCounter = 0);
@@ -405,7 +405,7 @@ namespace aairvid
         }
         public void OnPlayVideoWithConv(Video vid, MediaInfo mediaInfo, SubtitleStream sub, AudioStream audio)
         {
-            DoPlayVideo(vid.GetPlayWithConvUrl, 
+            DoPlayVideo(vid.GetPlayWithConvUrl,
                 vid, mediaInfo,
                 sub, audio, AndroidCodecProfile.GetProfile());
         }
@@ -419,19 +419,19 @@ namespace aairvid
         private async void DoPlayVideo(Func<IWebClient, MediaInfo, SubtitleStream, AudioStream, ICodecProfile, string> funcGetUrl,
             Video vid,
             MediaInfo mediaInfo,
-            SubtitleStream sub, AudioStream audio, 
+            SubtitleStream sub, AudioStream audio,
             ICodecProfile codecProfile)
         {
             ProgressDialog progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
-            string playbackUrl = await Task.Run(() => funcGetUrl(new WebClientAdp(), mediaInfo, sub,audio, codecProfile));
+            string playbackUrl = await Task.Run(() => funcGetUrl(new WebClientAdp(), mediaInfo, sub, audio, codecProfile));
 
             if (killed)
             {
                 return;
-            }            
+            }
 
             var tag = typeof(PlaybackFragment).Name;
 
@@ -444,14 +444,14 @@ namespace aairvid
             {
                 playbackFragment.SetPlaybackSource(playbackUrl, vid.Id, mediaInfo);
             }
-            
+
             var transaction = FragmentManager.BeginTransaction();
 
             transaction.Replace(Resource.Id.fragmentPlaceholder, playbackFragment, tag);
             transaction.AddToBackStack(tag);
             transaction.Commit();
             progress.Dismiss();
-        }        
+        }
 
         public void OnVideoNotPlayable()
         {
@@ -490,9 +490,9 @@ namespace aairvid
                 .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
                 .AddTestDevice("61B125201311D25A92623D5862F94D9A")
                 .Build();
-            
+
             _fullScreenAds.AdListener = new InterstitialAdImpl(_fullScreenAds);
-            
+
             _fullScreenAds.LoadAd(adRequest);
 #endif
         }

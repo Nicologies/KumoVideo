@@ -8,4 +8,9 @@
   <string name="Subtitle">字幕</string>
   <string name="AudioStream">音频</string>
   <string name="PasswordRequired">请输入密码</string>
+  <string name="AddServer">添加服务器</string>
+  <string name="DetectServer">扫描服务器</string>
+  <string name="InvalidIP">无效的IP</string>
+  <string name="InvalidPort">无效的端口号</string>
+  <string name="EmptyNotAllowed">不能为空</string>
 </resources>

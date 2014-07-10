@@ -3,6 +3,7 @@ using Android.Content;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using libairvidproto;
 using libairvidproto.model;
 using Network.ZeroConf;
 using System.Collections.Generic;
@@ -42,18 +43,30 @@ namespace aairvid
                 .FindViewById<TextView>(Resource.Id.tvServerName);
 
             var item = this[position];
-            serverName.Text = item.Name;
+            serverName.Text = item.Name + "@" + item.Server.Address + ":" + item.Server.Port;
             return convertView;
         }
 
         public void AddServer(IService service)
         {
-            var svr = new AirVidServer(new BonjourServer(service));
-            if (_servers.FirstOrDefault(r => r.Name == svr.Name) == null)
+            AddServer(new BonjourServer(service));
+        }
+
+        public AirVidServer AddServer(IServer server)
+        {
+            var svr = new AirVidServer(server);
+            if (_servers.FirstOrDefault(r => r.ID == svr.ID) == null)
             {
                 _servers.Add(svr);
             }
             this.NotifyDataSetChanged();
+            return svr;
+        }
+
+        public bool Exists(IService server)
+        {
+            var toSearch = new AirVidServer(new BonjourServer(server));
+            return _servers.Exists(r => r.ID == toSearch.ID);
         }
 
         public override AirVidServer this[int position]
@@ -71,6 +84,12 @@ namespace aairvid
         internal void AddServer(IEnumerable<AirVidServer> enumerable)
         {
             _servers.AddRange(enumerable);
+        }
+
+        internal void Remove(int p)
+        {
+            _servers.RemoveAt(p);
+            NotifyDataSetChanged();
         }
     }
 }

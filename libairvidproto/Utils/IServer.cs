@@ -21,5 +21,16 @@ namespace libairvidproto
         {
             get;
         }
+
+        /// <summary>
+        /// indicates if it's a manually added server.
+        /// </summary>
+        bool IsManual
+        {
+            get;
+        }
+
+        string Password
+        { get; }
     }
 }

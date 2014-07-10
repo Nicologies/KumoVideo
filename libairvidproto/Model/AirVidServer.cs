@@ -20,6 +20,13 @@ namespace libairvidproto.model
         }
 
         private IServer _service;
+        public IServer Server
+        {
+            get
+            {
+                return _service;
+            }
+        }
         public string _endpoint;
         public string Name
         {
@@ -69,6 +76,11 @@ namespace libairvidproto.model
         {
             _service = server;
             Name = server.Name;
+
+            if (!string.IsNullOrWhiteSpace(server.Password))
+            {
+                SetPassword(server.Password);
+            }
 
             _endpoint = string.Format("http://{0}:{1}/service", _service.Address, _service.Port);
         }
