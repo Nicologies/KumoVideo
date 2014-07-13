@@ -186,7 +186,9 @@
     </AndroidResource>
     <AndroidResource Include="Resources\layout\server_detail.axml" />
     <AndroidResource Include="Resources\layout\settings.axml" />
-    <AndroidResource Include="Resources\values\bitrates.xml" />
+    <AndroidResource Include="Resources\values\bitrates.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\main.axml">

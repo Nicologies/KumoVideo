@@ -2,8 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="@string/BitRate">
-      <aairvid.Settings.ListPreferenceShowSummary
-          android:key="BitRateWifi"
+        <aairvid.Settings.ListPreferenceShowSummary
+            android:key="KeyBitRateWifi"
             android:title="@string/BitRateWifi"
             android:entries="@array/BitratesEntries"
             android:entryValues="@array/BitratesEntryValues"

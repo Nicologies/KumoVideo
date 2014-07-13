@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using System.Text.RegularExpressions;
 using Android.Util;
+using Android.Preferences;
 
 namespace aairvid.Utils
 {
@@ -22,7 +23,8 @@ namespace aairvid.Utils
             if (profile == null)
             {
                 profile = new AndroidCodecProfile();
-                profile.Bitrate = 1024;
+                var pref = PreferenceManager.GetDefaultSharedPreferences(activity);
+				profile.Bitrate = int.Parse(pref.GetString("KeyBitRateWifi", "1536"));
 
                 try
                 {
