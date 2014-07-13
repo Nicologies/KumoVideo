@@ -7,8 +7,8 @@
     android:minWidth="25px"
     android:minHeight="25px">
     <VideoView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/playbackView"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_centerInParent="true" />
