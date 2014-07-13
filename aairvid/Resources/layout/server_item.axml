@@ -4,12 +4,13 @@
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:orientation="vertical"
-  android:padding="2sp"
+  android:padding="2dp"
   android:background="@drawable/round_corner_bkground">
   <TextView  
-    android:textSize="18sp"
-    android:minHeight="24sp"
-    android:layout_marginLeft="4sp"
+    android:textSize="18dp"
+    android:minHeight="24dp"
+    android:padding="2dp"
+    android:layout_marginLeft="4dp"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:gravity="center_vertical"
