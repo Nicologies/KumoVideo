@@ -13,4 +13,7 @@
   <string name="InvalidIP">无效的IP</string>
   <string name="InvalidPort">无效的端口号</string>
   <string name="EmptyNotAllowed">不能为空</string>
+  <string name="Settings">设置</string>
+  <string name="BitRate">码率</string>
+  <string name="BitRateWifi">使用WIFI时的码率</string>
 </resources>

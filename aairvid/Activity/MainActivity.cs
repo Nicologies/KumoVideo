@@ -31,7 +31,7 @@ namespace aairvid
         , ScreenOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape
         , ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize
         )]
-    public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener
+	public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener, IPopupSettings
     {
         private static ServerContainer _cachedServers = new ServerContainer();
         private static readonly string SERVER_PWD_FILE_NAME = "./servers.bin";
@@ -496,6 +496,22 @@ namespace aairvid
             _fullScreenAds.LoadAd(adRequest);
 #endif
         }
+
+		#region IPopupSettings implementation
+
+
+		public void PopupSettings ()
+		{
+			var tag = typeof(SettingsFragment).Name;
+			var settingsFragment = FragmentManager.FindFragmentByTag (tag);
+			if (settingsFragment == null) {
+				settingsFragment = new SettingsFragment ();
+			}
+			FragmentHelper.AddFragment (this, settingsFragment, tag);
+		}
+
+		#endregion
+
     }
 
     public class InterstitialAdImpl : AdListener, IDisposable

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/BitRate">
+      <aairvid.Settings.ListPreferenceShowSummary
+          android:key="BitRateWifi"
+            android:title="@string/BitRateWifi"
+            android:entries="@array/BitratesEntries"
+            android:entryValues="@array/BitratesEntryValues"
+            android:defaultValue="1536" />
+    </PreferenceCategory>
+</PreferenceScreen>

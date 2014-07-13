@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<resources>
+  <string-array name="BitratesEntries">
+    <item>64Kb</item>
+    <item>256Kb</item>
+    <item>384Kb</item>
+    <item>512Kb</item>
+    <item>768Kb</item>
+    <item>1024Kb</item>
+    <item>1280Kb</item>
+    <item>1536Kb</item>
+    <item>2048Kb</item>
+    <item>2560Kb</item>
+    <item>5120Kb</item>
+  </string-array>
+
+  <string-array name="BitratesEntryValues">
+      <item>64</item>
+      <item>256</item>
+      <item>384</item>
+      <item>512</item>
+      <item>768</item>
+      <item>1024</item>
+      <item>1280</item>
+      <item>1536</item>
+      <item>2048</item>
+      <item>2560</item>
+      <item>5120</item>
+  </string-array>
+</resources>
+

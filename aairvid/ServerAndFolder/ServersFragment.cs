@@ -188,6 +188,12 @@ namespace aairvid
                         addServerDlg.Show();
                         return true;
                     }
+			case Resource.Id.settings:
+				{
+					var pop = Activity as IPopupSettings;
+					pop.PopupSettings();
+					return true;
+				}
                 default:
                     return base.OnOptionsItemSelected(item);
             }

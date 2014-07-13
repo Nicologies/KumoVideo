@@ -15,6 +15,9 @@
   <string name="Edit">Edit</string>
   <string name="Delete">Delete</string>
   <string name="EmptyNotAllowed">Cannot Be Empty</string>
+  <string name="Settings">Settings</string>
+  <string name="BitRate">Bit Rate</string>
+  <string name="BitRateWifi">Bit Rate When Using WIFI</string>
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>
