@@ -116,6 +116,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ads\InterstitialAdImpl.cs" />
     <Compile Include="Media\AudioStreamAdapter.cs" />
     <Compile Include="Media\SubtitleAdapter.cs" />
     <Compile Include="Media\AudioStreamJavaAdp.cs" />
@@ -141,7 +142,7 @@
     <Compile Include="ServerAndFolder\ResourcesAdapter.cs" />
     <Compile Include="Activity\SplashActivity.cs" />
     <Compile Include="Media\SubtitleStreamJavaAdp.cs" />
-    <Compile Include="Utils\AdsLayout.cs" />
+    <Compile Include="Ads\AdsLayout.cs" />
     <Compile Include="Media\AspectRatioImageView.cs" />
     <Compile Include="Utils\ScreenProperty.cs" />
     <Compile Include="Media\AndroidCodecProfile.cs" />

@@ -1,5 +1,5 @@
+using aairvid.Ads;
 using aairvid.Model;
-using aairvid.UIUtils;
 using Android.App;
 using Android.Content;
 using Android.OS;

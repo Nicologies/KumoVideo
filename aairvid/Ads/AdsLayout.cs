@@ -1,15 +1,15 @@
-﻿using Android.Gms.Ads;
-using Android.Content;
+﻿using Android.Content;
+using Android.Gms.Ads;
 using Android.Preferences;
 using Android.Util;
-using Android.Widget;
 using Android.Views;
+using Android.Widget;
 using System;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace aairvid.UIUtils
+namespace aairvid.Ads
 {
     public class AdsLayout : LinearLayout
     {
