@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
@@ -221,7 +222,24 @@ namespace aairvid
 
             try
             {
-                var resources = await Task.Run(() => selectedServer.GetResources(new WebClientAdp()));
+                var resources = await Task <List<AirVidResource>>.Run(() =>
+                {
+                    try
+                    {
+                        return selectedServer.GetResources(new WebClientAdp());
+                    }
+                    catch (System.Net.WebException ex)
+                    {
+                        ShowConnectionFailure();
+                        return new List<AirVidResource>();
+                    }
+                });
+
+                if (resources.Count() == 0)
+                {
+                    progress.Dismiss();
+                    return;
+                }
 
                 if (killed)
                 {
@@ -275,6 +293,11 @@ namespace aairvid
             }
         }
 
+        private void ShowConnectionFailure()
+        {
+            RunOnUiThread(() => Toast.MakeText(this, Resource.String.CannotConnect, ToastLength.Short).Show());
+        }
+
         private void OnPasswordInputed(AirVidServer selectedServer, string passwd)
         {
             selectedServer.SetPassword(passwd);
@@ -307,7 +330,24 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var resources = await Task.Run(() => folder.GetResources(new WebClientAdp()));
+            var resources = await Task<List<AirVidResource>>.Run(() =>
+            {
+                try
+                {
+                    return folder.GetResources(new WebClientAdp()); 
+                }
+                catch (System.Net.WebException ex)
+                {
+                    ShowConnectionFailure();
+                    return new List<AirVidResource>();
+                }                
+            });
+
+            if (resources.Count == 0)
+            {
+                progress.Dismiss();
+                return;
+            }
 
             if (killed)
             {
@@ -348,7 +388,24 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var mediaInfo = await Task.Run(() => video.GetMediaInfo(new WebClientAdp()));
+            var mediaInfo = await Task <MediaInfo>.Run(() =>
+            {
+                try
+                {
+                    return video.GetMediaInfo(new WebClientAdp());
+                }
+                catch (System.Net.WebException ex)
+                {
+                    ShowConnectionFailure();
+                    return null;
+                }                
+            });
+
+            if (mediaInfo == null)
+            {
+                progress.Dismiss();
+                return;
+            }
 
             if (killed)
             {
@@ -428,7 +485,24 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            string playbackUrl = await Task.Run(() => funcGetUrl(new WebClientAdp(), mediaInfo, sub, audio, codecProfile));
+            string playbackUrl = await Task<string>.Run(() =>
+            {
+                try
+                {
+                    return funcGetUrl(new WebClientAdp(), mediaInfo, sub, audio, codecProfile);
+                }
+                catch (System.Net.WebException ex)
+                {
+                    ShowConnectionFailure();
+                    return null;
+                }    
+            });
+
+            if (string.IsNullOrEmpty(playbackUrl))
+            {
+                progress.Dismiss();
+                return;
+            }
 
             if (killed)
             {
