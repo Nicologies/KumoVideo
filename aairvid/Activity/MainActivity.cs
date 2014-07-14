@@ -31,7 +31,9 @@ namespace aairvid
         , ScreenOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape
         , ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize
         )]
-	public class MainActivity : Activity, IResourceSelectedListener, IPlayVideoListener, IServerSelectedListener, IVideoNotPlayableListener, IPopupSettings
+	public class MainActivity : Activity, IResourceSelectedListener,
+        IPlayVideoListener, IServerSelectedListener, 
+        IVideoNotPlayableListener
     {
         private static ServerContainer _cachedServers = new ServerContainer();
         private static readonly string SERVER_PWD_FILE_NAME = "./servers.bin";
@@ -497,23 +499,44 @@ namespace aairvid
 #endif
         }
 
-		#region IPopupSettings implementation
-
-
-		public void PopupSettings ()
+		public void PopupSettingsFragment ()
 		{
-			var tag = typeof(SettingsFragment).Name;
-			var settingsFragment = FragmentManager.FindFragmentByTag (tag);
-			if (settingsFragment == null) {
-				settingsFragment = new SettingsFragment ();
-			}
-			FragmentHelper.AddFragment (this, settingsFragment, tag);
+            if (!IsShowingSettings())
+            {
+                var tag = typeof(SettingsFragment).Name;
+                var settingsFragment = FragmentManager.FindFragmentByTag(tag);
+                if (settingsFragment == null)
+                {
+                    settingsFragment = new SettingsFragment();
+                }
+                FragmentHelper.AddFragment(this, settingsFragment, tag);
+            }
 		}
 
-		#endregion
+        public override bool OnCreateOptionsMenu(Android.Views.IMenu menu)
+        {
+            this.MenuInflater.Inflate(Resource.Menu.mainmenu, menu);
+            return base.OnCreateOptionsMenu(menu);
+        }
+        public override bool OnOptionsItemSelected(Android.Views.IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Resource.Id.settings:
+                    {
+                        PopupSettingsFragment();
+                        return true;
+                    }
+                default:
+                    return base.OnOptionsItemSelected(item);
+            }
+        }
 
-    }
-
-    
+        private bool IsShowingSettings()
+        {
+            var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
+            return fragment != null && fragment.Name == typeof(SettingsFragment).Name;
+        }
+    }    
 }
 

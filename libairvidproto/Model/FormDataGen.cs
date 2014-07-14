@@ -115,11 +115,29 @@ namespace libairvidproto.model
             var audioIndex = _audio == null? 1 : _audio.index;
             convReq.Add(new IntValue("audioStream", audioIndex));
             convReq.Add(new BitratesValue("allowedBitratesLocal", _codecProfile.Bitrate.ToString()));
-            convReq.Add(new BitratesValue("allowedBitratesRemote", "256"));
+            convReq.Add(new BitratesValue("allowedBitratesRemote", _codecProfile.Bitrate.ToString()));
             convReq.Add(new DoubleValue("audioBoost", 0));
             convReq.Add(new IntValue("cropRight", 0));
             convReq.Add(new IntValue("cropLeft", 0));
-            convReq.Add(new IntValue("resolutionWidth", _codecProfile.DeviceWidth));
+            var vidStream = _mediaInfo.VideoStreams.First();
+            var proposalWidth = Math.Min(_codecProfile.Width, vidStream.Width);
+            var ratio = (float)vidStream.Width / (float)vidStream.Height;
+            var proposalHeight = Math.Min(_codecProfile.Height, vidStream.Height);
+
+            var width = proposalWidth;
+            var height = proposalHeight;
+            var desiredWidth = (int)(proposalHeight * ratio);
+            if (desiredWidth > proposalWidth)
+            {
+                height = (int)((float)proposalWidth / ratio);
+            }
+            else
+            {
+                width = desiredWidth;
+            }
+            System.Diagnostics.Debug.WriteLine("{0} * {1}", width, height);
+            
+            convReq.Add(new IntValue("resolutionWidth", width));
             convReq.Add(new IntValue("videoStream", 0));
             convReq.Add(new IntValue("cropBottom", 0));
             convReq.Add(new IntValue("cropTop", 0));
@@ -132,12 +150,6 @@ namespace libairvidproto.model
             {
                 convReq.Add(new EncodableValue("subtitleInfo", _sub.SubtitleInfoFromServer));
             }
-
-            var vidStream = _mediaInfo.VideoStreams.First();
-
-            var height = Math.Min(
-                (int)((float)_codecProfile.DeviceWidth * (float)vidStream.Height / (float)vidStream.Width),
-                _codecProfile.DeviceHeight);
 
             convReq.Add(new DoubleValue("offset", 0.0));
             convReq.Add(new IntValue("resolutionHeight", height));

@@ -123,7 +123,9 @@
     <Compile Include="ServerAndFolder\BonjourServer.cs" />
     <Compile Include="ServerAndFolder\ManualServer.cs" />
     <Compile Include="ServerAndFolder\CachedServerItem.cs" />
+    <Compile Include="Settings\EditTextPreferenceShowSummary.cs" />
     <Compile Include="Settings\ListPreferenceShowSummary.cs" />
+    <Compile Include="Settings\SettingsHelper.cs" />
     <Compile Include="Utils\ByteOrderConvAdp.cs" />
     <Compile Include="ServerAndFolder\FolderFragment4LargeScreen.cs" />
     <Compile Include="ServerAndFolder\FolderFragment4SmallScreen.cs" />
@@ -157,7 +159,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Settings\SettingsFragment.cs" />
-    <Compile Include="Settings\IPopupSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -185,7 +186,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\server_detail.axml" />
-    <AndroidResource Include="Resources\layout\settings.axml" />
+    <AndroidResource Include="Resources\layout\settings.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <AndroidResource Include="Resources\values\bitrates.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -221,14 +224,19 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\splash.xml" />
-    <AndroidResource Include="Resources\values-zh\strings.xml" />
+    <AndroidResource Include="Resources\values-zh\strings.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <AndroidResource Include="Resources\xml\ga_global_tracker.xml" />
     <AndroidResource Include="Resources\drawable\add_plus.png" />
-    <AndroidResource Include="Resources\menu\mainmenu.xml">
+    <AndroidResource Include="Resources\menu\serversmenu.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\search.png" />
     <AndroidResource Include="Resources\drawable\settings.png" />
+    <AndroidResource Include="Resources\menu\mainmenu.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libairvidproto\libairvidproto.csproj">

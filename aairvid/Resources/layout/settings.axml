@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/BitRate">
+        android:title="@string/ConversionSetting">
         <aairvid.Settings.ListPreferenceShowSummary
-            android:key="KeyBitRateWifi"
+            android:key="@string/KeyBitRateWifi"
             android:title="@string/BitRateWifi"
             android:entries="@array/BitratesEntries"
-            android:entryValues="@array/BitratesEntryValues"
-            android:defaultValue="1536" />
+            android:entryValues="@array/BitratesEntryValues"/>
+      
+      <aairvid.Settings.ListPreferenceShowSummary
+            android:key="@string/KeyBitRate3G"
+            android:title="@string/BitRate3G"
+            android:entries="@array/BitratesEntries"
+            android:entryValues="@array/BitratesEntryValues"/>
+
+      <aairvid.Settings.EditTextPreferenceShowSummary
+            android:key="@string/KeyCodecWidthWifi"
+            android:inputType="number"
+            android:title="@string/HorizontalResolutionWifi"/>
+
+      <aairvid.Settings.EditTextPreferenceShowSummary
+            android:key="@string/KeyCodecHeightWifi"
+            android:inputType="number"
+            android:title="@string/VerticalResolutionWifi"/>
+
+      <aairvid.Settings.EditTextPreferenceShowSummary
+            android:key="@string/KeyCodecWidth3G"
+            android:inputType="number"
+            android:title="@string/HorizontalResolution3G"/>
+
+      <aairvid.Settings.EditTextPreferenceShowSummary
+            android:key="@string/KeyCodecHeight3G"
+            android:inputType="number"
+            android:title="@string/VerticalResolution3G"/>
     </PreferenceCategory>
+
 </PreferenceScreen>

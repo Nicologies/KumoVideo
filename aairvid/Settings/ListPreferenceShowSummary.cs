@@ -14,25 +14,37 @@ namespace aairvid.Settings
         public ListPreferenceShowSummary(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
+            Init();
         }
 
         public ListPreferenceShowSummary(Context context)
             : base(context)
         {
+            Init();
         }
 
+        private void Init()
+        {
+            this.PreferenceChange += ListPreferenceShowSummary_PreferenceChange;
+        }
+
+        void ListPreferenceShowSummary_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
+        {
+            e.Preference.Summary = e.NewValue.ToString();
+            this._summary = e.Preference.Summary;
+        }
+
+        private string _summary = "";
         public override Java.Lang.ICharSequence SummaryFormatted
         {
             get
             {
-                if (this.Entry != null)
-                {
-                    return new Java.Lang.String("Current Value: " + this.Entry);
-                }
-                return new Java.Lang.String("");
+                _summary = this.Entry;
+                return new Java.Lang.String(_summary);
             }
             set
             {
+                _summary = value.ToString();
                 base.SummaryFormatted = value;
             }
         }

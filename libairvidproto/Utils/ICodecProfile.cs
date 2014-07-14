@@ -3,11 +3,11 @@ namespace aairvid.Utils
 {
     public interface ICodecProfile
     {
-        int DeviceHeight
+        int Height
         {
             get;
         }
-        int DeviceWidth
+        int Width
         {
             get;
         }
@@ -16,5 +16,11 @@ namespace aairvid.Utils
         {
             get;
         }
+    }
+
+    public static class EmDefaultBitrate
+    {
+        public static readonly int WifiRate = 1536;
+        public static readonly int MobileDataRate = 384;
     }
 }

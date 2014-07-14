@@ -16,10 +16,25 @@
   <string name="Delete">Delete</string>
   <string name="EmptyNotAllowed">Cannot Be Empty</string>
   <string name="Settings">Settings</string>
-  <string name="BitRate">Bit Rate</string>
+  <string name="ConversionSetting">Conversion Setting</string>
   <string name="BitRateWifi">Bit Rate When Using WIFI</string>
+  <string name="BitRate3G">Bit Rate When Using Mobile Data</string>
+  <string name="HorizontalResolutionWifi">Horizontal Resolution(WIFI)</string>
+  <string name="VerticalResolutionWifi">Vertical Resolution(WIFI)</string>
+  <string name="HorizontalResolution3G">Horizontal Resolution(Mobile Data)</string>
+  <string name="VerticalResolution3G">Vertical Resolution(Mobile Data)</string>
+  <string name="CannotConnect">Cannot Connect To Server</string>
+  
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>
   </string-array>
+  
+  <!--No need to translate-->
+  <string name="KeyBitRateWifi">KeyBitRateWifi</string>
+  <string name="KeyBitRate3G">KeyBitRate3G</string>
+  <string name="KeyCodecWidthWifi">KeyCodecWidthWifi</string>
+  <string name="KeyCodecHeightWifi">KeyCodecHeightWifi</string>
+  <string name="KeyCodecWidth3G">KeyCodecWidth3G</string>
+  <string name="KeyCodecHeight3G">KeyCodecHeight3G</string>
 </resources>

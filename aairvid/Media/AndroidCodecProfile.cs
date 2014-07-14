@@ -1,30 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using aairvid.Settings;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System.Text.RegularExpressions;
-using Android.Util;
+using Android.Net;
 using Android.Preferences;
+using Android.Util;
+using System;
+using System.Text.RegularExpressions;
 
 namespace aairvid.Utils
 {
     public class AndroidCodecProfile : ICodecProfile
     {
         private static AndroidCodecProfile profile;
+        private Activity _activity;
         public static AndroidCodecProfile InitProfile(Activity activity)
         {
+            if (profile != null)
+            {
+                profile._activity = activity;
+            }
             if (profile == null)
             {
                 profile = new AndroidCodecProfile();
+                profile._activity = activity;
                 var pref = PreferenceManager.GetDefaultSharedPreferences(activity);
-				profile.Bitrate = int.Parse(pref.GetString("KeyBitRateWifi", "1536"));
+
+                profile.BitrateWifi = pref.GetBitRateWifi(activity.Resources);
+
+                profile.Bitrate3G = pref.GetBitRate3G(activity.Resources);
 
                 try
                 {
@@ -38,8 +41,11 @@ namespace aairvid.Utils
                         var w = int.Parse(matches.Groups[1].Value);
                         var h = int.Parse(matches.Groups[2].Value);
                         // self, height, width
-                        profile.DeviceHeight = Math.Min(w, h); ;
+                        profile.DeviceHeight = Math.Min(w, h);
                         profile.DeviceWidth = Math.Max(w, h);
+
+                        DoGenCodecProfile(activity, pref);
+
                         return profile;
                     }
                 }
@@ -48,18 +54,25 @@ namespace aairvid.Utils
                 }
 
                 DisplayMetrics localDisplayMetrics = activity.Resources.DisplayMetrics;
-                int height = Math.Min(localDisplayMetrics.WidthPixels, localDisplayMetrics.HeightPixels);
-                profile.DeviceHeight = height;
+                profile.DeviceHeight = Math.Min(localDisplayMetrics.WidthPixels, localDisplayMetrics.HeightPixels);
+                profile.DeviceWidth = Math.Max(localDisplayMetrics.HeightPixels, localDisplayMetrics.WidthPixels);
 
-                int width = Math.Max(localDisplayMetrics.HeightPixels, localDisplayMetrics.WidthPixels);
-                profile.DeviceWidth = width;
+                DoGenCodecProfile(activity, pref);
+                
             }
             return profile;
         }
 
-        public static AndroidCodecProfile GetProfile()
+        private static void DoGenCodecProfile(Activity activity, ISharedPreferences pref)
         {
-            return profile;
+            profile.HeightWifi = profile.DeviceHeight;
+            profile.WidthWifi = profile.DeviceWidth;
+            profile.HeightWifi = pref.GetCodecHeightWifi(activity.Resources, profile.HeightWifi);
+            profile.WidthWifi = pref.GetCodecWidthWifi(activity.Resources, profile.WidthWifi);
+            int defaultWidth3G = 480;
+            profile.Width3G = pref.GetCodecWidth3G(activity.Resources, defaultWidth3G);
+            int desiredHeight = (int)((float)defaultWidth3G * ((float)profile.DeviceHeight / (float)profile.DeviceWidth));
+            profile.Height3G = pref.GetCodecHeight3G(activity.Resources, desiredHeight);
         }
 
         public int DeviceHeight
@@ -67,16 +80,84 @@ namespace aairvid.Utils
             get;
             private set;
         }
+
         public int DeviceWidth
         {
             get;
             private set;
         }
 
-        public int Bitrate
+        public static AndroidCodecProfile GetProfile()
+        {
+            return profile;
+        }
+
+        public int Height
+        {
+            get
+            {
+                return IsWifiEnabled() ? HeightWifi : Height3G;
+            }
+        }
+        public int Width
+        {
+            get
+            {
+                return IsWifiEnabled() ? WidthWifi : Width3G;
+            }
+        }
+
+        private int HeightWifi
         {
             get;
-            private set;
+            set;
+        }
+        private int WidthWifi
+        {
+            get;
+            set;
+        }
+
+        private int Height3G
+        {
+            get;
+            set;
+        }
+        private int Width3G
+        {
+            get;
+            set;
+        }
+
+        protected int BitrateWifi
+        {
+            get;
+            set;
+        }
+
+        protected int Bitrate3G
+        {
+            get;
+            set;
+        }
+
+        public int Bitrate
+        {
+            get
+            {
+                return IsWifiEnabled() ? BitrateWifi : Bitrate3G;
+            }
+        }
+
+        private bool IsWifiEnabled()
+        {
+            var connectivityManager = (ConnectivityManager)_activity.GetSystemService(
+                Context.ConnectivityService);
+
+            var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi)
+                .GetState();
+            var wifiEnabled = wifiState == NetworkInfo.State.Connected;
+            return wifiEnabled;
         }
     }
 }

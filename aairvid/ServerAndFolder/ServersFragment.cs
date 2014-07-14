@@ -114,7 +114,7 @@ namespace aairvid
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
-            inflater.Inflate(Resource.Menu.mainmenu, menu);
+            inflater.Inflate(Resource.Menu.serversmenu, menu);
             base.OnCreateOptionsMenu(menu, inflater);
         }
 
@@ -188,12 +188,6 @@ namespace aairvid
                         addServerDlg.Show();
                         return true;
                     }
-			case Resource.Id.settings:
-				{
-					var pop = Activity as IPopupSettings;
-					pop.PopupSettings();
-					return true;
-				}
                 default:
                     return base.OnOptionsItemSelected(item);
             }
