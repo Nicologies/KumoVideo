@@ -227,6 +227,8 @@ namespace aairvid
 
         void playbackView_Prepared(object sender, EventArgs e)
         {
+            var player = sender as Android.Media.MediaPlayer;
+            player.SetScreenOnWhilePlaying(true);
             var lastPos = GetLastPos();
 
             var duration = _mediaInfo.DurationSeconds * 1000;
