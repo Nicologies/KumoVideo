@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.ezhang.aairvid" android:versionName="1.0.0.6" android:versionCode="83">
-	<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="18" />
+	<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19" />
 	<application android:label="aairvid" android:icon="@drawable/Icon">
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 		<activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
