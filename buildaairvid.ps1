@@ -7,11 +7,18 @@ Set-Location $scriptPath
 
 $manifestPath = ".\aairvid\Properties\AndroidManifest.xml"
 
-function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True)
+function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True, [bool]$firstBuildOfThisRelease = $False)
 {
     write-host building $architech version of APK -ForegroundColor DarkGreen
     $manifest = [IO.File]::ReadAllText($manifestPath)
-    $manifest = IncreaseVerNum($manifest)
+    if($firstBuildOfThisRelease)
+    {
+        $manifest = InitVerNumForNewRelease($manifest)
+    }
+    else
+    {
+        $manifest = IncreaseVerNum($manifest)
+    }
     [IO.File]::WriteAllText($manifestPath, $manifest)
     
     $toRemove =".\bin\" + $architech + "\*.apk"
@@ -24,7 +31,7 @@ function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True)
     }
     msbuild $collectionOfArgs | Out-Null
     
-    Stop-Process -processname dos2unix
+    Stop-Process -processname dos2unix -ErrorAction SilentlyContinue
     
     if($LastExitCode -ne 0)
     {
@@ -65,7 +72,7 @@ $manifest = [IO.File]::ReadAllText($manifestPath)
 $manifest = IncreaseVerName($manifest)
 [IO.File]::WriteAllText($manifestPath, $manifest)
     
-DoApkBuild -architech arm
+DoApkBuild -architech arm -firstBuildOfThisRelease $True
 DoApkBuild -architech armv7
 DoApkBuild -architech x86
 
