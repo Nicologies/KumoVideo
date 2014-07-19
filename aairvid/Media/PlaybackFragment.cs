@@ -4,6 +4,7 @@ using aairvid.VitamioAdapter;
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using libairvidproto.model;
@@ -41,6 +42,12 @@ namespace aairvid
                     }
                 }
             }
+        }
+
+        protected PlaybackFragment(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
         }
 
         public void SetPlaybackSource(string playbackUrl, string mediaId, MediaInfo mediaInfo)

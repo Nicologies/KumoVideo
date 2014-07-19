@@ -1,4 +1,5 @@
 ﻿using Android.Gms.Ads;
+using Android.Runtime;
 using System;
 
 namespace aairvid.Ads
@@ -9,6 +10,12 @@ namespace aairvid.Ads
         public InterstitialAdImpl(InterstitialAd ad)
         {
             _ad = ad;
+        }
+
+        protected InterstitialAdImpl(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
         }
         public override void OnAdClosed()
         {

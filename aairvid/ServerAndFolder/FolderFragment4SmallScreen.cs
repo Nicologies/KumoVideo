@@ -23,6 +23,12 @@ namespace aairvid.Fragments
         {
         }
 
+        protected FolderFragment4SmallScreen(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
+        }
+
         protected override Android.Views.View InflateView(LayoutInflater inflater, ViewGroup container)
         {
             View view = inflater.Inflate(Resource.Layout.folder_fragment_small, container, false);

@@ -1,15 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
 using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.Util;
+using System;
 
 namespace aairvid.VitamioAdapter
 {
@@ -26,6 +18,12 @@ namespace aairvid.VitamioAdapter
 
         public VitamioCenterLayout(Context p0, IAttributeSet p1, int p2)
             : base(p0, p1, p2)
+        {
+        }
+
+        protected VitamioCenterLayout(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
         {
         }
     }

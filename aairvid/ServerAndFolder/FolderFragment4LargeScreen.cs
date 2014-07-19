@@ -6,6 +6,7 @@ using aairvid.Utils;
 using Android.App;
 using Android.Graphics;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using libairvidproto.model;
@@ -28,6 +29,12 @@ namespace aairvid
         }
         public FolderFragment4LargeScreen(AirVidResourcesAdapter adp)
             : base(adp)
+        {
+        }
+
+        protected FolderFragment4LargeScreen(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
         {
         }
 

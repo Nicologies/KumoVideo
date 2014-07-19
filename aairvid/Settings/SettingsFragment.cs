@@ -2,6 +2,8 @@
 
 using Android.OS;
 using Android.Preferences;
+using Android.Runtime;
+using System;
 
 namespace aairvid
 {
@@ -13,6 +15,15 @@ namespace aairvid
 
 			AddPreferencesFromResource(Resource.Layout.settings);
 		}
+
+        public SettingsFragment()
+        { }
+
+        protected SettingsFragment(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
+        }
 	}
 }
 

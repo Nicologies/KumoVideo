@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Android.Runtime;
 using Android.Util;
 using Android.Widget;
 using System;
@@ -26,6 +27,12 @@ namespace aairvid.UIUtils
             : base(context, attrs, defStyle)
         {
 
+        }
+
+        protected AspectRatioImageView(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
         }
 
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)

@@ -1,6 +1,8 @@
 ﻿using Android.Content;
 using Android.Preferences;
+using Android.Runtime;
 using Android.Util;
+using System;
 
 namespace aairvid.Settings
 {
@@ -16,6 +18,12 @@ namespace aairvid.Settings
             : base(context)
         {
             Init();
+        }
+
+        protected EditTextPreferenceShowSummary(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
         }
 
         private void Init()

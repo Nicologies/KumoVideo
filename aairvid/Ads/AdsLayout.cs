@@ -1,6 +1,7 @@
 ﻿using Android.Content;
 using Android.Gms.Ads;
 using Android.Preferences;
+using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
@@ -47,7 +48,10 @@ namespace aairvid.Ads
         {
 
         }
-
+        protected AdsLayout(IntPtr javaReference, JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
+        }
         public override bool OnInterceptTouchEvent(Android.Views.MotionEvent ev)
         {
             if (ev.Action == MotionEventActions.Up)

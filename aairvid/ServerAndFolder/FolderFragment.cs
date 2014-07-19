@@ -2,9 +2,11 @@ using aairvid.Adapter;
 using aairvid.Model;
 using Android.App;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using libairvidproto.model;
+using System;
 using System.Linq;
 
 namespace aairvid
@@ -16,6 +18,12 @@ namespace aairvid
         public FolderFragment(AirVidResourcesAdapter adp)
         {
             _resources = adp;
+        }
+
+        protected FolderFragment(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
         }
 
         public FolderFragment()

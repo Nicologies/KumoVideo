@@ -3,9 +3,6 @@ using Android.Preferences;
 using Android.Runtime;
 using Android.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace aairvid.Settings
 {
@@ -19,6 +16,13 @@ namespace aairvid.Settings
 
         public ListPreferenceShowSummary(Context context)
             : base(context)
+        {
+            Init();
+        }
+
+        protected ListPreferenceShowSummary(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
         {
             Init();
         }

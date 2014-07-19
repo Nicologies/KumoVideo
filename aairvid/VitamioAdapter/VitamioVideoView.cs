@@ -1,7 +1,9 @@
 
 using aairvid.Utils;
 using Android.Content;
+using Android.Runtime;
 using Android.Util;
+using System;
 
 namespace aairvid.VitamioAdapter
 {
@@ -18,6 +20,12 @@ namespace aairvid.VitamioAdapter
 
         public VitamioVideoView(Context p0, IAttributeSet p1, int p2)
             : base(p0, p1, p2)
+        {
+        }
+
+        protected VitamioVideoView(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
         {
         }
 

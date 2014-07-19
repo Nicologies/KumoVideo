@@ -5,6 +5,7 @@ using aairvid.Utils;
 using Android.App;
 using Android.Graphics;
 using Android.OS;
+using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
@@ -27,6 +28,12 @@ namespace aairvid
         }
 
         public MediaInfoFragment()
+        {
+        }
+
+        protected MediaInfoFragment(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
         {
         }
         public override void OnCreate(Bundle savedInstanceState)

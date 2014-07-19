@@ -4,11 +4,13 @@ using Android.App;
 using Android.Content;
 using Android.Net;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using libairvidproto;
 using Network.Bonjour;
 using Network.ZeroConf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,6 +34,12 @@ namespace aairvid
         public ServersFragment(Dictionary<string, CachedServerItem> cachedServers)
         {
             SetServers(cachedServers);
+        }
+
+        protected ServersFragment(IntPtr javaReference,
+            JniHandleOwnership transfer)
+            : base(javaReference, transfer)
+        {
         }
 
         public override void OnCreate(Bundle savedInstanceState)
