@@ -10,14 +10,12 @@ using Android.Runtime;
 using Android.Text.Method;
 using Android.Util;
 using Android.Widget;
-using IO.Vov.Vitamio;
 using libairvidproto;
 using libairvidproto.model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,9 +93,6 @@ namespace aairvid
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
-            if (!LibsChecker.CheckVitamioLibs(this))
-                return;
 
             if (_cachedServers == null || _cachedServers.Count() == 0)
             {

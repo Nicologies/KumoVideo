@@ -36,8 +36,6 @@ namespace aairvid.VitamioAdapter
 
         public void SetLayoutStretch(float ratio)
         {
-            var prof = AndroidCodecProfile.GetProfile();
-            SetScreenResolution(prof.DeviceWidth, prof.DeviceHeight);
             SetVideoLayout(IO.Vov.Vitamio.Widget.VideoView.VideoLayoutScale, 0);
         }
     }

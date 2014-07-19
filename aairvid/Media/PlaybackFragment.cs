@@ -133,7 +133,7 @@ namespace aairvid
             Activity.Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
             playbackView = view.FindViewById<VitamioVideoView>(Resource.Id.playbackView);
-
+                        
             playbackView.Error += playbackView_Error;
 
             playbackView.Completion += playbackView_Completion;            
@@ -241,9 +241,9 @@ namespace aairvid
             var player = args.P0 as IO.Vov.Vitamio.MediaPlayer;
             player.SetScreenOnWhilePlaying(true);
 
-            var stream = _mediaInfo.VideoStreams[0];
+            playbackView.SetLayoutStretch(0);
 
-            playbackView.SetLayoutStretch((float)stream.Width/(float)stream.Height);
+            var stream = _mediaInfo.VideoStreams[0];
 
             var lastPos = GetLastPos();
 

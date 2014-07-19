@@ -57,15 +57,9 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
 
 (Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'aairvidpro', 'aairvid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml
 
-DoLibBuild -architech arm -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
-DoLibBuild -architech armv7 -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
-DoLibBuild -architech x86 -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
-
-DoLibBuild -architech Debug -projPath ".\libairvidproto\libairvidproto.csproj"
-DoLibBuild -architech Release -projPath ".\libairvidproto\libairvidproto.csproj"
-
-DoLibBuild -architech Debug -projPath ".\VitamitoMarin\VitamitoMarin.csproj"
-DoLibBuild -architech Release -projPath ".\VitamitoMarin\VitamitoMarin.csproj"
+. .\buildVitamioMarin.ps1
+. .\buildbonjour.ps1
+. .\buildLibAirvidProto.ps1
 
 $manifest = [IO.File]::ReadAllText($manifestPath)
 $manifest = IncreaseVerName($manifest)
