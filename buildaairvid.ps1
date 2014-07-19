@@ -61,9 +61,11 @@ DoLibBuild -architech arm -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
 DoLibBuild -architech armv7 -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
 DoLibBuild -architech x86 -projPath ".\Bonjour.NET\Bonjour.NET.csproj"
 
-DoLibBuild -architech arm -projPath ".\libairvidproto\libairvidproto.csproj"
-DoLibBuild -architech armv7 -projPath ".\libairvidproto\libairvidproto.csproj"
-DoLibBuild -architech x86 -projPath ".\libairvidproto\libairvidproto.csproj"
+DoLibBuild -architech Debug -projPath ".\libairvidproto\libairvidproto.csproj"
+DoLibBuild -architech Release -projPath ".\libairvidproto\libairvidproto.csproj"
+
+DoLibBuild -architech Debug -projPath ".\VitamitoMarin\VitamitoMarin.csproj"
+DoLibBuild -architech Release -projPath ".\VitamitoMarin\VitamitoMarin.csproj"
 
 $manifest = [IO.File]::ReadAllText($manifestPath)
 $manifest = IncreaseVerName($manifest)
