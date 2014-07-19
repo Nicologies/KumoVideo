@@ -84,7 +84,7 @@ namespace aairvid.Fragments
             var needConv = stream.Height > profile.DeviceHeight || stream.Width > profile.DeviceWidth;
             if (needConv)
             {
-                btnPlay.Visibility = ViewStates.Gone;
+                //btnPlay.Visibility = ViewStates.Gone;
             }
         }
 

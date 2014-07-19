@@ -1,4 +1,5 @@
 using aairvid.Settings;
+using aairvid.UIUtils;
 using Android.App;
 using Android.Content;
 using Android.Net;
@@ -31,23 +32,16 @@ namespace aairvid.Utils
 
                 try
                 {
-                    // hack to get the real device metrics
-                    var dispStr = activity.WindowManager.DefaultDisplay.ToString();
-                    //"Display id 0: DisplayInfo{\"Built-in Screen\", app 800 x 1216, real 800 x 1280, largest app 1280 x 1183, smallest app 800 x 703, 60.
-                    Regex regex = new Regex(@".*real (\d+) x (\d+),.*", RegexOptions.IgnoreCase);
-                    var matches = regex.Match(dispStr);
-                    if (matches.Success)
-                    {
-                        var w = int.Parse(matches.Groups[1].Value);
-                        var h = int.Parse(matches.Groups[2].Value);
-                        // self, height, width
-                        profile.DeviceHeight = Math.Min(w, h);
-                        profile.DeviceWidth = Math.Max(w, h);
+                    var res = ScreenProperty.GetScreenResolution(activity);
+                    var w = res.Key;
+                    var h = res.Value;
+                    // self, height, width
+                    profile.DeviceHeight = Math.Min(w, h);
+                    profile.DeviceWidth = Math.Max(w, h);
 
-                        DoGenCodecProfile(activity, pref);
+                    DoGenCodecProfile(activity, pref);
 
-                        return profile;
-                    }
+                    return profile;
                 }
                 catch
                 {// fall through to use the DisplayMetrics if any exception.

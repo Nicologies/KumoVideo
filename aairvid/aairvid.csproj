@@ -31,9 +31,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <AndroidLinkSkip>
-    </AndroidLinkSkip>
+    <AndroidLinkSkip>libvinit</AndroidLinkSkip>
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
+    <BundleAssemblies>False</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -160,6 +161,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Settings\SettingsFragment.cs" />
+    <Compile Include="VitamioAdapter\VitamioCenterLayout.cs" />
+    <Compile Include="VitamioAdapter\VitamioVideoView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -178,7 +181,7 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\playback_fragment.axml">
-      <SubType>AndroidResource</SubType>
+      <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\folder_fragment_large.axml">
       <SubType>Designer</SubType>
@@ -239,20 +242,38 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\libairvidproto\libairvidproto.csproj">
-      <Project>{07B8FC28-967F-4F36-B980-FBEF1EC73A82}</Project>
-      <Name>libairvidproto</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug'">
+      <ItemGroup>
+        <Reference Include="VitamitoMarin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\bin\Debug\VitamitoMarin.dll</HintPath>
+        </Reference>
+        <Reference Include="libairvidproto, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\bin\Debug\libairvidproto.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Arm' Or '$(Configuration)'=='ArmV7' Or '$(Configuration)'=='X86'">
+      <ItemGroup>
+        <Reference Include="VitamitoMarin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\bin\Release\VitamitoMarin.dll</HintPath>
+        </Reference>
+        <Reference Include="libairvidproto, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\bin\Release\libairvidproto.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
     <XamarinComponentReference Include="googleplayservices">
       <Version>16.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.

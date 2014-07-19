@@ -5,7 +5,7 @@ namespace aairvid.Model
     [Serializable]
     public class HistoryItem
     {
-        public int LastPosition
+        public long LastPosition
         {
             get;
             set;

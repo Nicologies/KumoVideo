@@ -1,5 +1,6 @@
 using aairvid.Ads;
 using aairvid.Model;
+using aairvid.VitamioAdapter;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -124,7 +125,7 @@ namespace aairvid
 
             Activity.Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
-            playbackView = view.FindViewById<VideoView>(Resource.Id.playbackView);
+            playbackView = view.FindViewById<VitamioVideoView>(Resource.Id.playbackView);
 
             playbackView.Error += playbackView_Error;
 
@@ -182,7 +183,9 @@ namespace aairvid
             }
         }
 
-        void playbackView_Error(object sender, Android.Media.MediaPlayer.ErrorEventArgs e)
+
+
+        void playbackView_Error(object sender, IO.Vov.Vitamio.MediaPlayer.ErrorEventArgs e)
         {
             _failedToPlay = true;
             var listner = Activity as IVideoNotPlayableListener;
@@ -192,7 +195,7 @@ namespace aairvid
             }
         }
 
-        VideoView playbackView;
+        VitamioVideoView playbackView;
 
         public override void OnResume()
         {
@@ -207,7 +210,7 @@ namespace aairvid
         {
             try
             {
-                var mediaController = new MediaController(this.Activity);
+                var mediaController = new IO.Vov.Vitamio.Widget.MediaController(this.Activity);
                 mediaController.SetAnchorView(playbackView);
 
                 playbackView.Prepared += playbackView_Prepared;
@@ -227,8 +230,14 @@ namespace aairvid
 
         void playbackView_Prepared(object sender, EventArgs e)
         {
-            var player = sender as Android.Media.MediaPlayer;
+            var args = e as IO.Vov.Vitamio.MediaPlayer.PreparedEventArgs;
+            var player = args.P0 as IO.Vov.Vitamio.MediaPlayer;
             player.SetScreenOnWhilePlaying(true);
+
+            var stream = _mediaInfo.VideoStreams[0];
+
+            playbackView.SetLayoutStretch((float)stream.Width/(float)stream.Height);
+
             var lastPos = GetLastPos();
 
             var duration = _mediaInfo.DurationSeconds * 1000;
@@ -269,7 +278,7 @@ namespace aairvid
                 new BinaryFormatter().Serialize(stream, _history);
             }
         }
-        private int GetLastPos()
+        private long GetLastPos()
         {
             HistoryItem hisItem;
             if (_history.TryGetValue(_mediaId, out hisItem))

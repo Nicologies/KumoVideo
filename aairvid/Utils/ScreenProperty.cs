@@ -22,5 +22,12 @@ namespace aairvid.UIUtils
             var widthInches = (float)me.WidthPixels / me.Xdpi;
             return widthInches >= 5.3;//ipad mini width.
         }
+        public static KeyValuePair<int, int> GetScreenResolution(Context ctx)
+        {
+            var x = IO.Vov.Vitamio.Utils.ScreenResolution.GetResolution(ctx);
+            var w = x.First as Java.Lang.Integer;
+            var h = x.Second as Java.Lang.Integer;
+            return new KeyValuePair<int, int>(w.IntValue(), h.IntValue());
+        }
     }
 }

@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Text.Method;
 using Android.Util;
 using Android.Widget;
+using IO.Vov.Vitamio;
 using libairvidproto;
 using libairvidproto.model;
 using System;
@@ -94,6 +95,9 @@ namespace aairvid
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            if (!LibsChecker.CheckVitamioLibs(this))
+                return;
 
             if (_cachedServers == null || _cachedServers.Count() == 0)
             {
