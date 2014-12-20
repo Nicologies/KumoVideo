@@ -14,7 +14,8 @@
   <string name="InvalidPort">无效的端口号</string>
   <string name="EmptyNotAllowed">不能为空</string>
   <string name="Settings">设置</string>
-  <string name="ConversionSetting">转码参数</string>
+  <string name="ConversionSettingWifi">转码参数(WIFI)</string>
+  <string name="ConversionSetting3G">转码参数(移动网络)</string>
   <string name="BitRateWifi">使用WIFI时的码率</string>
   <string name="BitRate3G">使用移动网络时的码率</string>
   <string name="HorizontalResolutionWifi">水平分辨率(WIFI)</string>
@@ -22,4 +23,6 @@
   <string name="HorizontalResolution3G">水平分辨率(Mobile Data)</string>
   <string name="VerticalResolution3G">垂直分辨率(Mobile Data)</string>
   <string name="CannotConnect">无法连接服务器</string>
+  <string name="H264Passthrough">直传H264</string>
+  <string name="H264PassthroughSummary">未选择字幕时直传 H264 码流, 不进行转码.</string>
 </resources>

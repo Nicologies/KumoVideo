@@ -24,11 +24,6 @@ namespace aairvid.Utils
             {
                 profile = new AndroidCodecProfile();
                 profile._activity = activity;
-                var pref = PreferenceManager.GetDefaultSharedPreferences(activity);
-
-                profile.BitrateWifi = pref.GetBitRateWifi(activity.Resources);
-
-                profile.Bitrate3G = pref.GetBitRate3G(activity.Resources);
 
                 try
                 {
@@ -39,7 +34,7 @@ namespace aairvid.Utils
                     profile.DeviceHeight = Math.Min(w, h);
                     profile.DeviceWidth = Math.Max(w, h);
 
-                    DoGenCodecProfile(activity, pref);
+                    DoGenCodecProfile(activity);
 
                     return profile;
                 }
@@ -51,22 +46,26 @@ namespace aairvid.Utils
                 profile.DeviceHeight = Math.Min(localDisplayMetrics.WidthPixels, localDisplayMetrics.HeightPixels);
                 profile.DeviceWidth = Math.Max(localDisplayMetrics.HeightPixels, localDisplayMetrics.WidthPixels);
 
-                DoGenCodecProfile(activity, pref);
+                DoGenCodecProfile(activity);
                 
             }
             return profile;
         }
 
-        private static void DoGenCodecProfile(Activity activity, ISharedPreferences pref)
+        private static void DoGenCodecProfile(Activity activity)
         {
-            profile.HeightWifi = profile.DeviceHeight;
-            profile.WidthWifi = profile.DeviceWidth;
-            profile.HeightWifi = pref.GetCodecHeightWifi(activity.Resources, profile.HeightWifi);
-            profile.WidthWifi = pref.GetCodecWidthWifi(activity.Resources, profile.WidthWifi);
+            var pref = PreferenceManager.GetDefaultSharedPreferences(activity);
+
+            pref.DefaultsBitRateWifi(activity.Resources);
+
+            pref.DefaultsBitRate3G(activity.Resources);
+
+            pref.DefaultsCodecHeightWifi(activity.Resources, profile.DeviceHeight);
+            pref.DefaultsCodecWidthWifi(activity.Resources, profile.DeviceWidth);
             int defaultWidth3G = 480;
-            profile.Width3G = pref.GetCodecWidth3G(activity.Resources, defaultWidth3G);
+            pref.DefaultsCodecWidth3G(activity.Resources, defaultWidth3G);
             int desiredHeight = (int)((float)defaultWidth3G * ((float)profile.DeviceHeight / (float)profile.DeviceWidth));
-            profile.Height3G = pref.GetCodecHeight3G(activity.Resources, desiredHeight);
+            pref.DefaultsCodecHeight3G(activity.Resources, desiredHeight);
         }
 
         public int DeviceHeight
@@ -90,68 +89,52 @@ namespace aairvid.Utils
         {
             get
             {
-                return IsWifiEnabled() ? HeightWifi : Height3G;
+                var pref = PreferenceManager.GetDefaultSharedPreferences(_activity);
+                if (IsWifiEnabled())
+                {
+                    return pref.GetCodecHeightWifi(_activity.Resources, DeviceHeight);
+                }
+                else
+                {
+                    return pref.GetCodecHeight3G(_activity.Resources, 320);
+                }
             }
         }
         public int Width
         {
             get
             {
-                return IsWifiEnabled() ? WidthWifi : Width3G;
+                var pref = PreferenceManager.GetDefaultSharedPreferences(_activity);
+                if (IsWifiEnabled())
+                {
+                    return pref.GetCodecWidthWifi(_activity.Resources, DeviceWidth);
+                }
+                else
+                {
+                    return pref.GetCodecWidth3G(_activity.Resources, 480);
+                }
             }
-        }
-
-        private int HeightWifi
-        {
-            get;
-            set;
-        }
-        private int WidthWifi
-        {
-            get;
-            set;
-        }
-
-        private int Height3G
-        {
-            get;
-            set;
-        }
-        private int Width3G
-        {
-            get;
-            set;
-        }
-
-        protected int BitrateWifi
-        {
-            get;
-            set;
-        }
-
-        protected int Bitrate3G
-        {
-            get;
-            set;
         }
 
         public int Bitrate
         {
             get
             {
-                return IsWifiEnabled() ? BitrateWifi : Bitrate3G;
+                var pref = PreferenceManager.GetDefaultSharedPreferences(_activity);
+                if (IsWifiEnabled())
+                {
+                    return pref.GetBitRateWifi(_activity.Resources);
+                }
+                else
+                {
+                    return pref.GetBitRate3G(_activity.Resources);
+                }
             }
         }
 
         private bool IsWifiEnabled()
         {
-            var connectivityManager = (ConnectivityManager)_activity.GetSystemService(
-                Context.ConnectivityService);
-
-            var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi)
-                .GetState();
-            var wifiEnabled = wifiState == NetworkInfo.State.Connected;
-            return wifiEnabled;
+            return this._activity.IsWifiEnabled();
         }
     }
 }

@@ -16,7 +16,8 @@
   <string name="Delete">Delete</string>
   <string name="EmptyNotAllowed">Cannot Be Empty</string>
   <string name="Settings">Settings</string>
-  <string name="ConversionSetting">Conversion Setting</string>
+  <string name="ConversionSettingWifi">Conversion Setting(WIFI)</string>
+  <string name="ConversionSetting3G">Conversion Setting(Mobile Data)</string>
   <string name="BitRateWifi">Bit Rate When Using WIFI</string>
   <string name="BitRate3G">Bit Rate When Using Mobile Data</string>
   <string name="HorizontalResolutionWifi">Horizontal Resolution(WIFI)</string>
@@ -24,7 +25,8 @@
   <string name="HorizontalResolution3G">Horizontal Resolution(Mobile Data)</string>
   <string name="VerticalResolution3G">Vertical Resolution(Mobile Data)</string>
   <string name="CannotConnect">Cannot Connect To Server</string>
-  
+  <string name="H264Passthrough">H264Passthrough</string>
+  <string name="H264PassthroughSummary">Passthrough H264 without transcode. But will transcode if subtitle selected.</string>
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>
@@ -37,4 +39,6 @@
   <string name="KeyCodecHeightWifi">KeyCodecHeightWifi</string>
   <string name="KeyCodecWidth3G">KeyCodecWidth3G</string>
   <string name="KeyCodecHeight3G">KeyCodecHeight3G</string>
+  <string name="KeyH264PassthroughWifi">KeyH264PassthroughWifi</string>
+  <string name="KeyH264Passthrough3G">KeyH264Passthrough3G</string>
 </resources>

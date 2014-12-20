@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/ConversionSetting">
+        android:title="@string/ConversionSettingWifi">
+      <CheckBoxPreference
+        android:key="@string/KeyH264PassthroughWifi"
+        android:title="@string/H264Passthrough"
+        android:defaultValue="true"
+        android:summary="@string/H264PassthroughSummary"
+        >
+      </CheckBoxPreference>
         <aairvid.Settings.ListPreferenceShowSummary
             android:key="@string/KeyBitRateWifi"
             android:title="@string/BitRateWifi"
             android:entries="@array/BitratesEntries"
-            android:entryValues="@array/BitratesEntryValues"/>
-      
-      <aairvid.Settings.ListPreferenceShowSummary
-            android:key="@string/KeyBitRate3G"
-            android:title="@string/BitRate3G"
-            android:entries="@array/BitratesEntries"
-            android:entryValues="@array/BitratesEntryValues"/>
+            android:entryValues="@array/BitratesEntryValues"/>      
 
       <aairvid.Settings.EditTextPreferenceShowSummary
             android:key="@string/KeyCodecWidthWifi"
@@ -23,16 +24,32 @@
             android:key="@string/KeyCodecHeightWifi"
             android:inputType="number"
             android:title="@string/VerticalResolutionWifi"/>
-
-      <aairvid.Settings.EditTextPreferenceShowSummary
-            android:key="@string/KeyCodecWidth3G"
-            android:inputType="number"
-            android:title="@string/HorizontalResolution3G"/>
-
-      <aairvid.Settings.EditTextPreferenceShowSummary
-            android:key="@string/KeyCodecHeight3G"
-            android:inputType="number"
-            android:title="@string/VerticalResolution3G"/>
     </PreferenceCategory>
+
+  <PreferenceCategory
+        android:title="@string/ConversionSetting3G">
+
+    <CheckBoxPreference
+        android:key="@string/KeyH264Passthrough3G"
+        android:title="@string/H264Passthrough"
+        android:defaultValue="false"
+        android:summary="@string/H264PassthroughSummary"
+        />
+    <aairvid.Settings.ListPreferenceShowSummary
+          android:key="@string/KeyBitRate3G"
+          android:title="@string/BitRate3G"
+          android:entries="@array/BitratesEntries"
+          android:entryValues="@array/BitratesEntryValues"/>
+
+    <aairvid.Settings.EditTextPreferenceShowSummary
+          android:key="@string/KeyCodecWidth3G"
+          android:inputType="number"
+          android:title="@string/HorizontalResolution3G"/>
+
+    <aairvid.Settings.EditTextPreferenceShowSummary
+          android:key="@string/KeyCodecHeight3G"
+          android:inputType="number"
+          android:title="@string/VerticalResolution3G"/>
+  </PreferenceCategory>
 
 </PreferenceScreen>

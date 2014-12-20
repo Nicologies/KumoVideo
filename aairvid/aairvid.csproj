@@ -149,7 +149,7 @@
     <Compile Include="Ads\AdsLayout.cs" />
     <Compile Include="Media\AspectRatioImageView.cs" />
     <Compile Include="Utils\ScreenProperty.cs" />
-    <Compile Include="Media\AndroidCodecProfile.cs" />
+    <Compile Include="Settings\AndroidCodecProfile.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerAndFolder\FolderFragment.cs" />
@@ -161,6 +161,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Settings\SettingsFragment.cs" />
+    <Compile Include="Utils\WifiStatus.cs" />
     <Compile Include="VitamioAdapter\VitamioCenterLayout.cs" />
     <Compile Include="VitamioAdapter\VitamioVideoView.cs" />
   </ItemGroup>

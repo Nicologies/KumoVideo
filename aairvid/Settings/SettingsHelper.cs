@@ -26,10 +26,23 @@ namespace aairvid.Settings
             return ret;
         }
 
+        public static void DefaultsBitRate3G(this ISharedPreferences pref, Resources res)
+        {
+            var key = res.GetString(Resource.String.KeyBitRate3G);
+            int defaultValue = EmDefaultBitrate.MobileDataRate;
+            DoSetIntValueIfNotExisting(pref, key, defaultValue);
+        }
+
+        public static void DefaultsBitRateWifi(this ISharedPreferences pref, Resources res)
+        {
+            var key = res.GetString(Resource.String.KeyBitRateWifi);
+            int defaultValue = EmDefaultBitrate.WifiRate;
+            DoSetIntValueIfNotExisting(pref, key, defaultValue);
+        }
+
         public static int GetCodecWidthWifi(this ISharedPreferences pref, Resources res, int defaultValue)
         {
             var key = res.GetString(Resource.String.KeyCodecWidthWifi);
-
             return DoGetIntValue(pref, key, defaultValue);
         }
 
@@ -38,6 +51,18 @@ namespace aairvid.Settings
             var key = res.GetString(Resource.String.KeyCodecHeightWifi);
 
             return DoGetIntValue(pref, key, defaultValue);
+        }
+
+        public static void DefaultsCodecHeightWifi(this ISharedPreferences pref, Resources res, int defaultValue)
+        {
+            var key = res.GetString(Resource.String.KeyCodecHeightWifi);
+            DoSetIntValueIfNotExisting(pref, key, defaultValue);
+        }
+
+        public static void DefaultsCodecWidthWifi(this ISharedPreferences pref, Resources res, int defaultValue)
+        {
+            var key = res.GetString(Resource.String.KeyCodecWidthWifi);
+            DoSetIntValueIfNotExisting(pref, key, defaultValue);
         }
 
         public static int GetCodecWidth3G(this ISharedPreferences pref, Resources res, int defaultValue)
@@ -54,14 +79,30 @@ namespace aairvid.Settings
             return DoGetIntValue(pref, key, defaultValue);
         }
 
-        private static int DoGetIntValue(ISharedPreferences pref, string key, int defaultValue)
+        public static void DefaultsCodecHeight3G(this ISharedPreferences pref, Resources res, int defaultValue)
+        {
+            var key = res.GetString(Resource.String.KeyCodecHeight3G);
+            DoSetIntValueIfNotExisting(pref, key, defaultValue);
+        }
+
+        public static void DefaultsCodecWidth3G(this ISharedPreferences pref, Resources res, int defaultValue)
+        {
+            var key = res.GetString(Resource.String.KeyCodecWidth3G);
+            DoSetIntValueIfNotExisting(pref, key, defaultValue);
+        }
+
+        private static void DoSetIntValueIfNotExisting(ISharedPreferences pref, string key, int value)
         {
             if (!pref.Contains(key))
             {
                 var editor = pref.Edit();
-                editor.PutString(key, defaultValue.ToString());
+                editor.PutString(key, value.ToString());
                 editor.Commit();
             }
+        }
+
+        private static int DoGetIntValue(ISharedPreferences pref, string key, int defaultValue)
+        {
             var ret = int.Parse(pref.GetString(key, defaultValue.ToString()));
             return ret;
         }
