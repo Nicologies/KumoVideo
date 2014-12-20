@@ -1,5 +1,6 @@
 using aairvid.Ads;
 using aairvid.Model;
+using aairvid.Utils;
 using aairvid.VitamioAdapter;
 using Android.App;
 using Android.Content;
@@ -217,15 +218,10 @@ namespace aairvid
         {
             try
             {
-                var mediaController = new IO.Vov.Vitamio.Widget.MediaController(this.Activity);
-                mediaController.SetAnchorView(playbackView);
-
                 playbackView.Prepared += playbackView_Prepared;
 
                 playbackView.SetVideoURI(Android.Net.Uri.Parse(this._playbackUrl));
-
-                playbackView.SetMediaController(mediaController);
-
+                
                 playbackView.RequestFocus();
             }
             catch (Exception ex)
@@ -242,6 +238,18 @@ namespace aairvid
             player.SetScreenOnWhilePlaying(true);
 
             playbackView.SetLayoutStretch(0);
+
+            var mediaController = new IO.Vov.Vitamio.Widget.MediaController(this.Activity);
+            mediaController.SetAnchorView(playbackView);
+
+            if (Activity.IsWifiEnabled())
+            {
+                mediaController.SetInstantSeeking(true);
+            }
+
+            playbackView.SetMediaController(mediaController);
+
+            mediaController.SetFileName(this._mediaId);
 
             var stream = _mediaInfo.VideoStreams[0];
 
