@@ -159,7 +159,9 @@ namespace libairvidproto.model
             devInfo.Add(new StringValue(null, "clientVersion"));
             devInfo.Add(new StringValue(null, "2.4.13"));
             devInfo.Add(new StringValue(null, "h264Passthrough"));
-            devInfo.Add(new StringValue(null, "0"));
+            var passthrough = _sub == null ? "1" : "0";
+            devInfo.Add(new StringValue(null, passthrough));
+            
             convReq.Add(devInfo);
             paramList.Add(convReq);
             return paramList;
