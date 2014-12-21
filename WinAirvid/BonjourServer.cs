@@ -34,5 +34,18 @@ namespace WinAirvid
             get;
             private set;
         }
+
+        public bool IsManual
+        {
+            get
+            { 
+                return false; 
+            }
+        }
+
+        public string Password
+        {
+            get { return ""; }
+        }
     }
 }

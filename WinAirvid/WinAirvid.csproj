@@ -30,7 +30,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -110,6 +110,7 @@
     <Compile Include="ResourceVM.cs" />
     <Compile Include="RootVM.cs" />
     <Compile Include="ServerVM.cs" />
+    <Compile Include="SHA1Calculator.cs" />
     <Compile Include="VideoSelectedToVisiConverter.cs" />
     <Compile Include="VideoVM.cs" />
     <Compile Include="WebClientAdp.cs" />

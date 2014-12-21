@@ -120,7 +120,7 @@ namespace WinAirvid
         {
             public int Bitrate
             {
-                get { return 1024; }
+                get { return 2560; }
             }
 
             public int DeviceHeight
@@ -132,11 +132,22 @@ namespace WinAirvid
             {
                 get { return (int)System.Windows.SystemParameters.PrimaryScreenWidth; }
             }
+
+
+            public int Height
+            {
+                get { return DeviceHeight; }
+            }
+
+            public int Width
+            {
+                get { return DeviceWidth; }
+            }
         }
 
-        public string GetPlaybackURL()
+        public string GetPlaybackURL(SubtitleStream subtitle, AudioStream audioStream)
         {
-            return _video.GetPlaybackUrl(new WebClientAdp(), _MediaInfo, null, new CodecProfile());
+            return _video.GetPlaybackUrl(new WebClientAdp(), _MediaInfo, subtitle, audioStream, new CodecProfile());
         }
     }
 }

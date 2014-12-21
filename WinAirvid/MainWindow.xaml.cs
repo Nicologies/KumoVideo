@@ -9,7 +9,7 @@ namespace WinAirvid
     {
         public MainWindow()
         {
-            libairvidproto.LibIniter.Init(new ByteOrderConvAdp());
+            libairvidproto.LibIniter.Init(new ByteOrderConvAdp(), new SHA1Calculator());
             InitializeComponent();
         }
     }

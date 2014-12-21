@@ -68,6 +68,7 @@
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
             </TreeView>
+                
             <Grid Grid.Column="1" DataContext="{Binding SelectedItem}">
                 <Grid.Visibility>
                     <Binding Path="DataContext.SelectedItem" RelativeSource="{RelativeSource AncestorType=Window}">
@@ -81,28 +82,58 @@
                 </Grid.Visibility>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0">FileSize:</TextBlock>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding MediaInfo.FileSize}"></TextBlock>
+                <Grid Grid.Row="0">                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0">FileSize:</TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding MediaInfo.FileSize}"></TextBlock>
 
-                <TextBlock Margin="4,0,0,0" Grid.Row="0" Grid.Column="2">Duration:</TextBlock>
-                <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding MediaInfo.DurationSeconds}"></TextBlock>
-                
-                <Button Height="25" Width="100"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.ColumnSpan="4" Grid.Row="1" 
-                        Command="{Binding DataContext.PlayCmd, RelativeSource={RelativeSource AncestorType=Window}}">Play</Button>
+                    <TextBlock Margin="4,0,0,0" Grid.Row="0" Grid.Column="2">Duration:</TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding MediaInfo.DurationSeconds}"></TextBlock>
 
-                <Image VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="4" Margin="4" Source="{Binding Thumbnail}"></Image>
+                    <TextBlock Grid.Row="1" Grid.Column="0">Subtitle:</TextBlock>
+                    <ComboBox 
+                        SelectedItem="{Binding DataContext.SelectedSubtitle, RelativeSource={RelativeSource AncestorType=Window}}"
+                        ItemsSource="{Binding MediaInfo.Subtitles}"
+                        SelectedIndex="0"
+                        Grid.Row="1" Grid.Column="1">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayableLan}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Margin="4,0,0,0">AudioStream:</TextBlock>
+                    <ComboBox 
+                        SelectedIndex="0"
+                        SelectedItem="{Binding DataContext.SelectedAudioStream, RelativeSource={RelativeSource AncestorType=Window}}"
+                        ItemsSource="{Binding MediaInfo.AudioStreams}"
+                        Grid.Row="1" Grid.Column="3">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding index}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Button Height="25" Width="100"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Grid.ColumnSpan="4" Grid.Row="2" 
+                            Command="{Binding DataContext.PlayCmd, RelativeSource={RelativeSource AncestorType=Window}}">Play</Button>
+                </Grid>
+                <Image VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="1" Margin="4" Source="{Binding Thumbnail}"></Image>
             </Grid>
         </Grid>
         <TextBlock 

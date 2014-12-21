@@ -1,7 +1,9 @@
-﻿using Network.Bonjour;
+﻿using libairvidproto.model;
+using Network.Bonjour;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -37,11 +39,14 @@ namespace WinAirvid
             }
             Resources = new ObservableCollection<ResourceVM>();
             _busySetter = new BusyingSetter(this);
-            RunOnUIThread(DispatcherPriority.Loaded, () => 
+            if (!DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
-                _serverDetector.ServiceFound += _serverDetector_ServiceFound;
-                _serverDetector.Resolve("_airvideoserver._tcp.local.");
-            });
+                RunOnUIThread(DispatcherPriority.Loaded, () =>
+                {
+                    _serverDetector.ServiceFound += _serverDetector_ServiceFound;
+                    _serverDetector.Resolve("_airvideoserver._tcp.local.");
+                });
+            }
         }
 
         void _serverDetector_ServiceFound(Network.ZeroConf.IService item)
@@ -113,7 +118,7 @@ namespace WinAirvid
             {
                 try
                 {
-                    var url = vid.GetPlaybackURL();
+                    var url = vid.GetPlaybackURL(SelectedSubtitle, SelectedAudioStream);
                     Process.Start(PlayerPath, url);
                 }
                 catch (Exception ex)
@@ -141,6 +146,40 @@ namespace WinAirvid
                     {
                         File.WriteAllText(PlayerPathConfig, _PlayerPath);
                     }
+                }
+            }
+        }
+
+        private SubtitleStream _SelectedSubtitle;
+        public SubtitleStream SelectedSubtitle
+        {
+            get
+            {
+                return _SelectedSubtitle;
+            }
+            set
+            {
+                if (_SelectedSubtitle != value)
+                {
+                    _SelectedSubtitle = value;
+                    NotifyPropertyChange(() => SelectedSubtitle);
+                }
+            }
+        }
+
+        private AudioStream _SelectedAudioStream;
+        public AudioStream SelectedAudioStream
+        {
+            get
+            {
+                return _SelectedAudioStream;
+            }
+            set
+            {
+                if (_SelectedAudioStream != value)
+                {
+                    _SelectedAudioStream = value;
+                    NotifyPropertyChange(() => SelectedAudioStream);
                 }
             }
         }
