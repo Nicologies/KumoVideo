@@ -5,7 +5,7 @@ Set-Location $scriptPath
 . .\IncreaseApkVer.ps1
 . .\buildlib.ps1
 
-$manifestPath = ".\aairvid\Properties\AndroidManifest.xml"
+($manifestPath = join-path $scriptPath ".\aairvid\Properties\AndroidManifest.xml") | Out-Null
 
 function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True, [bool]$firstBuildOfThisRelease = $False)
 {
@@ -21,7 +21,7 @@ function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True, [bool]$firstB
     }
     [IO.File]::WriteAllText($manifestPath, $manifest)
     
-    $toRemove =".\bin\" + $architech + "\*.apk"
+    ($toRemove =join-path $scriptPath ("bin\" + $architech + "\*.apk")) | Out-Null
     Remove-Item $toRemove -Force -ErrorAction SilentlyContinue
     $config = "/p:Configuration=" + $architech;
     $collectionOfArgs = @("aairvid\aairvid.csproj", "/t:Clean", "/target:SignAndroidPackage", "/fileLogger", "/noconsolelogger", "/verbosity:minimal", $config)
@@ -49,13 +49,35 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
         $suffix = "pro";
     }
     write-host signing $architch version
-    $apktosign = ".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".apk";
-    $signedApk = ".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-Signed.apk";
-    $alignedApk = ".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-aligned.apk";
+    $apktosignRelPath = (".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".apk");
+    ($apktosign = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".apk")) | Out-Null;
+    ($zip = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".zip")) | Out-Null;
+    Rename-Item $apktosign $zip
+    ($tempLibArmBaseFolder = Join-Path $scriptPath "res") | Out-Null
+    
+    Remove-Item $tempLibArmBaseFolder -Force -Recurse -ErrorAction SilentlyContinue
+    ($libArmNoExt = Join-Path $tempLibArmBaseFolder "\raw\libarm") |Out-Null;
+    $libArm7z = $libArmNoExt + ".7z";
+    &7z.exe @("x", $zip, "res\raw\libarm")
+    Rename-Item $libArmNoExt $libArm7z
+    if($architch -eq "X86")
+    {        
+        &7z.exe @("d", $libArm7z, "60", "61", "70", "71");        
+    }    
+    if(($architch -eq "Arm") -or ($architch -eq "ArmV7"))
+    {
+       &7z.exe @("d", $libArm7z, "50\");       
+    }
+    Rename-Item $libArm7z $libArmNoExt
+    &7z.exe @("u", $zip, "res\raw\libarm");
+    Rename-Item $zip $apktosign
+    
+    ($signedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-Signed.apk")) | Out-Null;
+    ($alignedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-aligned.apk")) | Out-Null;
     (jarsigner -certs -verbose:summary -signedjar $signedApk -sigalg SHA1withRSA -digestalg SHA1 -keystore e:\mydoc\release-key.keystore -storepass IlyZrnXl169254 -keypass IlyZrnXl169254  $apktosign googkey) | Out-Null
     (zipalign -v 4 $signedApk $alignedApk) | Out-Null       
     
-    $distApk = "dist\com.ezhang.aairvid" + $suffix + ".signed" +$architch+ ".apk"
+    ($distApk = Join-Path $scriptPath ("dist\com.ezhang.aairvid" + $suffix + ".signed" +$architch+ ".apk")) | Out-Null;
     Move-Item  -Path  $alignedApk -Destination $distApk -Force
 }
 

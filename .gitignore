@@ -72,3 +72,4 @@ buildaairvid.ps1
 sign.bat
 
 dist
+res/raw/libarm
