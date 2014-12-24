@@ -136,5 +136,21 @@ namespace aairvid.Utils
         {
             return this._activity.IsWifiEnabled();
         }
+
+        public bool H264Passthrough
+        {
+            get
+            {
+                var pref = PreferenceManager.GetDefaultSharedPreferences(_activity);
+                if (IsWifiEnabled())
+                {
+                    return pref.GetH264PassthroughWifi(_activity.Resources);
+                }
+                else
+                {
+                    return pref.GetH264Passthrough3G(_activity.Resources);
+                }
+            }
+        }
     }
 }

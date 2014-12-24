@@ -16,6 +16,11 @@ namespace aairvid.Utils
         {
             get;
         }
+
+        bool H264Passthrough
+        {
+            get;
+        }
     }
 
     public static class EmDefaultBitrate

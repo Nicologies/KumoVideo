@@ -143,6 +143,12 @@ namespace WinAirvid
             {
                 get { return DeviceWidth; }
             }
+
+
+            public bool H264Passthrough
+            {
+                get { return true; }
+            }
         }
 
         public string GetPlaybackURL(SubtitleStream subtitle, AudioStream audioStream)

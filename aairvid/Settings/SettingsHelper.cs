@@ -106,5 +106,23 @@ namespace aairvid.Settings
             var ret = int.Parse(pref.GetString(key, defaultValue.ToString()));
             return ret;
         }
+
+        public static bool GetH264PassthroughWifi(this ISharedPreferences pref, Resources res)
+        {
+            var key = res.GetString(Resource.String.KeyH264PassthroughWifi);
+            bool defaultValue = true;
+
+            var ret = pref.GetBoolean(key, defaultValue);
+            return ret;
+        }
+
+        public static bool GetH264Passthrough3G(this ISharedPreferences pref, Resources res)
+        {
+            var key = res.GetString(Resource.String.KeyH264Passthrough3G);
+            bool defaultValue = true;
+
+            var ret = pref.GetBoolean(key, defaultValue);
+            return ret;
+        }
     }
 }
