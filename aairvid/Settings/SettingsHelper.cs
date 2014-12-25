@@ -110,7 +110,7 @@ namespace aairvid.Settings
         public static bool GetH264PassthroughWifi(this ISharedPreferences pref, Resources res)
         {
             var key = res.GetString(Resource.String.KeyH264PassthroughWifi);
-            bool defaultValue = true;
+            bool defaultValue = false;
 
             var ret = pref.GetBoolean(key, defaultValue);
             return ret;
@@ -119,10 +119,26 @@ namespace aairvid.Settings
         public static bool GetH264Passthrough3G(this ISharedPreferences pref, Resources res)
         {
             var key = res.GetString(Resource.String.KeyH264Passthrough3G);
-            bool defaultValue = true;
+            bool defaultValue = false;
 
             var ret = pref.GetBoolean(key, defaultValue);
             return ret;
+        }
+
+        public static void SetH264PassthroughWifi(this ISharedPreferences pref, Resources res, bool value)
+        {
+            var key = res.GetString(Resource.String.KeyH264PassthroughWifi);
+            var editor = pref.Edit();
+            editor.PutBoolean(key, value);
+            editor.Commit();
+        }
+
+        public static void SetH264Passthrough3G(this ISharedPreferences pref, Resources res, bool value)
+        {
+            var key = res.GetString(Resource.String.KeyH264Passthrough3G);
+            var editor = pref.Edit();
+            editor.PutBoolean(key, value);
+            editor.Commit();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace aairvid.Utils
     {
         private static AndroidCodecProfile profile;
         private Activity _activity;
+        public event Action OnH264PassthroughChanged;
         public static AndroidCodecProfile InitProfile(Activity activity)
         {
             if (profile != null)
@@ -149,6 +150,23 @@ namespace aairvid.Utils
                 else
                 {
                     return pref.GetH264Passthrough3G(_activity.Resources);
+                }
+            }
+
+            set
+            {
+                var pref = PreferenceManager.GetDefaultSharedPreferences(_activity);
+                if (IsWifiEnabled())
+                {
+                    pref.SetH264PassthroughWifi(_activity.Resources, value);
+                }
+                else
+                {
+                    pref.SetH264Passthrough3G(_activity.Resources, value);
+                }
+                if (OnH264PassthroughChanged != null)
+                {
+                    OnH264PassthroughChanged();
                 }
             }
         }

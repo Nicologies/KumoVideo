@@ -52,6 +52,7 @@ namespace aairvid.Fragments
             this._view = null;
             this._mediaInfo = null;
             this._videoInfo = null;
+            AndroidCodecProfile.GetProfile().OnH264PassthroughChanged -= this.profile_OnH264PassthroughChanged;
         }
 
         private void Init()
@@ -77,7 +78,7 @@ namespace aairvid.Fragments
             btnPlay.Click += btnPlay_Click;
 
             var btnPlayWithConv = _view.FindViewById<Button>(Resource.Id.btnPlayWithConv);
-            btnPlayWithConv.Click += btnPlayWithConv_Click;      
+            btnPlayWithConv.Click += btnPlayWithConv_Click;
 
             var profile = AndroidCodecProfile.GetProfile();
             var stream = _mediaInfo.VideoStreams[0];
@@ -86,8 +87,14 @@ namespace aairvid.Fragments
             {
                 //btnPlay.Visibility = ViewStates.Gone;
             }
-        }
+            }
 
+            var ckH264Passthrough = _view.FindViewById<CheckBox>(Resource.Id.ckH264Passthrough);
+            ckH264Passthrough.Checked = profile.H264Passthrough;
+            ckH264Passthrough.CheckedChange += ckH264PassthroughCheckedChanged;
+
+            profile.OnH264PassthroughChanged += profile_OnH264PassthroughChanged;
+        }
         public static string ReadableFileSize(long byteCount)
         {
             string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
@@ -119,7 +126,9 @@ namespace aairvid.Fragments
             var sub = GetSelectedSub();
             RecentLans.Instance.UpdateRecentLan(this._mediaInfoFragment.Activity, sub);
 
-            var audio = GetSelectedAudioStream();
+            SaveH264PassthroughSettings();
+
+            var audio = GetSelectedAudioStream();            
 
             var listener = this._mediaInfoFragment.Activity as IPlayVideoListener;
             listener.OnPlayVideo(_videoInfo, _mediaInfo, sub, audio);
@@ -162,9 +171,42 @@ namespace aairvid.Fragments
             var sub = GetSelectedSub();
             RecentLans.Instance.UpdateRecentLan(_mediaInfoFragment.Activity, sub);
 
+            SaveH264PassthroughSettings();
+
             var audio = GetSelectedAudioStream();
             var listener = _mediaInfoFragment.Activity as IPlayVideoListener;
             listener.OnPlayVideoWithConv(_videoInfo, _mediaInfo, sub, audio);
+        }
+
+        private void SaveH264PassthroughSettings()
+        {
+            var ckH264Passthrough = this._view.FindViewById<CheckBox>(Resource.Id.ckH264Passthrough);
+            var profile = AndroidCodecProfile.GetProfile();
+            profile.H264Passthrough = ckH264Passthrough.Checked;
+        }
+
+        void ckH264PassthroughCheckedChanged(object sender, CompoundButton.CheckedChangeEventArgs e)
+        {
+            CheckBox ck = sender as CheckBox;
+            if (ck.Checked)
+            {
+                Toast.MakeText(_view.Context, Resource.String.H264PassthroughSummary, ToastLength.Long).Show();
+            }
+        }
+
+        void profile_OnH264PassthroughChanged()
+        {
+            if (_view == null)
+            {
+                return;
+            }
+            var ckH264Passthrough = _view.FindViewById<CheckBox>(Resource.Id.ckH264Passthrough);
+            if (ckH264Passthrough == null)
+            {
+                return;
+            }
+
+            ckH264Passthrough.Checked = AndroidCodecProfile.GetProfile().H264Passthrough;
         }
     }
 }

@@ -137,6 +137,8 @@ namespace aairvid
             Activity.Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
             playbackView = view.FindViewById<VitamioVideoView>(Resource.Id.playbackView);
+
+            playbackView.SetVideoChroma(IO.Vov.Vitamio.MediaPlayer.VideochromaRgb565);
                         
             playbackView.Error += playbackView_Error;
 
