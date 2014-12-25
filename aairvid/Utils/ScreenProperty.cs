@@ -19,7 +19,7 @@ namespace aairvid.UIUtils
     {
         public static bool IsLargeScreen(DisplayMetrics me)
         {
-            var widthInches = (float)me.WidthPixels / me.Xdpi;
+            var widthInches = (float)me.WidthPixels / (float)me.DensityDpi;
             return widthInches >= 5.3;//ipad mini width.
         }
         public static KeyValuePair<int, int> GetScreenResolution(Context ctx)
