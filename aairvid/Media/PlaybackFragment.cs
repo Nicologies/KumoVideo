@@ -109,8 +109,11 @@ namespace aairvid
                     adsLayout.Visibility = ViewStates.Gone;
                 }
             }
-            
-            activity.ActionBar.Hide();
+
+            if (activity.ActionBar != null)
+            {
+                activity.ActionBar.Hide();
+            }
         }
         public override void OnDetach()
         {
@@ -151,7 +154,10 @@ namespace aairvid
                 playbackView.StopPlayback();
                 playbackView = null;
             }
-            Activity.ActionBar.Show();
+            if (Activity.ActionBar != null)
+            {
+                Activity.ActionBar.Show();
+            }
 
             Activity.Window.ClearFlags(WindowManagerFlags.Fullscreen);
             
