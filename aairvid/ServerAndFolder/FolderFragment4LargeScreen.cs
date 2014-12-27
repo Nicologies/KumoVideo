@@ -77,7 +77,7 @@ namespace aairvid
                 }
                 _mediaInfoDisplayhelper = new MediaInfoFragmentHelper(this, view, _mediaInfo, _videoInfo);
             }
-            else
+            else if(_mediaInfoDisplayhelper != null)
             {
                 _mediaInfoDisplayhelper.Dispose();
                 _mediaInfoDisplayhelper = null;
@@ -87,6 +87,16 @@ namespace aairvid
         {
             View view = inflater.Inflate(Resource.Layout.folder_fragment_large, container, false);
             return view;
+        }
+
+        public override void OnDestroyView()
+        {
+            if (_mediaInfoDisplayhelper != null)
+            {
+                _mediaInfoDisplayhelper.Dispose();
+                _mediaInfoDisplayhelper = null;
+            }
+            base.OnDestroyView();
         }
     }
 }

@@ -54,5 +54,15 @@ namespace aairvid
 
             return view;
         }
+
+        public override void OnDestroyView()
+        {
+            if (_mediaInfoDisplayhelper != null)
+            {
+                _mediaInfoDisplayhelper.Dispose();
+                _mediaInfoDisplayhelper = null;
+            }
+            base.OnDestroyView();
+        }
     }
 }
