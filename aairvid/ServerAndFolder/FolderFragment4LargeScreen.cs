@@ -22,8 +22,6 @@ namespace aairvid
 
         MediaInfoFragmentHelper _mediaInfoDisplayhelper;
 
-        private bool _wasPlaying = false;
-
         public FolderFragment4LargeScreen()
         {
         }
@@ -40,11 +38,10 @@ namespace aairvid
 
         public override void OnResume()
         {
-            if (_wasPlaying && _videoInfo != null && _mediaInfo != null)
+            if (_videoInfo != null && _mediaInfo != null)
             {
                 DisplayDetail(_videoInfo, _mediaInfo);
             }
-            _wasPlaying = false;
             base.OnResume();
         }
 
