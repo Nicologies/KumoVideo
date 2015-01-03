@@ -1,5 +1,4 @@
 using aairvid.Ads;
-using aairvid.Model;
 using aairvid.Utils;
 using aairvid.VitamioAdapter;
 using Android.App;
@@ -10,39 +9,19 @@ using Android.Views;
 using Android.Widget;
 using libairvidproto.model;
 using System;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using HistoryContainer = System.Collections.Generic.Dictionary<string, aairvid.Model.HistoryItem>;
 
 namespace aairvid
 {
     public class PlaybackFragment : Fragment
     {        
         private string _playbackUrl;
-        private string _mediaId;
+        private string _vidBaseName;
         private MediaInfo _mediaInfo;
-
-        private static readonly string HISTORY_FILE_NAME = "./history.bin";
-        private static readonly string HISTORY_FILE = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), HISTORY_FILE_NAME);
-
-        private static HistoryContainer _history = new HistoryContainer();
 
         public PlaybackFragment(string playbackUrl, string mediaId, MediaInfo mediaInfo)
         {
             SetPlaybackSource(playbackUrl, mediaId, mediaInfo);
-
-            if(_history.Count() == 0)
-            {
-                if(File.Exists(HISTORY_FILE))
-                {
-                    using (var stream = File.OpenRead(HISTORY_FILE))
-                    {
-                        var fmt = new BinaryFormatter();
-                        _history = fmt.Deserialize(stream) as HistoryContainer;
-                    }
-                }
-            }
         }
 
         protected PlaybackFragment(IntPtr javaReference,
@@ -54,21 +33,19 @@ namespace aairvid
         public void SetPlaybackSource(string playbackUrl, string mediaId, MediaInfo mediaInfo)
         {
             this._playbackUrl = playbackUrl;
-            _mediaId = mediaId.Split('\\').LastOrDefault();
+            _vidBaseName = GetVidBasenameFromId(mediaId);
             _mediaInfo = mediaInfo;
+        }
+
+        public static string GetVidBasenameFromId(string mediaId)
+        {
+            return mediaId.Split('\\').LastOrDefault();
         }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             RetainInstance = true;
             base.OnCreate(savedInstanceState);
-            int maxHis = 200;
-
-            if (_history.Count() > maxHis)
-            {
-                var temp = _history.OrderBy(r => r.Value.LastPlayDate);
-                _history = temp.Skip(temp.Count() / 2).ToDictionary(r => r.Key, r => r.Value);
-            }
         }
 
         public override void OnPause()
@@ -77,7 +54,7 @@ namespace aairvid
             {
                 if (playbackView.IsPlaying)
                 {
-                    SaveLastPos();
+                    HistoryMaiten.SaveLastPos(_vidBaseName, playbackView.CurrentPosition);
                     playbackView.Suspend();
                 }
             }
@@ -87,7 +64,7 @@ namespace aairvid
 
         public override void OnDestroyView()
         {
-            if (playbackView != null && _mediaId != null)
+            if (playbackView != null && _vidBaseName != null)
             {
                 //SaveLastPos();
             }
@@ -257,11 +234,11 @@ namespace aairvid
 
             playbackView.SetMediaController(mediaController);
 
-            mediaController.SetFileName(this._mediaId);
+            mediaController.SetFileName(this._vidBaseName);
 
             var stream = _mediaInfo.VideoStreams[0];
 
-            var lastPos = GetLastPos();
+            var lastPos = HistoryMaiten.GetLastPos(_vidBaseName);
 
             var duration = _mediaInfo.DurationSeconds * 1000;
 
@@ -276,43 +253,6 @@ namespace aairvid
             _startPlayTime = DateTime.Now;
 
             playbackView.Start();
-        }
-
-        private void SaveLastPos()
-        {
-            HistoryItem hisItem;
-            if (_history.TryGetValue(_mediaId, out hisItem))
-            {
-                hisItem.LastPlayDate = DateTime.Now;
-                hisItem.LastPosition = playbackView.CurrentPosition;
-            }
-            else
-            {
-                hisItem = new HistoryItem()
-                {
-                    LastPosition = playbackView.CurrentPosition,
-                    LastPlayDate = DateTime.Now
-                };
-                _history.Add(_mediaId, hisItem);
-            }
-
-            using (var stream = File.OpenWrite(HISTORY_FILE))
-            {
-                new BinaryFormatter().Serialize(stream, _history);
-            }
-        }
-        private long GetLastPos()
-        {
-            HistoryItem hisItem;
-            if (_history.TryGetValue(_mediaId, out hisItem))
-            {
-                hisItem.LastPlayDate = DateTime.Now;
-                return hisItem.LastPosition;
-            }
-            else
-            {
-                return 0;
-            }
         }
     }
 }

@@ -27,6 +27,7 @@
   <string name="CannotConnect">Cannot Connect To Server</string>
   <string name="H264Passthrough">H264Passthrough</string>
   <string name="H264PassthroughSummary">Passthrough H264 without transcoding.\nNOTE: Will transcode if subtitle selected.\nMay cause video audio in-sync if device isn\'t fast enough\nWill consume more battery to decode.</string>
+  <string name="Viewed">Viewed On</string>
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>

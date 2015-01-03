@@ -83,11 +83,23 @@
                     android:id="@+id/cmbAudioStream" />
             </LinearLayout>
         </LinearLayout>
-        <aairvid.UIUtils.AspectRatioImageView
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
+        <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/imgVidThumbnail" />
+            android:layout_height="fill_parent">
+            <aairvid.UIUtils.AspectRatioImageView
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/imgVidThumbnail" />
+            <TextView
+                android:id="@+id/tvViewed"
+                android:text="Viewed On"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginRight="6dp"
+                android:background="@android:drawable/toast_frame" />
+        </FrameLayout>
     </LinearLayout>
 </merge>

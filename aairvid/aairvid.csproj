@@ -148,6 +148,7 @@
     <Compile Include="Media\SubtitleStreamJavaAdp.cs" />
     <Compile Include="Ads\AdsLayout.cs" />
     <Compile Include="Media\AspectRatioImageView.cs" />
+    <Compile Include="Utils\HistoryMaiten.cs" />
     <Compile Include="Utils\ScreenProperty.cs" />
     <Compile Include="Settings\AndroidCodecProfile.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

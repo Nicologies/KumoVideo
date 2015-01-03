@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using aairvid.Adapter;
+using aairvid.Utils;
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
+using Android.Graphics;
 using Android.Views;
 using Android.Widget;
-using aairvid.Adapter;
 using libairvidproto.model;
-using aairvid.Utils;
-using Android.Graphics;
+using System;
+using System.Linq;
 
 namespace aairvid.Fragments
 {
@@ -93,6 +87,20 @@ namespace aairvid.Fragments
             ckH264Passthrough.CheckedChange += ckH264PassthroughCheckedChanged;
 
             profile.OnH264PassthroughChanged += profile_OnH264PassthroughChanged;
+
+            var viewedMark = _view.FindViewById<TextView>(Resource.Id.tvViewed);
+            var vidName = PlaybackFragment.GetVidBasenameFromId(_videoInfo.Id);
+            var histInfo = HistoryMaiten.GetLastPlayedInfo(vidName);
+            if(histInfo != null)
+            {
+                viewedMark.Text = _view.Resources.GetString(Resource.String.Viewed) + " " + histInfo.LastPlayDate.ToShortDateString();
+                viewedMark.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+                viewedMark.Text = "";
+                viewedMark.Visibility = ViewStates.Gone;
+            }
         }
         public static string ReadableFileSize(long byteCount)
         {
@@ -187,9 +195,9 @@ namespace aairvid.Fragments
         void ckH264PassthroughCheckedChanged(object sender, CompoundButton.CheckedChangeEventArgs e)
         {
             CheckBox ck = sender as CheckBox;
-            if (ck.Checked)
+            if (ck.Checked && ck.Visibility == ViewStates.Visible)
             {
-                Toast.MakeText(_view.Context, Resource.String.H264PassthroughSummary, ToastLength.Long).Show();
+                Toast.MakeText(ck.Context, Resource.String.H264PassthroughSummary, ToastLength.Long).Show();
             }
         }
 

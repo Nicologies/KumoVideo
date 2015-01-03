@@ -25,4 +25,5 @@
   <string name="CannotConnect">无法连接服务器</string>
   <string name="H264Passthrough">直传H264</string>
   <string name="H264PassthroughSummary">直传 H264 码流, 不进行转码.\n注意: 只在未选择字幕时有效, 因为必须转码来合成字幕.\n如果机器性能不足, 则可能导致声音不同步.\n会消耗更多电来解码.</string>
+  <string name="Viewed">已观看</string>
 </resources>

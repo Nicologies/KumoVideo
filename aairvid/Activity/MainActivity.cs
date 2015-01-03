@@ -88,6 +88,7 @@ namespace aairvid
         public MainActivity()
         {
             LibIniter.Init(new ByteOrderConvAdp(), new SHA1Calculator());
+            HistoryMaiten.Load();
         }
 
         protected override void OnCreate(Bundle bundle)
