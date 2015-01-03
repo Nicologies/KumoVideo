@@ -230,6 +230,9 @@ namespace aairvid
 
         public override void OnDestroyView()
         {
+            var lvServers = View.FindViewById<ListView>(Resource.Id.lvServers);
+            lvServers.ItemClick -= lvServers_ItemClick;
+
             if (_serverDetector != null)
             {
                 _serverDetector.ServiceFound -= OnServiceFound;

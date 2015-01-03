@@ -43,9 +43,28 @@ namespace aairvid.Fragments
         public void Dispose()
         {
             this._mediaInfoFragment = null;
-            this._view = null;
             this._mediaInfo = null;
             this._videoInfo = null;
+            var ckH264Passthrough = _view.FindViewById<CheckBox>(Resource.Id.ckH264Passthrough);
+            if (ckH264Passthrough != null)
+            {
+                ckH264Passthrough.CheckedChange -= ckH264PassthroughCheckedChanged;
+            }
+
+            var btnPlay = _view.FindViewById<Button>(Resource.Id.btnPlay);
+            if (btnPlay != null)
+            {
+                btnPlay.Click -= btnPlay_Click;
+            }
+
+            var btnPlayWithConv = _view.FindViewById<Button>(Resource.Id.btnPlayWithConv);
+            if (btnPlayWithConv != null)
+            {
+                btnPlayWithConv.Click -= btnPlayWithConv_Click;
+            }
+
+            this._view = null;
+
             AndroidCodecProfile.GetProfile().OnH264PassthroughChanged -= this.profile_OnH264PassthroughChanged;
         }
 

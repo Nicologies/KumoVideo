@@ -130,6 +130,12 @@ namespace aairvid
         {
             if (playbackView != null)
             {
+                playbackView.Error -= playbackView_Error;
+
+                playbackView.Completion -= playbackView_Completion;
+
+                playbackView.Prepared -= playbackView_Prepared;
+
                 playbackView.StopPlayback();
                 playbackView = null;
             }

@@ -79,5 +79,12 @@ namespace aairvid
 
             FragmentHelper.AddFragment(Activity, mediaInfoFragment, tag);
         }
+
+        public override void OnDestroyView()
+        {
+            var lvResources = View.FindViewById<ListView>(Resource.Id.lvResources);
+            lvResources.ItemClick -= OnItemClick;
+            base.OnDestroyView();
+        }
     }
 }
