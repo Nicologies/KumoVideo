@@ -140,5 +140,19 @@ namespace aairvid.Settings
             editor.PutBoolean(key, value);
             editor.Commit();
         }
+
+        public static bool ShouldShowH264Warning(this ISharedPreferences pref, Resources res)
+        {
+            var key = res.GetString(Resource.String.KeyShowH264Warning);
+            return pref.GetBoolean(key, true);
+        }
+
+        public static void SetShouldShowH264Warning(this ISharedPreferences pref, Resources res, bool value)
+        {
+            var key = res.GetString(Resource.String.KeyShowH264Warning);
+            var editor = pref.Edit();
+            editor.PutBoolean(key, value);
+            editor.Commit();
+        }
     }
 }

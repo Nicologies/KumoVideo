@@ -26,8 +26,10 @@
   <string name="VerticalResolution3G">Vertical Resolution(Mobile Data)</string>
   <string name="CannotConnect">Cannot Connect To Server</string>
   <string name="H264Passthrough">H264Passthrough</string>
-  <string name="H264PassthroughSummary">Passthrough H264 without transcoding.\nNOTE: Will transcode if subtitle selected.\nMay cause video audio in-sync if device isn\'t fast enough\nWill consume more battery to decode.</string>
+  <string name="H264PassthroughSummary">Tick it to passthrough H264 stream without transcoding. NOTE: Will transcode if subtitle selected. May cause video audio in-sync if device isn\'t fast enough. May consume more battery to decode.</string>
   <string name="Viewed">Viewed On</string>
+  <string name="DontShowAgain">Don\'t Show Again</string>
+  <string name="Info">Info</string>
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>
@@ -42,4 +44,5 @@
   <string name="KeyCodecHeight3G">KeyCodecHeight3G</string>
   <string name="KeyH264PassthroughWifi">KeyH264PassthroughWifi</string>
   <string name="KeyH264Passthrough3G">KeyH264Passthrough3G</string>
+  <string name="KeyShowH264Warning">KeyShowH264Warning</string>
 </resources>

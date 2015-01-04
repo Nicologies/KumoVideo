@@ -2,11 +2,13 @@ using aairvid.Adapter;
 using aairvid.Utils;
 using Android.App;
 using Android.Graphics;
+using Android.Preferences;
 using Android.Views;
 using Android.Widget;
 using libairvidproto.model;
 using System;
 using System.Linq;
+using aairvid.Settings;
 
 namespace aairvid.Fragments
 {
@@ -216,7 +218,21 @@ namespace aairvid.Fragments
             CheckBox ck = sender as CheckBox;
             if (ck.Checked && ck.Visibility == ViewStates.Visible)
             {
-                Toast.MakeText(ck.Context, Resource.String.H264PassthroughSummary, ToastLength.Long).Show();
+                var pref = PreferenceManager.GetDefaultSharedPreferences(ck.Context);
+                if (pref.ShouldShowH264Warning(ck.Context.Resources))
+                {
+                    var dlg = new AlertDialog.Builder(ck.Context)
+                        .SetTitle(Resource.String.Info)
+                        .SetMessage(Resource.String.H264PassthroughSummary)
+                        .SetPositiveButton(Android.Resource.String.Ok, delegate{})
+                        .SetNegativeButton(Resource.String.DontShowAgain, delegate
+                        {
+                            pref.SetShouldShowH264Warning(ck.Context.Resources, false);
+                        })
+                        .SetCancelable(true)
+                        .Create();
+                    dlg.Show();
+                }
             }
         }
 
