@@ -1,6 +1,7 @@
 ﻿using aairvid.Adapter;
 using aairvid.Ads;
 using aairvid.Fragments;
+using aairvid.UIUtils;
 using aairvid.Utils;
 using Android.App;
 using Android.Gms.Ads;
@@ -377,6 +378,10 @@ namespace aairvid
             progress.Dismiss();
 
             if (resources.Count == 1 && resources[0] is Video)
+            {
+                OnMediaSelected(resources[0] as Video, folderFragment);
+            }
+            else if (resources[0] is Video && ScreenProperty.IsLargeScreen(Resources.DisplayMetrics))
             {
                 OnMediaSelected(resources[0] as Video, folderFragment);
             }
