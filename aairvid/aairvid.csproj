@@ -136,7 +136,7 @@
     <Compile Include="Media\MediaInfoFragment.cs" />
     <Compile Include="Media\MediaInfoFragmentHelper.cs" />
     <Compile Include="Media\PlaybackFragment.cs" />
-    <Compile Include="Media\HistoryItem.cs" />
+    <Compile Include="History\HistoryItem.cs" />
     <Compile Include="Media\IMediaDetailDisplayer.cs" />
     <Compile Include="Media\IPlayVideoListener.cs" />
     <Compile Include="ServerAndFolder\IResourceSelectedListener.cs" />
@@ -148,7 +148,7 @@
     <Compile Include="Media\SubtitleStreamJavaAdp.cs" />
     <Compile Include="Ads\AdsLayout.cs" />
     <Compile Include="Media\AspectRatioImageView.cs" />
-    <Compile Include="Utils\HistoryMaiten.cs" />
+    <Compile Include="History\HistoryMaiten.cs" />
     <Compile Include="Utils\ScreenProperty.cs" />
     <Compile Include="Settings\AndroidCodecProfile.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
