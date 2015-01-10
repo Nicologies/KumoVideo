@@ -1,4 +1,5 @@
 ﻿
+using System.Text;
 namespace libairvidproto.model
 {
     public class AirVidResource
@@ -27,11 +28,26 @@ namespace libairvidproto.model
             private set;
         }
 
-        public AirVidResource(AirVidServer server, string name, string id)
+        public AirVidResource(AirVidServer server, string name, string id, AirVidResource parent)
         {
             Server = server;
             Name = name;
             Id = id;
+            Parent = parent;
+        }
+
+        public  AirVidResource Parent { get; private set; }
+
+        public string GetPath()
+        {
+            var p = Parent;
+            var ret = new StringBuilder(Name);
+            while (p != null)
+            {
+                ret.Insert(0, string.Format(@"{0}/", p.Name));
+                p = p.Parent;
+            }
+            return ret.ToString();
         }
     }
 }

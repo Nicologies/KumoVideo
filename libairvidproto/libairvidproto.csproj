@@ -36,6 +36,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="model\RootFolder.cs" />
     <Compile Include="Utils\BytesToHexString.cs" />
     <Compile Include="Utils\IByteOrderConv.cs" />
     <Compile Include="Utils\InvalidPasswordException.cs" />

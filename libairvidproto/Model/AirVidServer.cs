@@ -101,6 +101,7 @@ namespace libairvidproto.model
         public List<AirVidResource> GetResources(
             IWebClient webClient,
             string path,
+            AirVidResource parent,
             ActionType actionType = ActionType.GetResources)
         {
             ServiceType serviceType = ServiceType.Browser;
@@ -118,24 +119,31 @@ namespace libairvidproto.model
                     var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
 
-                    var err = rootObj.Children.SingleOrDefault(r => r is StringValue && (r as StringValue).Key == "errorMessage") as StringValue;
-                    if (err != null && err.Value != null && err.Value.ToString().ToUpperInvariant().StartsWith("INVALID PASSWORD"))
+                    if (rootObj == null)
+                    {
+                        return new List<AirVidResource>();
+                    }
+                    var err =
+                        rootObj.Children.SingleOrDefault(
+                            r => r is StringValue && (r as StringValue).Key == "errorMessage") as StringValue;
+                    if (err != null && err.Value != null &&
+                        err.Value.ToUpperInvariant().StartsWith("INVALID PASSWORD"))
                     {
                         throw new InvalidPasswordException();
                     }
-                    var result = rootObj.GetResources(this, actionType);
+                    var result = rootObj.GetResources(this, actionType, parent);
                     return result;
                 }
             }
         }
 
-        public List<AirVidResource> GetNestItem(IWebClient webClient, string path)
+        public List<AirVidResource> GetNestItem(IWebClient webClient, Video video)
         {
             ServiceType serviceType = ServiceType.Browser;
 
             var actionType = ActionType.GetNestItem;
 
-            var reqData = new FormDataGenForNestItem(this, serviceType, actionType, path).GetFormData();
+            var reqData = new FormDataGenForNestItem(this, serviceType, actionType, video.Id).GetFormData();
 
             FillWebClientHeader(webClient);
 
@@ -147,20 +155,24 @@ namespace libairvidproto.model
                 {
                     var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
-                    var result = rootObj.GetResources(this, actionType);
+                    if (rootObj == null)
+                    {
+                        return new List<AirVidResource>();
+                    }
+                    var result = rootObj.GetResources(this, actionType, video);
                     return result;
                 }
             }
         }
 
-        public List<AirVidResource> GetResources(IWebClient webClient)
+        public List<AirVidResource> GetServerRootResources(IWebClient webClient)
         {
-            return GetResources(webClient, "");
+            return GetResources(webClient, "", new RootFolder(this));
         }
 
-        public MediaInfo GetMediaInfo(IWebClient webClient, string id)
+        public MediaInfo GetMediaInfo(IWebClient webClient, Video videoInfo)
         {
-            var res = GetNestItem(webClient, id);
+            var res = GetNestItem(webClient, videoInfo);
 
             return res.Single(r => r is MediaInfo) as MediaInfo;
         }
@@ -180,9 +192,10 @@ namespace libairvidproto.model
                 {
                     var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
+                    if (rootObj == null) return "";
                     var playbackResp = rootObj.Get(RootObj.EmObjType.PlaybackInitResponse);
                     var url = playbackResp.Get("contentURL") as StringValue;
-                    return url.Value;
+                    return url != null ? url.Value : "";
                 }
             }
         }
@@ -209,9 +222,10 @@ namespace libairvidproto.model
                 {
                     var de = new Decoder();
                     var rootObj = de.Decode(read) as RootObj;
+                    if (rootObj == null) return "";
                     var playbackResp = rootObj.Get(RootObj.EmObjType.PlaybackInitResponse);
                     var url = playbackResp.Get("contentURL") as StringValue;
-                    return url.Value;
+                    return url != null ? url.Value : "";
                 }
             }
         }

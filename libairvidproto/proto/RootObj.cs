@@ -123,7 +123,7 @@ namespace libairvidproto.types
             return null;
         }
 
-        public List<AirVidResource> GetResources(AirVidServer server, AirVidServer.ActionType actionType)
+        public List<AirVidResource> GetResources(AirVidServer server, AirVidServer.ActionType actionType, AirVidResource parent)
         {
             var res = new List<AirVidResource>();
             if (actionType == AirVidServer.ActionType.GetResources)
@@ -157,14 +157,14 @@ namespace libairvidproto.types
                         string name;
                         string id;
                         GetNameAndId(itemObj, out name, out id);
-                        res.Add(new Folder(server, name, id));
+                        res.Add(new Folder(server, name, id, parent));
                     }
                     else if (objType == EmObjType.VideoItem)
                     {
                         string name;
                         string id;
                         GetNameAndId(itemObj, out name, out id);
-                        res.Add(new Video(server, name, id));
+                        res.Add(new Video(server, name, id, parent));
                     }
                 }
             }
@@ -173,7 +173,7 @@ namespace libairvidproto.types
                 var videoItem = this.Get(EmObjType.VideoItem);
                 if (videoItem != null)
                 {
-                    var avMediaInfo = new MediaInfo(server);
+                    var avMediaInfo = new MediaInfo(server, parent);
                     var mediaInfo = videoItem.Get(EmObjType.MediaInfo);
                     if (mediaInfo != null)
                     {

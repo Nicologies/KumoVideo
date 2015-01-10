@@ -1,6 +1,7 @@
 ﻿using aairvid.Adapter;
 using aairvid.Ads;
 using aairvid.Fragments;
+using aairvid.History;
 using aairvid.UIUtils;
 using aairvid.Utils;
 using Android.App;
@@ -227,7 +228,7 @@ namespace aairvid
                 {
                     try
                     {
-                        return selectedServer.GetResources(new WebClientAdp());
+                        return selectedServer.GetServerRootResources(new WebClientAdp());
                     }
                     catch (System.Net.WebException ex)
                     {
@@ -581,41 +582,55 @@ namespace aairvid
 
 		public void PopupSettingsFragment ()
 		{
-            if (!IsShowingSettings())
-            {
-                var tag = typeof(SettingsFragment).Name;
-                var settingsFragment = FragmentManager.FindFragmentByTag(tag);
-                if (settingsFragment == null)
-                {
-                    settingsFragment = new SettingsFragment();
-                }
-                FragmentHelper.AddFragment(this, settingsFragment, tag);
-            }
+		    if (IsShowingSettingsFragment()) return;
+		    var tag = typeof(SettingsFragment).Name;
+		    var settingsFragment = FragmentManager.FindFragmentByTag(tag) ?? new SettingsFragment();
+		    FragmentHelper.AddFragment(this, settingsFragment, tag);
 		}
 
         public override bool OnCreateOptionsMenu(Android.Views.IMenu menu)
         {
-            this.MenuInflater.Inflate(Resource.Menu.mainmenu, menu);
+            MenuInflater.Inflate(Resource.Menu.mainmenu, menu);
             return base.OnCreateOptionsMenu(menu);
         }
+
         public override bool OnOptionsItemSelected(Android.Views.IMenuItem item)
         {
             switch (item.ItemId)
             {
                 case Resource.Id.settings:
-                    {
-                        PopupSettingsFragment();
-                        return true;
-                    }
+                {
+                    PopupSettingsFragment();
+                    return true;
+                }
+                case Resource.Id.RecentlyViewed:
+                {
+                    PopupRecentlyViewedFragment();
+                    return true;
+                }
                 default:
                     return base.OnOptionsItemSelected(item);
             }
         }
 
-        private bool IsShowingSettings()
+        private bool IsShowingSettingsFragment()
         {
             var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
             return fragment != null && fragment.Name == typeof(SettingsFragment).Name;
+        }
+
+        private bool IsShowingRecentlyViewFragment()
+        {
+            var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
+            return fragment != null && fragment.Name == typeof(RecentlyViewedFragment).Name;
+        }
+
+        private void PopupRecentlyViewedFragment()
+        {
+            if (IsShowingRecentlyViewFragment()) return;
+            var tag = typeof(RecentlyViewedFragment).Name;
+            var fragment = FragmentManager.FindFragmentByTag(tag) ?? new RecentlyViewedFragment();
+            FragmentHelper.AddFragment(this, fragment, tag);
         }
     }    
 }

@@ -6,14 +6,14 @@ namespace libairvidproto.model
     {
         public static readonly int ContentType = (int)EmContentType.Video;
 
-        public Video(AirVidServer server, string name, string id)
-            : base(server, name, id)
+        public Video(AirVidServer server, string name, string id, AirVidResource parent)
+            : base(server, name, id, parent)
         {
         }
 
         public MediaInfo GetMediaInfo(IWebClient webClient)
         {
-            return Server.GetMediaInfo(webClient, Id);
+            return Server.GetMediaInfo(webClient, this);
         }
 
         public string GetPlaybackUrl(IWebClient webClient,

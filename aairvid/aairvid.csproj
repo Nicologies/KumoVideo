@@ -119,6 +119,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ads\InterstitialAdImpl.cs" />
+    <Compile Include="History\RecentlyItemListAdapter.cs" />
+    <Compile Include="History\RecentlyViewedFragment.cs" />
     <Compile Include="Media\AudioStreamAdapter.cs" />
     <Compile Include="Media\SubtitleAdapter.cs" />
     <Compile Include="Media\AudioStreamJavaAdp.cs" />
@@ -198,6 +200,9 @@
     <AndroidResource Include="Resources\values\bitrates.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\recently_item.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\main.axml">
@@ -243,6 +248,7 @@
     <AndroidResource Include="Resources\menu\mainmenu.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable\history.png" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(Configuration)'=='Debug'">

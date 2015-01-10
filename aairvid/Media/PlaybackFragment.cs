@@ -54,7 +54,8 @@ namespace aairvid
             {
                 if (playbackView.IsPlaying)
                 {
-                    HistoryMaiten.SaveLastPos(_vidBaseName, playbackView.CurrentPosition);
+                    HistoryMaiten.SaveLastPos(_vidBaseName,
+                        playbackView.CurrentPosition, _mediaInfo.Parent.Parent);
                     playbackView.Suspend();
                 }
             }

@@ -30,6 +30,7 @@
   <string name="Viewed">Viewed On</string>
   <string name="DontShowAgain">Don\'t Show Again</string>
   <string name="Info">Info</string>
+  <string name="RecentlyViewed">Recently Viewed</string>
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>
