@@ -81,10 +81,17 @@ namespace aairvid.Fragments
             var tvDuration = _view.FindViewById<TextView>(Resource.Id.tvVideoDuration);
             var duration = TimeSpan.FromSeconds(_mediaInfo.DurationSeconds);
             tvDuration.Text = string.Format("Duration: {0}:{1}:{2}", duration.Hours, duration.Minutes, duration.Seconds);
-            var imageBitmap = BitmapFactory.DecodeByteArray(_mediaInfo.Thumbnail, 0, _mediaInfo.Thumbnail.Length);
 
-            var imgThumbnail = _view.FindViewById<ImageView>(Resource.Id.imgVidThumbnail);
-            imgThumbnail.SetImageBitmap(imageBitmap);
+            try
+            {
+                var imageBitmap = BitmapFactory.DecodeByteArray(_mediaInfo.Thumbnail, 0, _mediaInfo.Thumbnail.Length);
+
+                var imgThumbnail = _view.FindViewById<ImageView>(Resource.Id.imgVidThumbnail);
+                imgThumbnail.SetImageBitmap(imageBitmap);
+            }
+            catch
+            {
+            }
 
             var tvVideoSize = _view.FindViewById<TextView>(Resource.Id.tvVideoSize);
             tvVideoSize.Text = "File Size: " + ReadableFileSize(_mediaInfo.FileSize);
