@@ -27,10 +27,10 @@
   <string name="CannotConnect">Cannot Connect To Server</string>
   <string name="H264Passthrough">H264Passthrough</string>
   <string name="H264PassthroughSummary">Tick it to passthrough H264 stream without transcoding. NOTE: Will transcode if subtitle selected. May cause video audio in-sync if device isn\'t fast enough. May consume more battery to decode.</string>
-  <string name="Viewed">Viewed On</string>
+  <string name="Viewed">Watched On</string>
   <string name="DontShowAgain">Don\'t Show Again</string>
   <string name="Info">Info</string>
-  <string name="RecentlyViewed">Recently Viewed</string>
+  <string name="RecentlyViewed">Recently Watched</string>
   <string name="Play">Play</string>
   <string name="PlayConv">PlayWithConv</string>
   <string name="CannotFindServer">Cannot Find The Server</string>
