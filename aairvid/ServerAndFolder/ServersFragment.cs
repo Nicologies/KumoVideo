@@ -8,6 +8,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using libairvidproto;
+using libairvidproto.model;
 using Network.Bonjour;
 using Network.ZeroConf;
 using System;
@@ -285,6 +286,11 @@ namespace aairvid
                 this._servers.Remove(info.Position);
             }
             return true;
+        }
+
+        internal AirVidServer GetServerById(string id)
+        {
+            return _servers.GetServerById(id);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace aairvid.Utils
 
         public static void Load()
         {
-            if (HistoryItems.Count() == 0)
+            if (!HistoryItems.Any())
             {
                 if (File.Exists(HISTORY_FILE))
                 {
@@ -38,10 +38,10 @@ namespace aairvid.Utils
             }
         }
 
-        public static void SaveLastPos(string vidBaseName, long pos, AirVidResource parent)
+        public static void SaveLastPos(Video vid, long pos, AirVidResource.NodeInfo parent)
         {
             HistoryItem hisItem;
-            if (HistoryItems.TryGetValue(vidBaseName, out hisItem))
+            if (HistoryItems.TryGetValue(vid.Id, out hisItem))
             {
                 hisItem.LastPlayDate = DateTime.Now;
                 hisItem.LastPosition = pos;
@@ -52,28 +52,37 @@ namespace aairvid.Utils
                 {
                     LastPosition = pos,
                     LastPlayDate = DateTime.Now,
-                    Server = parent.Server.Name,
-                    FolderPath = parent.GetPath(),
+                    Server = vid.Server.Name,
+                    ServerId = vid.Server.ID,
+                    FolderPath = parent.Path,
                     FolderId = parent.Id,
+                    VideoId = vid.Id,
+                    VideoName = vid.GetDispName()
                 };
-                HistoryItems.Add(vidBaseName, hisItem);
+                HistoryItems.Add(vid.Id, hisItem);
             }
 
+            SaveAllItems();
+        }
+
+        public static void SaveAllItems()
+        {
             using (var stream = File.OpenWrite(HISTORY_FILE))
             {
                 new BinaryFormatter().Serialize(stream, HistoryItems);
             }
         }
-        public static long GetLastPos(string vidBaseName)
+
+        public static long GetLastPos(string vidId)
         {
-            var item = GetLastPlayedInfo(vidBaseName);
+            var item = GetLastPlayedInfo(vidId);
             return item == null ? 0 : item.LastPosition;
         }
 
-        public static HistoryItem GetLastPlayedInfo(string vidBaseName)
+        public static HistoryItem GetLastPlayedInfo(string vidId)
         {
             HistoryItem hisItem;
-            if (HistoryItems.TryGetValue(vidBaseName, out hisItem))
+            if (HistoryItems.TryGetValue(vidId, out hisItem))
             {
                 hisItem.LastPlayDate = DateTime.Now;
                 return hisItem;

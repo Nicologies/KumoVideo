@@ -1,4 +1,5 @@
 using aairvid.Model;
+using aairvid.Utils;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
@@ -6,21 +7,19 @@ using System.Collections.Generic;
 
 namespace aairvid.History
 {
-    public class RecentlyItemListAdapter : BaseAdapter
+    public class HistoryItemJavaAdapter : Java.Lang.Object
     {
-        private readonly LayoutInflater _inflater;
-
-        private class HistoryItemJavaAdapter : Java.Lang.Object
-        {
-            public string VideoBaseName { get; set; }
-            public HistoryItem Details { get; set; }
-        }
+        public HistoryItem Details { get; set; }
+    }
+    public class RecentlyItemListAdapter : BaseAdapter<HistoryItemJavaAdapter>
+    {
+        private readonly Context _ctx;
 
         private readonly List<HistoryItemJavaAdapter> _items = new List<HistoryItemJavaAdapter>();
 
         public RecentlyItemListAdapter(Context context)
         {
-            _inflater = LayoutInflater.From(context);
+            _ctx = context;
         }
 
         public override int Count
@@ -38,18 +37,25 @@ namespace aairvid.History
             return position;
         }
 
+        public string GetVideoName(int position)
+        {
+            return position < _items.Count ? _items[position].Details.VideoName : "";
+        }
+
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             if (convertView == null) // otherwise create a new one
             {
-                convertView = _inflater.Inflate(Resource.Layout.recently_item, null);
+                var inflater = LayoutInflater.From(_ctx);
+                convertView = inflater.Inflate(Resource.Layout.recently_item, null);
             }
 
-            var serverName = convertView
+            var itemDesc = convertView
                 .FindViewById<TextView>(Resource.Id.tvVideoBaseName);
 
             var item = _items[position];
-            serverName.Text = item.VideoBaseName + " @ " + item.Details.FolderPath;
+            itemDesc.Text = item.Details.VideoName + " @ " + item.Details.FolderPath;
+
             return convertView;
         }
 
@@ -57,10 +63,26 @@ namespace aairvid.History
         {
             _items.Add(new HistoryItemJavaAdapter()
             {
-                VideoBaseName = videoBasename,
                 Details = historyItem
             });
             NotifyDataSetChanged();
+        }
+
+        internal void RemoveItem(int p)
+        {
+            var item = _items[p];
+            _items.RemoveAt(p);
+            HistoryMaiten.HistoryItems.Remove(item.Details.VideoId);
+            HistoryMaiten.SaveAllItems();
+            NotifyDataSetChanged();
+        }
+
+        public override HistoryItemJavaAdapter this[int position]
+        {
+            get
+            {
+                return position >= _items.Count ? null : _items[position];
+            }
         }
     }
 }

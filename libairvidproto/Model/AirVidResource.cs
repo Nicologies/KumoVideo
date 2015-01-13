@@ -4,6 +4,12 @@ namespace libairvidproto.model
 {
     public class AirVidResource
     {
+        public class NodeInfo
+        {
+            public string Id;
+            public string Path;
+            public string Name;
+        }
         protected enum EmContentType
         {
             Folder = 1,
@@ -28,7 +34,7 @@ namespace libairvidproto.model
             private set;
         }
 
-        public AirVidResource(AirVidServer server, string name, string id, AirVidResource parent)
+        public AirVidResource(AirVidServer server, string name, string id, NodeInfo parent)
         {
             Server = server;
             Name = name;
@@ -36,18 +42,21 @@ namespace libairvidproto.model
             Parent = parent;
         }
 
-        public  AirVidResource Parent { get; private set; }
+        public NodeInfo Parent { get; private set; }
+
+        public NodeInfo GetNodeInfo()
+        {
+            return new NodeInfo()
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Path = this.GetPath()
+            };
+        }
 
         public string GetPath()
         {
-            var p = Parent;
-            var ret = new StringBuilder(Name);
-            while (p != null)
-            {
-                ret.Insert(0, string.Format(@"{0}/", p.Name));
-                p = p.Parent;
-            }
-            return ret.ToString();
+            return Parent != null ? string.Format(@"{0}\{1}", Parent.Path, Name) : "";
         }
     }
 }

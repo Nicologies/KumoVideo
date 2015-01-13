@@ -23,8 +23,7 @@ namespace aairvid
 
         public MediaInfoFragment(MediaInfo mediaInfo, Video vid)
         {
-            this._mediaInfo = mediaInfo;
-            _videoInfo = vid;
+            UpdateWithNewDetail(mediaInfo, vid);
         }
 
         public MediaInfoFragment()
@@ -38,7 +37,7 @@ namespace aairvid
         }
         public override void OnCreate(Bundle savedInstanceState)
         {
-            this.RetainInstance = true;
+            RetainInstance = true;
             base.OnCreate(savedInstanceState);
         }
 
@@ -63,6 +62,12 @@ namespace aairvid
                 _mediaInfoDisplayhelper = null;
             }
             base.OnDestroyView();
+        }
+
+        public void UpdateWithNewDetail(MediaInfo mediaInfo, Video vid)
+        {
+            _mediaInfo = mediaInfo;
+            _videoInfo = vid;
         }
     }
 }

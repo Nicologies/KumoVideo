@@ -157,14 +157,14 @@ namespace libairvidproto.types
                         string name;
                         string id;
                         GetNameAndId(itemObj, out name, out id);
-                        res.Add(new Folder(server, name, id, parent));
+                        res.Add(new Folder(server, name, id, parent.GetNodeInfo()));
                     }
                     else if (objType == EmObjType.VideoItem)
                     {
                         string name;
                         string id;
                         GetNameAndId(itemObj, out name, out id);
-                        res.Add(new Video(server, name, id, parent));
+                        res.Add(new Video(server, name, id, parent.GetNodeInfo()));
                     }
                 }
             }
@@ -173,7 +173,7 @@ namespace libairvidproto.types
                 var videoItem = this.Get(EmObjType.VideoItem);
                 if (videoItem != null)
                 {
-                    var avMediaInfo = new MediaInfo(server, parent);
+                    var avMediaInfo = new MediaInfo(server, parent.GetNodeInfo());
                     var mediaInfo = videoItem.Get(EmObjType.MediaInfo);
                     if (mediaInfo != null)
                     {

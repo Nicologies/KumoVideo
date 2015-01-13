@@ -1,4 +1,5 @@
-﻿using aairvid.Utils;
+﻿using System.Linq;
+using aairvid.Utils;
 
 namespace libairvidproto.model
 {
@@ -6,7 +7,7 @@ namespace libairvidproto.model
     {
         public static readonly int ContentType = (int)EmContentType.Video;
 
-        public Video(AirVidServer server, string name, string id, AirVidResource parent)
+        public Video(AirVidServer server, string name, string id, NodeInfo parent)
             : base(server, name, id, parent)
         {
         }
@@ -56,5 +57,11 @@ namespace libairvidproto.model
         {
             return Server.GetPlayWithConvUrl(webClient, this, mediaInfo, sub, audio, profile);
         }
+
+        public string GetDispName()
+        {
+            return Id.Split('\\').LastOrDefault();
+        }
+
     }
 }

@@ -31,8 +31,20 @@
   <string name="DontShowAgain">Don\'t Show Again</string>
   <string name="Info">Info</string>
   <string name="RecentlyViewed">Recently Viewed</string>
+  <string name="Play">Play</string>
+  <string name="PlayConv">PlayWithConv</string>
+  <string name="CannotFindServer">Cannot Find The Server</string>
+  <string name="ViewVideoInfo">View Video Info</string>
+  <string name="ViewFolderInfo">View Folder Info</string>
+  
 
   <string-array name="server_ctx_menu">
+    <item>@string/Delete</item>
+  </string-array>
+
+  <string-array name="recentitems_ctx_menu">
+    <item>@string/ViewFolderInfo</item>
+    <item>@string/ViewVideoInfo</item>
     <item>@string/Delete</item>
   </string-array>
   

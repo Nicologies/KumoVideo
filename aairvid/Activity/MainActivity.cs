@@ -97,7 +97,7 @@ namespace aairvid
         {
             base.OnCreate(bundle);
 
-            if (_cachedServers == null || _cachedServers.Count() == 0)
+            if (_cachedServers == null || !_cachedServers.Any())
             {
                 if (File.Exists(SERVER_PWD_FILE))
                 {
@@ -390,7 +390,7 @@ namespace aairvid
 
         public async void OnMediaSelected(Video video, IMediaDetailDisplayer dtDisp)
         {
-            ProgressDialog progress = new ProgressDialog(this);
+            var progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
@@ -404,7 +404,7 @@ namespace aairvid
                 {
                     ShowConnectionFailure();
                     return null;
-                }                
+                }
             });
 
             if (mediaInfo == null)
@@ -418,6 +418,53 @@ namespace aairvid
                 return;
             }
             dtDisp.DisplayDetail(video, mediaInfo);
+
+            progress.Dismiss();
+        }
+
+        public async void ReqDisplayMediaViaMediaFragment(Video video)
+        {
+            var progress = new ProgressDialog(this);
+            progress.SetMessage("Loading");
+            progress.Show();
+
+            var mediaInfo = await Task<MediaInfo>.Run(() =>
+            {
+                try
+                {
+                    return video.GetMediaInfo(new WebClientAdp());
+                }
+                catch (System.Net.WebException ex)
+                {
+                    ShowConnectionFailure();
+                    return null;
+                }
+            });
+
+            if (mediaInfo == null)
+            {
+                progress.Dismiss();
+                return;
+            }
+
+            if (killed)
+            {
+                return;
+            }
+
+            var tag = typeof(MediaInfoFragment).Name;
+
+            var mediaInfoFragment = FragmentManager.FindFragmentByTag<MediaInfoFragment>(tag);
+            if (mediaInfoFragment == null)
+            {
+                mediaInfoFragment = new MediaInfoFragment(mediaInfo, video);
+            }
+            else
+            {
+                mediaInfoFragment.UpdateWithNewDetail(mediaInfo, video);
+            }
+
+            FragmentHelper.AddFragment(this, mediaInfoFragment, tag);
 
             progress.Dismiss();
         }
@@ -520,11 +567,11 @@ namespace aairvid
             var playbackFragment = FragmentManager.FindFragmentByTag<PlaybackFragment>(tag);
             if (playbackFragment == null)
             {
-                playbackFragment = new PlaybackFragment(playbackUrl, vid.Id, mediaInfo);
+                playbackFragment = new PlaybackFragment(playbackUrl, vid, mediaInfo);
             }
             else
             {
-                playbackFragment.SetPlaybackSource(playbackUrl, vid.Id, mediaInfo);
+                playbackFragment.SetPlaybackSource(playbackUrl, vid, mediaInfo);
             }
 
             var transaction = FragmentManager.BeginTransaction();
@@ -631,6 +678,12 @@ namespace aairvid
             var tag = typeof(RecentlyViewedFragment).Name;
             var fragment = FragmentManager.FindFragmentByTag(tag) ?? new RecentlyViewedFragment();
             FragmentHelper.AddFragment(this, fragment, tag);
+        }
+
+
+        public AirVidServer GetServerById(string id)
+        {
+            return _serverFragment == null ? null : _serverFragment.GetServerById(id);
         }
     }    
 }

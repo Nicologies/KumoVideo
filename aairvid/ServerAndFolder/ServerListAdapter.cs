@@ -37,9 +37,7 @@ namespace aairvid
                 convertView = _inflater.Inflate(Resource.Layout.server_item, null);
             }
 
-            TextView serverName;
-
-            serverName = convertView
+            var serverName = convertView
                 .FindViewById<TextView>(Resource.Id.tvServerName);
 
             var item = this[position];
@@ -59,7 +57,7 @@ namespace aairvid
             {
                 _servers.Add(svr);
             }
-            this.NotifyDataSetChanged();
+            NotifyDataSetChanged();
             return svr;
         }
 
@@ -90,6 +88,11 @@ namespace aairvid
         {
             _servers.RemoveAt(p);
             NotifyDataSetChanged();
+        }
+
+        public AirVidServer GetServerById(string id)
+        {
+            return _servers.FirstOrDefault(r => r.ID.ToLowerInvariant() == id.ToLowerInvariant());
         }
     }
 }

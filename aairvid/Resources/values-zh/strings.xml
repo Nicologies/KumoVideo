@@ -29,4 +29,7 @@
   <string name="DontShowAgain">不再提示</string>
   <string name="Info">提示</string>
   <string name="RecentlyViewed">最近观看记录</string>
+  <string name="CannotFindServer">找不到服务器</string>
+  <string name="ViewVideoInfo">查看视频信息</string>
+  <string name="ViewFolderInfo">查看视频所在文件夹</string>
 </resources>

@@ -9,19 +9,18 @@ using Android.Views;
 using Android.Widget;
 using libairvidproto.model;
 using System;
-using System.Linq;
 
 namespace aairvid
 {
     public class PlaybackFragment : Fragment
     {        
         private string _playbackUrl;
-        private string _vidBaseName;
+        private Video _video;
         private MediaInfo _mediaInfo;
 
-        public PlaybackFragment(string playbackUrl, string mediaId, MediaInfo mediaInfo)
+        public PlaybackFragment(string playbackUrl, Video v, MediaInfo mediaInfo)
         {
-            SetPlaybackSource(playbackUrl, mediaId, mediaInfo);
+            SetPlaybackSource(playbackUrl, v, mediaInfo);
         }
 
         protected PlaybackFragment(IntPtr javaReference,
@@ -30,16 +29,11 @@ namespace aairvid
         {
         }
 
-        public void SetPlaybackSource(string playbackUrl, string mediaId, MediaInfo mediaInfo)
+        public void SetPlaybackSource(string playbackUrl, Video v, MediaInfo mediaInfo)
         {
-            this._playbackUrl = playbackUrl;
-            _vidBaseName = GetVidBasenameFromId(mediaId);
+            _playbackUrl = playbackUrl;
+            _video = v;
             _mediaInfo = mediaInfo;
-        }
-
-        public static string GetVidBasenameFromId(string mediaId)
-        {
-            return mediaId.Split('\\').LastOrDefault();
         }
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -50,27 +44,16 @@ namespace aairvid
 
         public override void OnPause()
         {
-            if (playbackView != null)
+            if (_playbackView != null)
             {
-                if (playbackView.IsPlaying)
+                if (_playbackView.IsPlaying)
                 {
-                    HistoryMaiten.SaveLastPos(_vidBaseName,
-                        playbackView.CurrentPosition, _mediaInfo.Parent.Parent);
-                    playbackView.Suspend();
+                    HistoryMaiten.SaveLastPos(_video, _playbackView.CurrentPosition, _video.Parent);
+                    _playbackView.Suspend();
                 }
             }
             
             base.OnPause();
-        }
-
-        public override void OnDestroyView()
-        {
-            if (playbackView != null && _vidBaseName != null)
-            {
-                //SaveLastPos();
-            }
-
-            base.OnDestroyView();
         }
 
         public override void OnAttach(Activity activity)
@@ -93,10 +76,6 @@ namespace aairvid
                 activity.ActionBar.Hide();
             }
         }
-        public override void OnDetach()
-        {
-            base.OnDetach();            
-        }
 
         private bool _failedToPlay = false;
 
@@ -104,9 +83,9 @@ namespace aairvid
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            View view = inflater.Inflate(Resource.Layout.playback_fragment, container, false);
+            var view = inflater.Inflate(Resource.Layout.playback_fragment, container, false);
 
-            PowerManager powerManager = (PowerManager)Activity.GetSystemService(Context.PowerService);
+            var powerManager = (PowerManager)Activity.GetSystemService(Context.PowerService);
             if (!powerManager.IsScreenOn)
             {
                 return view;
@@ -114,31 +93,31 @@ namespace aairvid
 
             Activity.Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
 
-            playbackView = view.FindViewById<VitamioVideoView>(Resource.Id.playbackView);
+            _playbackView = view.FindViewById<VitamioVideoView>(Resource.Id.playbackView);
 
-            playbackView.SetVideoChroma(IO.Vov.Vitamio.MediaPlayer.VideochromaRgb565);
+            _playbackView.SetVideoChroma(IO.Vov.Vitamio.MediaPlayer.VideochromaRgb565);
                         
-            playbackView.Error += playbackView_Error;
+            _playbackView.Error += playbackView_Error;
 
-            playbackView.Completion += playbackView_Completion;            
+            _playbackView.Completion += playbackView_Completion;            
 
-            StartPlay(view);
+            StartPlay();
 
             return view;
         }
 
         public override void OnDestroy()
         {
-            if (playbackView != null)
+            if (_playbackView != null)
             {
-                playbackView.Error -= playbackView_Error;
+                _playbackView.Error -= playbackView_Error;
 
-                playbackView.Completion -= playbackView_Completion;
+                _playbackView.Completion -= playbackView_Completion;
 
-                playbackView.Prepared -= playbackView_Prepared;
+                _playbackView.Prepared -= playbackView_Prepared;
 
-                playbackView.StopPlayback();
-                playbackView = null;
+                _playbackView.StopPlayback();
+                _playbackView = null;
             }
             if (Activity.ActionBar != null)
             {
@@ -183,8 +162,6 @@ namespace aairvid
             }
         }
 
-
-
         void playbackView_Error(object sender, IO.Vov.Vitamio.MediaPlayer.ErrorEventArgs e)
         {
             _failedToPlay = true;
@@ -195,30 +172,30 @@ namespace aairvid
             }
         }
 
-        VitamioVideoView playbackView;
+        VitamioVideoView _playbackView;
 
         public override void OnResume()
         {
-            if (playbackView != null)
+            if (_playbackView != null)
             {
-                playbackView.Resume();
+                _playbackView.Resume();
             }
             base.OnResume();
         }
         
-        private void StartPlay(View view)
+        private void StartPlay()
         {
             try
             {
-                playbackView.Prepared += playbackView_Prepared;
+                _playbackView.Prepared += playbackView_Prepared;
 
-                playbackView.SetVideoURI(Android.Net.Uri.Parse(this._playbackUrl));
+                _playbackView.SetVideoURI(Android.Net.Uri.Parse(_playbackUrl));
                 
-                playbackView.RequestFocus();
+                _playbackView.RequestFocus();
             }
             catch (Exception ex)
             {
-                Toast.MakeText(this.Activity, ex.ToString(), ToastLength.Long);
+                Toast.MakeText(Activity, ex.ToString(), ToastLength.Long);
                 throw;
             }
         }
@@ -226,26 +203,27 @@ namespace aairvid
         void playbackView_Prepared(object sender, EventArgs e)
         {
             var args = e as IO.Vov.Vitamio.MediaPlayer.PreparedEventArgs;
-            var player = args.P0 as IO.Vov.Vitamio.MediaPlayer;
-            player.SetScreenOnWhilePlaying(true);
+            if (args != null)
+            {
+                var player = args.P0;
+                player.SetScreenOnWhilePlaying(true);
+            }
 
-            playbackView.SetLayoutStretch(0);
+            _playbackView.SetLayoutStretch(0);
 
-            var mediaController = new IO.Vov.Vitamio.Widget.MediaController(this.Activity);
-            mediaController.SetAnchorView(playbackView);
+            var mediaController = new IO.Vov.Vitamio.Widget.MediaController(Activity);
+            mediaController.SetAnchorView(_playbackView);
 
             if (Activity.IsWifiEnabled())
             {
                 mediaController.SetInstantSeeking(true);
             }
 
-            playbackView.SetMediaController(mediaController);
+            _playbackView.SetMediaController(mediaController);
 
-            mediaController.SetFileName(this._vidBaseName);
+            mediaController.SetFileName(_video.GetDispName());
 
-            var stream = _mediaInfo.VideoStreams[0];
-
-            var lastPos = HistoryMaiten.GetLastPos(_vidBaseName);
+            var lastPos = HistoryMaiten.GetLastPos(_video.Id);
 
             var duration = _mediaInfo.DurationSeconds * 1000;
 
@@ -254,12 +232,12 @@ namespace aairvid
                 && lastPos < duration
                 && distanceToEnd > 3)
             {
-                playbackView.SeekTo(lastPos);
+                _playbackView.SeekTo(lastPos);
             }
 
             _startPlayTime = DateTime.Now;
 
-            playbackView.Start();
+            _playbackView.Start();
         }
     }
 }

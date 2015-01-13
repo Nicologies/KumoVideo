@@ -38,7 +38,7 @@ namespace libairvidproto.model
         {
             get
             {
-                return Name + _service.Address + _service.Port.ToString();
+                return GenServerId(Name, _service.Address, _service.Port);
             }
         }
 
@@ -228,6 +228,11 @@ namespace libairvidproto.model
                     return url != null ? url.Value : "";
                 }
             }
+        }
+
+        public static string GenServerId(string name, string addr, ushort port)
+        {
+            return name + addr + port.ToString();
         }
     }
 }

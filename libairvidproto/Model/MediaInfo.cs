@@ -5,7 +5,7 @@ namespace libairvidproto.model
     public class MediaInfo : AirVidResource
     {
         public static readonly int ContentType = (int)EmContentType.MediaInfo;
-        public MediaInfo(AirVidServer server, AirVidResource parent)
+        public MediaInfo(AirVidServer server, NodeInfo parent)
             : base(server, "", "", parent)
         {
             FileSize = 0L;

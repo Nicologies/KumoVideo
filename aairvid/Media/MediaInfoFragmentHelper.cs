@@ -117,8 +117,7 @@ namespace aairvid.Fragments
             profile.OnH264PassthroughChanged += profile_OnH264PassthroughChanged;
 
             var viewedMark = _view.FindViewById<TextView>(Resource.Id.tvViewed);
-            var vidName = PlaybackFragment.GetVidBasenameFromId(_videoInfo.Id);
-            var histInfo = HistoryMaiten.GetLastPlayedInfo(vidName);
+            var histInfo = HistoryMaiten.GetLastPlayedInfo(_videoInfo.Id);
             if(histInfo != null)
             {
                 viewedMark.Text = _view.Resources.GetString(Resource.String.Viewed) + " " + histInfo.LastPlayDate.ToShortDateString();

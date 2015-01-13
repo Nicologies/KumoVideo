@@ -11,10 +11,10 @@ namespace aairvid.Model
         public string Server { get; set; }
         public string FolderPath { get; set; }
         public string FolderId { get; set; }
+        public string ServerId { get; set; }
 
-        public string GetPath(string name)
-        {
-            return FolderPath + @"/" + name;
-        }
+        public string VideoId { get; set; }
+
+        public string VideoName { get; set; }
     }
 }
