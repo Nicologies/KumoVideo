@@ -36,6 +36,7 @@
   <string name="CannotFindServer">Cannot Find The Server</string>
   <string name="ViewVideoInfo">View Video Info</string>
   <string name="ViewFolderInfo">View Folder Info</string>
+  <string name="DeleteFromHistory">Delete From History</string>
   
 
   <string-array name="server_ctx_menu">
@@ -45,7 +46,7 @@
   <string-array name="recentitems_ctx_menu">
     <item>@string/ViewFolderInfo</item>
     <item>@string/ViewVideoInfo</item>
-    <item>@string/Delete</item>
+    <item>@string/DeleteFromHistory</item>
   </string-array>
   
   <!--No need to translate-->

@@ -46,7 +46,7 @@ namespace aairvid.History
 
             var selectedItem = item.TitleFormatted.ToString();
 
-            if (selectedItem == Resources.GetString(Resource.String.Delete))
+            if (selectedItem == Resources.GetString(Resource.String.DeleteFromHistory))
             {
                 _adp.RemoveItem(info.Position);
             }

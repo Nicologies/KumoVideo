@@ -61,6 +61,10 @@ namespace aairvid.History
 
         internal void AddItem(string videoBasename, HistoryItem historyItem)
         {
+            if (string.IsNullOrEmpty(historyItem.Server))
+            {
+                return;//old version.
+            }
             _items.Add(new HistoryItemJavaAdapter()
             {
                 Details = historyItem
