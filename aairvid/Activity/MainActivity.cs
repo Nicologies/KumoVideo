@@ -26,7 +26,7 @@ using ServerContainer = System.Collections.Generic.Dictionary<string, aairvid.Se
 
 namespace aairvid
 {
-    [Activity(Label = "aairvid"
+    [Activity(Label = "Kumo Video"
         , MainLauncher = false
         , Icon = "@drawable/icon"
         , NoHistory = false
