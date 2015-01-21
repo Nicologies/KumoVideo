@@ -215,9 +215,11 @@ namespace aairvid.Ads
 
     public class AdListenerImpl : AdListener, IDisposable
     {
+        private const int InitDelay = 5000;
+        private static int _delay = InitDelay; 
         private AdsLayout _adContainer;
         private AdView _ad;
-        private AdRequest _adRequest;
+        private readonly AdRequest _adRequest;
 
         public AdListenerImpl(AdsLayout adsLayout, AdView ad, AdRequest adRequest)
         {
@@ -227,6 +229,7 @@ namespace aairvid.Ads
         }
         public override void OnAdLoaded()
         {
+            _delay = InitDelay;
             _adContainer.RemoveAllViews();
             _adContainer.AddView(_ad);
             _adContainer.IsAdsLoaded = true;
@@ -237,11 +240,13 @@ namespace aairvid.Ads
             base.OnAdFailedToLoad(p0);
 
             ReloadWithDelay();
+
+            _delay *= 2;
         }
 
         private async void ReloadWithDelay()
         {
-            await Task.Delay(5000);
+            await Task.Delay(_delay);
             _ad.LoadAd(_adRequest);
         }
 

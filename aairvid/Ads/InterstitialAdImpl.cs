@@ -6,6 +6,8 @@ namespace aairvid.Ads
 {
     public class InterstitialAdImpl : AdListener, IDisposable
     {
+        private const int InitDelay = 5000;
+        private static int _delay = InitDelay; 
         InterstitialAd _ad;
         public InterstitialAdImpl(InterstitialAd ad)
         {
@@ -24,17 +26,19 @@ namespace aairvid.Ads
         }
         public override void OnAdLoaded()
         {
+            _delay = InitDelay;
             base.OnAdLoaded();
         }
         public override void OnAdFailedToLoad(int p0)
         {
             base.OnAdFailedToLoad(p0);
             ReloadAds();
+            _delay *= 2;
         }
 
         private async void ReloadAds()
         {
-            await System.Threading.Tasks.Task.Delay(5000);
+            await System.Threading.Tasks.Task.Delay(_delay);
             if (_ad != null)
             {
                 _ad.LoadAd(new AdRequest.Builder()
