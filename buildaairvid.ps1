@@ -49,9 +49,9 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
         $suffix = "pro";
     }
     write-host signing $architch version
-    $apktosignRelPath = (".\bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".apk");
-    ($apktosign = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".apk")) | Out-Null;
-    ($zip = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+".zip")) | Out-Null;
+    $apktosignRelPath = (".\bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+".apk");
+    ($apktosign = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+".apk")) | Out-Null;
+    ($zip = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+".zip")) | Out-Null;
     Rename-Item $apktosign $zip
     ($tempLibArmBaseFolder = Join-Path $scriptPath "res") | Out-Null
     
@@ -72,19 +72,19 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
     &7z.exe @("u", $zip, "res\raw\libarm");
     Rename-Item $zip $apktosign
     
-    ($signedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-Signed.apk")) | Out-Null;
-    ($alignedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.aairvid"+ $suffix+"-aligned.apk")) | Out-Null;
+    ($signedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+"-Signed.apk")) | Out-Null;
+    ($alignedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+"-aligned.apk")) | Out-Null;
     (jarsigner -certs -verbose:summary -signedjar $signedApk -sigalg SHA1withRSA -digestalg SHA1 -keystore e:\mydoc\release-key.keystore -storepass IlyZrnXl169254 -keypass IlyZrnXl169254  $apktosign googkey) | Out-Null
     (zipalign -v 4 $signedApk $alignedApk) | Out-Null       
     
-    ($distApk = Join-Path $scriptPath ("dist\com.ezhang.aairvid" + $suffix + ".signed" +$architch+ ".apk")) | Out-Null;
+    ($distApk = Join-Path $scriptPath ("dist\com.ezhang.kumovid" + $suffix + ".signed" +$architch+ ".apk")) | Out-Null;
     Move-Item  -Path  $alignedApk -Destination $distApk -Force
 }
 
 
 (New-Item -ItemType Directory -Force -Path "dist") | Out-Null
 
-(Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'aairvidpro', 'aairvid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml
+(Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'kumovidpro', 'kumovid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml
 
 . .\buildVitamioMarin.ps1
 . .\buildbonjour.ps1
@@ -102,7 +102,7 @@ SignAndAlignAndDist -architch arm
 SignAndAlignAndDist -architch armv7
 SignAndAlignAndDist -architch x86
 
-$c = ((Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace "android:label=`"aairvid`"", "android:label=`"aairvidpro`"" -replace "package=`"com.ezhang.aairvid`"", "package=`"com.ezhang.aairvidpro`"" } )
+$c = ((Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace "android:label=`"kumovid`"", "android:label=`"kumovidpro`"" -replace "package=`"com.ezhang.kumovid`"", "package=`"com.ezhang.kumovidpro`"" } )
 Set-Content .\aairvid\Properties\AndroidManifest.xml -Value $c
     
 DoApkBuild -architech arm -isFreeVer $False
@@ -113,6 +113,6 @@ SignAndAlignAndDist -architch arm -isFreeVer $False
 SignAndAlignAndDist -architch armv7 -isFreeVer $False
 SignAndAlignAndDist -architch x86 -isFreeVer $False
     
-(Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'aairvidpro', 'aairvid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml
+(Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'kumovidpro', 'kumovid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml
 write-host 'done' -ForegroundColor DarkGreen
 
