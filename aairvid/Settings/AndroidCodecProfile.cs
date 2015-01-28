@@ -61,11 +61,15 @@ namespace aairvid.Utils
 
             pref.DefaultsBitRate3G(activity.Resources);
 
-            pref.DefaultsCodecHeightWifi(activity.Resources, profile.DeviceHeight);
-            pref.DefaultsCodecWidthWifi(activity.Resources, profile.DeviceWidth);
-            int defaultWidth3G = 480;
+            var large = ScreenProperty.IsLargeScreen(activity.Resources.DisplayMetrics);
+
+            var widthWifi = large ? 1024 : 720;
+            var heightWifi = (int)((float)widthWifi * ((float)profile.DeviceHeight / (float)profile.DeviceWidth));
+            pref.DefaultsCodecHeightWifi(activity.Resources, heightWifi);
+            pref.DefaultsCodecWidthWifi(activity.Resources, widthWifi);
+            const int defaultWidth3G = 480;
             pref.DefaultsCodecWidth3G(activity.Resources, defaultWidth3G);
-            int desiredHeight = (int)((float)defaultWidth3G * ((float)profile.DeviceHeight / (float)profile.DeviceWidth));
+            var desiredHeight = (int)((float)defaultWidth3G * ((float)profile.DeviceHeight / (float)profile.DeviceWidth));
             pref.DefaultsCodecHeight3G(activity.Resources, desiredHeight);
         }
 
