@@ -5,6 +5,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using Java.IO;
 using libairvidproto.model;
 using System.Linq;
 
@@ -109,6 +110,19 @@ namespace aairvid.History
         {
             RegisterForContextMenu(l);
             l.ShowContextMenuForChild(v);
+        }
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            base.OnCreateOptionsMenu(menu, inflater);
+            var recentMenuItem = menu.FindItem(Resource.Id.RecentlyViewed);
+            recentMenuItem.SetVisible(false);
+        }
+
+        public override void OnCreate(Bundle savedInstanceState)
+        {
+            SetHasOptionsMenu(true);
+            base.OnCreate(savedInstanceState);
         }
     }
 }
