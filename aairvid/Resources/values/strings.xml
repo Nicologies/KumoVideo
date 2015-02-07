@@ -37,6 +37,7 @@
   <string name="ViewVideoInfo">View Video Info</string>
   <string name="ViewFolderInfo">View Folder Info</string>
   <string name="DeleteFromHistory">Delete From History</string>
+  <string name="Exit">Exit</string>
   
 
   <string-array name="server_ctx_menu">

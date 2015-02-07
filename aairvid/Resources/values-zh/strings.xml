@@ -33,4 +33,5 @@
   <string name="ViewVideoInfo">查看视频信息</string>
   <string name="ViewFolderInfo">查看视频所在文件夹</string>
   <string name="DeleteFromHistory">从历史记录中删除</string>
+  <string name="Exit">退出</string>
 </resources>

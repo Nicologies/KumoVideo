@@ -115,8 +115,15 @@ namespace aairvid.History
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             base.OnCreateOptionsMenu(menu, inflater);
-            var recentMenuItem = menu.FindItem(Resource.Id.RecentlyViewed);
-            recentMenuItem.SetVisible(false);
+
+            for (var i = 0; i < menu.Size(); ++i)
+            {
+                var item = menu.GetItem(i);
+                if (item != null && item.ItemId != Resource.Id.menu_exit)
+                {
+                    item.SetVisible(false);
+                }
+            }
         }
 
         public override void OnCreate(Bundle savedInstanceState)

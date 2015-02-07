@@ -44,9 +44,9 @@ namespace aairvid
             SERVER_PWD_FILE_NAME);
         ServersFragment _serverFragment;
 
-        private bool killed = false;
+        private bool _killed = false;
 
-        private int exitCounter = 0;
+        private int _exitCounter = 0;
 
         private AdsLayout _adsLayout;
 
@@ -59,7 +59,7 @@ namespace aairvid
 
         protected override void OnDestroy()
         {
-            killed = true;
+            _killed = true;
 
             using (var stream = File.OpenWrite(SERVER_PWD_FILE))
             {
@@ -243,7 +243,7 @@ namespace aairvid
                     return;
                 }
 
-                if (killed)
+                if (_killed)
                 {
                     return;
                 }
@@ -351,7 +351,7 @@ namespace aairvid
                 return;
             }
 
-            if (killed)
+            if (_killed)
             {
                 return;
             }
@@ -413,7 +413,7 @@ namespace aairvid
                 return;
             }
 
-            if (killed)
+            if (_killed)
             {
                 return;
             }
@@ -447,7 +447,7 @@ namespace aairvid
                 return;
             }
 
-            if (killed)
+            if (_killed)
             {
                 return;
             }
@@ -480,29 +480,33 @@ namespace aairvid
 
         public override void OnBackPressed()
         {
-            ResetAdsClick();
-
             if (FragmentManager.BackStackEntryCount > 1)
             {
+                ResetAdsClick();
                 base.OnBackPressed();
             }
             else
             {
-                if (exitCounter == 1)
-                {
-                    this.Finish();
-                }
-                else
-                {
-                    exitCounter = 1;
+                TryExit();
+            }
+        }
 
-                    Timer t = new Timer();
-                    t.Interval = 5000;
-                    t.Elapsed += (sender, arg) => this.RunOnUiThread(() => exitCounter = 0);
-                    t.Start();
+        private void TryExit()
+        {
+            ResetAdsClick();
+            if (_exitCounter == 1)
+            {
+                Finish();
+            }
+            else
+            {
+                _exitCounter = 1;
 
-                    Toast.MakeText(this, Resource.String.ExitPrompt, ToastLength.Short).Show();
-                }
+                var t = new Timer {Interval = 5000};
+                t.Elapsed += (sender, arg) => RunOnUiThread(() => _exitCounter = 0);
+                t.Start();
+
+                Toast.MakeText(this, Resource.String.ExitPrompt, ToastLength.Short).Show();
             }
         }
 
@@ -557,7 +561,7 @@ namespace aairvid
                 return;
             }
 
-            if (killed)
+            if (_killed)
             {
                 return;
             }
@@ -645,14 +649,20 @@ namespace aairvid
         {
             switch (item.ItemId)
             {
-                case Resource.Id.settings:
+                case Resource.Id.menu_settings:
                 {
                     PopupSettingsFragment();
                     return true;
                 }
-                case Resource.Id.RecentlyViewed:
+                case Resource.Id.menu_recentlyViewed:
                 {
                     PopupRecentlyViewedFragment();
+                    return true;
+                }
+
+                case Resource.Id.menu_exit:
+                {
+                    TryExit();
                     return true;
                 }
                 default:
