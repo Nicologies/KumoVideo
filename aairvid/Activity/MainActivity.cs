@@ -22,6 +22,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using Android.Content;
 using ServerContainer = System.Collections.Generic.Dictionary<string, aairvid.ServerAndFolder.CachedServerItem>;
 
 namespace aairvid
@@ -30,7 +31,6 @@ namespace aairvid
         , MainLauncher = false
         , Icon = "@drawable/icon"
         , NoHistory = false
-        , ScreenOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape
         , ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize
         )]
 	public class MainActivity : Activity, IResourceSelectedListener,
@@ -159,7 +159,6 @@ namespace aairvid
             exBuilder.SetDescription("Unhandled Exception" + exceptionStr);
             exBuilder.SetFatal(true);
             var bui = exBuilder.Build();
-            var strBuilder = new StringBuilder();
             var report = new Dictionary<string, string>();
             foreach (var i in bui.Keys)
             {
@@ -191,19 +190,7 @@ namespace aairvid
             base.OnResume();
 
             AndroidCodecProfile.InitProfile(this);
-
-            bool isPlaying = IsPlaying();
-            if (!isPlaying || AdsLayout.SHOW_ADS_WHEN_PLAYING)
-            {
-                LoadAds();
-            }
-        }
-
-        private bool IsPlaying()
-        {
-            var fragment = FragmentManager.GetBackStackEntryAt(FragmentManager.BackStackEntryCount - 1);
-            bool isPlaying = fragment != null && fragment.Name == typeof(PlaybackFragment).Name;
-            return isPlaying;
+            LoadAds();
         }
 
         public async void OnServerSelected(AirVidServer selectedServer)
@@ -332,7 +319,7 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var resources = await Task<List<AirVidResource>>.Run(() =>
+            var resources = await Task.Run(() =>
             {
                 try
                 {
@@ -394,7 +381,7 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var mediaInfo = await Task <MediaInfo>.Run(() =>
+            var mediaInfo = await Task.Run(() =>
             {
                 try
                 {
@@ -566,23 +553,10 @@ namespace aairvid
                 return;
             }
 
-            var tag = typeof(PlaybackFragment).Name;
-
-            var playbackFragment = FragmentManager.FindFragmentByTag<PlaybackFragment>(tag);
-            if (playbackFragment == null)
-            {
-                playbackFragment = new PlaybackFragment(playbackUrl, vid, mediaInfo);
-            }
-            else
-            {
-                playbackFragment.SetPlaybackSource(playbackUrl, vid, mediaInfo);
-            }
-
-            var transaction = FragmentManager.BeginTransaction();
-
-            transaction.Replace(Resource.Id.fragmentPlaceholder, playbackFragment, tag);
-            transaction.AddToBackStack(tag);
-            transaction.Commit();
+            var intent = new Intent(Intent.ActionView);
+            intent.SetDataAndType(Android.Net.Uri.Parse(playbackUrl), "video/*");
+            StartActivity(intent);
+            OnVideoFinished(10);
             progress.Dismiss();
         }
 
@@ -607,7 +581,6 @@ namespace aairvid
                 }
             }
 
-            FragmentManager.PopBackStack(typeof(PlaybackFragment).Name, PopBackStackFlags.Inclusive);
             LoadAds();
         }
 

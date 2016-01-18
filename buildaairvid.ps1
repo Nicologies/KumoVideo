@@ -35,7 +35,7 @@ function DoApkBuild ([string]$architech, [bool]$isFreeVer = $True, [bool]$firstB
     
     if($LastExitCode -ne 0)
     {
-        Write-Error "Failed to build " + $architech + " version." 
+        Write-Error "Failed to build $architech version." 
         return;
     }
     write-host sucessfully built $architech version  of APK -ForegroundColor DarkGreen
@@ -50,27 +50,8 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
     }
     write-host signing $architch version
     $apktosignRelPath = (".\bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+".apk");
-    ($apktosign = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+".apk")) | Out-Null;
-    ($zip = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+".zip")) | Out-Null;
-    Rename-Item $apktosign $zip
-    ($tempLibArmBaseFolder = Join-Path $scriptPath "res") | Out-Null
+    ($apktosign = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+".apk")) | Out-Null;    
     
-    Remove-Item $tempLibArmBaseFolder -Force -Recurse -ErrorAction SilentlyContinue
-    ($libArmNoExt = Join-Path $tempLibArmBaseFolder "\raw\libarm") |Out-Null;
-    $libArm7z = $libArmNoExt + ".7z";
-    &7z.exe @("x", $zip, "res\raw\libarm")
-    Rename-Item $libArmNoExt $libArm7z
-    if($architch -eq "X86")
-    {        
-        &7z.exe @("d", $libArm7z, "60", "61", "70", "71");        
-    }    
-    if(($architch -eq "Arm") -or ($architch -eq "ArmV7"))
-    {
-       &7z.exe @("d", $libArm7z, "50\");       
-    }
-    Rename-Item $libArm7z $libArmNoExt
-    &7z.exe @("u", $zip, "res\raw\libarm");
-    Rename-Item $zip $apktosign
     
     ($signedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+"-Signed.apk")) | Out-Null;
     ($alignedApk = Join-Path $scriptPath ("bin\" + $architch + "\com.ezhang.kumovid"+ $suffix+"-aligned.apk")) | Out-Null;
@@ -86,7 +67,6 @@ function SignAndAlignAndDist([string]$architch, [bool]$isFreeVer = $True)
 
 (Get-Content .\aairvid\Properties\AndroidManifest.xml) | ForEach-Object { $_ -replace 'kumovidpro', 'kumovid'} | Set-Content .\aairvid\Properties\AndroidManifest.xml
 
-. .\buildVitamioMarin.ps1
 . .\buildbonjour.ps1
 . .\buildLibAirvidProto.ps1
 

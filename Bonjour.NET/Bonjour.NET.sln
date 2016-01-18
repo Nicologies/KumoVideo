@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bonjour.NET", "Bonjour.NET.csproj", "{DD32DB45-727C-4683-9384-AFFEC891172B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Arm|Any CPU = Arm|Any CPU
+		ArmV7|Any CPU = ArmV7|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		X86|Any CPU = X86|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.Arm|Any CPU.ActiveCfg = Arm|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.Arm|Any CPU.Build.0 = Arm|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.ArmV7|Any CPU.ActiveCfg = ArmV7|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.ArmV7|Any CPU.Build.0 = ArmV7|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.X86|Any CPU.ActiveCfg = X86|Any CPU
+		{DD32DB45-727C-4683-9384-AFFEC891172B}.X86|Any CPU.Build.0 = X86|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,17 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Android.Widget;
-using Android.Content.Res;
 using Android.Util;
-using aairvid.Utils;
 
 namespace aairvid.UIUtils
 {
@@ -19,15 +9,17 @@ namespace aairvid.UIUtils
     {
         public static bool IsLargeScreen(DisplayMetrics me)
         {
-            var widthInches = (float)me.WidthPixels / (float)me.DensityDpi;
-            return widthInches >= 5.3;//ipad mini width.
+            var widthInches = me.WidthPixels/(float) me.DensityDpi;
+            return widthInches >= 5.3; //ipad mini width.
         }
+
         public static KeyValuePair<int, int> GetScreenResolution(Context ctx)
         {
-            var x = IO.Vov.Vitamio.Utils.ScreenResolution.GetResolution(ctx);
-            var w = x.First as Java.Lang.Integer;
-            var h = x.Second as Java.Lang.Integer;
-            return new KeyValuePair<int, int>(w.IntValue(), h.IntValue());
+            var wm = (IWindowManager)ctx.GetSystemService(Context.WindowService);
+            var display = wm.DefaultDisplay;
+            var metrics = new DisplayMetrics();
+            display.GetRealMetrics(metrics);
+            return new KeyValuePair<int, int>(metrics.WidthPixels, metrics.HeightPixels);
         }
     }
 }

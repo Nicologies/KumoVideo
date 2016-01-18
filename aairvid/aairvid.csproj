@@ -62,6 +62,13 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <BundleAssemblies>True</BundleAssemblies>
     <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidStoreUncompressedFileExtensions />
+    <MandroidI18n />
+    <Debugger>Xamarin</Debugger>
+    <AndroidEnableMultiDex>False</AndroidEnableMultiDex>
+    <DevInstrumentationEnabled>False</DevInstrumentationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ArmV7|AnyCPU'">
     <OutputPath>..\bin\ArmV7\</OutputPath>
@@ -137,7 +144,6 @@
     <Compile Include="Utils\FragmentHelper.cs" />
     <Compile Include="Media\MediaInfoFragment.cs" />
     <Compile Include="Media\MediaInfoFragmentHelper.cs" />
-    <Compile Include="Media\PlaybackFragment.cs" />
     <Compile Include="History\HistoryItem.cs" />
     <Compile Include="Media\IMediaDetailDisplayer.cs" />
     <Compile Include="Media\IPlayVideoListener.cs" />
@@ -165,8 +171,6 @@
     </Compile>
     <Compile Include="Settings\SettingsFragment.cs" />
     <Compile Include="Utils\WifiStatus.cs" />
-    <Compile Include="VitamioAdapter\VitamioCenterLayout.cs" />
-    <Compile Include="VitamioAdapter\VitamioVideoView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -182,9 +186,6 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\mediainfo_fragment.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\playback_fragment.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\folder_fragment_large.axml">
@@ -254,10 +255,6 @@
   <Choose>
     <When Condition="'$(Configuration)'=='Debug'">
       <ItemGroup>
-        <Reference Include="VitamitoMarin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\bin\Debug\VitamitoMarin.dll</HintPath>
-        </Reference>
         <Reference Include="libairvidproto, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\bin\Debug\libairvidproto.dll</HintPath>
