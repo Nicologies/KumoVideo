@@ -29,12 +29,12 @@ namespace aairvid.Utils
                 }
             }
 
-            int maxHis = 200;
+            int maxHis = 100;
 
             if (HistoryItems.Count() > maxHis)
             {
-                var temp = HistoryItems.OrderBy(r => r.Value.LastPlayDate);
-                HistoryItems = temp.Skip(temp.Count() / 2).ToDictionary(r => r.Key, r => r.Value);
+                var temp = HistoryItems.OrderByDescending(r => r.Value.LastPlayDate);
+                HistoryItems = temp.Take(temp.Count() / 2).ToDictionary(r => r.Key, r => r.Value);
             }
         }
 
