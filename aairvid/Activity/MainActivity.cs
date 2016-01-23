@@ -555,6 +555,7 @@ namespace aairvid
 
             var intent = new Intent(Intent.ActionView);
             intent.SetDataAndType(Android.Net.Uri.Parse(playbackUrl), "video/*");
+            HistoryMaiten.SaveLastPos(vid, 0, vid.Parent);
             StartActivity(intent);
             OnVideoFinished(10);
             progress.Dismiss();
