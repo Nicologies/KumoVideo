@@ -3,6 +3,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6CB2B7FF-27FE-4340-8FD9-DEBE2E41B4D8}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -12,33 +14,36 @@
     <FileAlignment>512</FileAlignment>
     <AndroidApplication>true</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
-    <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
-    <AndroidStoreUncompressedFileExtensions />
-    <MandroidI18n />
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
     <JavaOptions />
-    <AndroidUseLatestPlatformSdk />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
     <AndroidLinkSkip>libvinit</AndroidLinkSkip>
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
-    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
-    <BundleAssemblies>False</BundleAssemblies>
+    <BundleAssemblies>false</BundleAssemblies>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>PdbOnly</DebugType>
+    <Optimize>True</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -48,82 +53,6 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <BundleAssemblies>True</BundleAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Arm|AnyCPU'">
-    <OutputPath>..\bin\Arm\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <AndroidSupportedAbis>armeabi</AndroidSupportedAbis>
-    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkSkip>System</AndroidLinkSkip>
-    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-    <BundleAssemblies>True</BundleAssemblies>
-    <WarningLevel>4</WarningLevel>
-    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
-    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-    <AndroidStoreUncompressedFileExtensions />
-    <MandroidI18n />
-    <Debugger>Xamarin</Debugger>
-    <AndroidEnableMultiDex>False</AndroidEnableMultiDex>
-    <DevInstrumentationEnabled>False</DevInstrumentationEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ArmV7|AnyCPU'">
-    <OutputPath>..\bin\ArmV7\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
-    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkSkip>System</AndroidLinkSkip>
-    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-    <BundleAssemblies>True</BundleAssemblies>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'X86|AnyCPU'">
-    <OutputPath>..\bin\X86\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <AndroidSupportedAbis>x86</AndroidSupportedAbis>
-    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkSkip>System</AndroidLinkSkip>
-    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-    <BundleAssemblies>True</BundleAssemblies>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Bonjour.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\$(Configuration)\Bonjour.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="GooglePlayServicesLib">
-      <HintPath>..\Components\googleplayservices-16.0\lib\android\GooglePlayServicesLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Android" />
-    <Reference Include="Mono.Android.Export" />
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Xamarin.Android.Support.v4">
-      <HintPath>..\Components\googleplayservices-16.0\lib\android\Xamarin.Android.Support.v4.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Android.Support.v7.AppCompat">
-      <HintPath>..\Components\googleplayservices-16.0\lib\android\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Android.Support.v7.MediaRouter">
-      <HintPath>..\Components\googleplayservices-16.0\lib\android\Xamarin.Android.Support.v7.MediaRouter.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Ads\InterstitialAdImpl.cs" />
     <Compile Include="History\RecentlyItemListAdapter.cs" />
@@ -222,10 +151,10 @@
     <AndroidResource Include="Resources\drawable\round_corner_bkground.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <Content Include="Properties\AndroidManifest.xml">
+    <None Include="Properties\AndroidManifest.xml">
       <TransformOnBuild>true</TransformOnBuild>
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <AndroidResource Include="Resources\layout\server_item.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -252,15 +181,32 @@
     <AndroidResource Include="Resources\drawable\history.png" />
     <AndroidResource Include="Resources\drawable\exit.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bonjour.NET\Bonjour.NET.csproj">
+      <Project>{a311fda7-f101-4596-a1c8-6a75c5b88059}</Project>
+      <Name>Bonjour.NET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libairvidproto\libairvidproto.csproj">
+      <Project>{07b8fc28-967f-4f36-b980-fbef1ec73a82}</Project>
+      <Name>libairvidproto</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.GooglePlayServices.Ads.Lite">
+      <Version>42.1021.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.GooglePlayServices.Analytics">
+      <Version>42.1021.1</Version>
+    </PackageReference>
+  </ItemGroup>
   <Choose>
-    <When Condition="'$(Configuration)'=='Debug'">
-      <ItemGroup>
-        <Reference Include="libairvidproto, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\bin\Debug\libairvidproto.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="'$(Configuration)'=='Debug'" />
     <When Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Arm' Or '$(Configuration)'=='ArmV7' Or '$(Configuration)'=='X86'">
       <ItemGroup>
         <Reference Include="VitamitoMarin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -274,12 +220,6 @@
       </ItemGroup>
     </When>
   </Choose>
-  <ItemGroup>
-    <XamarinComponentReference Include="googleplayservices">
-      <Version>16.0</Version>
-      <Visible>False</Visible>
-    </XamarinComponentReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
