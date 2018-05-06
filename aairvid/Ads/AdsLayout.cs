@@ -14,10 +14,10 @@ namespace aairvid.Ads
 {
     public class AdsLayout : LinearLayout
     {
-        public static readonly string RESUME_FROM_AD_CLICKED = "AdsLayout.AdsClicked";
-        public static readonly string NO_ADS_HOURS = "AdsLayout.NoAdsHours";
-        public static readonly string NO_ADS_FROM = "AdsLayout.NoAdsFrom";
-        private static readonly string NO_ADS_DATE_FMT = "dd/MM/yyyy HH:mm:ss";
+        public static readonly string ResumeFromAdClicked = "AdsLayout.AdsClicked";
+        public static readonly string NoAdsHours = "AdsLayout.NoAdsHours";
+        public static readonly string NoAdsFrom = "AdsLayout.NoAdsFrom";
+        public static readonly string NoAdsDateFmt = "dd/MM/yyyy HH:mm:ss";
         private static readonly int[] Weights = 
         {
             4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4 ,4,4,
@@ -28,9 +28,9 @@ namespace aairvid.Ads
             42,
         };
 
-        AdView ad;
+        private AdView _ad;
 
-        private bool _adsMightClicked = false;
+        private bool _adsMightClicked;
         public AdsLayout(Context context)
             : base(context)
         {
@@ -68,16 +68,13 @@ namespace aairvid.Ads
 
         private void ResetAdsStatus()
         {
-            if (ad != null)
+            if (_ad?.AdListener != null)
             {
-                if (ad.AdListener != null)
-                {
-                    var listener = ad.AdListener as AdListenerImpl;
-                    ad.AdListener = null;
-                    listener.Dispose();
-                }
+                var listener = _ad.AdListener as AdListenerImpl;
+                _ad.AdListener = null;
+                listener?.Dispose();
             }
-            ad = null;
+            _ad = null;
             IsAdsLoaded = false;
         }
 
@@ -87,7 +84,7 @@ namespace aairvid.Ads
             {
                 var pref = PreferenceManager.GetDefaultSharedPreferences(Context);
                 var editor = pref.Edit();
-                editor.PutBoolean(RESUME_FROM_AD_CLICKED, true);
+                editor.PutBoolean(ResumeFromAdClicked, true);
                 editor.Commit();
             }
             return base.OnSaveInstanceState();
@@ -97,16 +94,14 @@ namespace aairvid.Ads
         {
             var rand = new Random().Next();
             System.Diagnostics.Trace.TraceInformation("rand, {0}", rand % 100);
-            bool hit = rand % 100 <= 5;
-            if (hit)
-            {
-                int noAdsIndex = new Random().Next() % Weights.Length;
-                var editor = pref.Edit();
-                editor.PutInt(AdsLayout.NO_ADS_HOURS, Weights[noAdsIndex]);
-                editor.PutString(AdsLayout.NO_ADS_FROM, DateTime.Now.ToString(NO_ADS_DATE_FMT));
-                editor.PutBoolean(AdsLayout.RESUME_FROM_AD_CLICKED, false);
-                editor.Commit();
-            }
+            var hit = rand % 100 <= 5;
+            if (!hit) return;
+            var noAdsIndex = new Random().Next() % Weights.Length;
+            var editor = pref.Edit();
+            editor.PutInt(AdsLayout.NoAdsHours, Weights[noAdsIndex]);
+            editor.PutString(AdsLayout.NoAdsFrom, DateTime.Now.ToString(NoAdsDateFmt));
+            editor.PutBoolean(AdsLayout.ResumeFromAdClicked, false);
+            editor.Commit();
         }
 
         protected override void OnDetachedFromWindow()
@@ -122,7 +117,7 @@ namespace aairvid.Ads
                 return;
             }
             var pref = PreferenceManager.GetDefaultSharedPreferences(Context);
-            var resumeFromAdsClicked = pref.GetBoolean(AdsLayout.RESUME_FROM_AD_CLICKED, false);
+            var resumeFromAdsClicked = pref.GetBoolean(AdsLayout.ResumeFromAdClicked, false);
             if (resumeFromAdsClicked)
             {
                 SaveNoAdsPref(pref);
@@ -130,38 +125,38 @@ namespace aairvid.Ads
 
             if (ShouldShowAds(pref))
             {
-                if (ad == null)
+                if (_ad != null) return;
+                _ad = new AdView(Context)
                 {
-                    ad = new AdView(Context);
+                    AdSize = AdSize.SmartBanner,
+                    AdUnitId = "ca-app-pub-3312616311449672/9767882743",
+                    Id = Resource.Id.adView
+                };
 
-                    ad.AdSize = AdSize.SmartBanner;
-                    ad.AdUnitId = "ca-app-pub-3312616311449672/9767882743";
-                    ad.Id = Resource.Id.adView;
 
-                    var layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent, ViewGroup.LayoutParams.FillParent);
+                var layoutParams = new LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
 
-                    ad.LayoutParameters = layoutParams;
+                _ad.LayoutParameters = layoutParams;
 
-                    AdRequest adRequest = new AdRequest.Builder()
-                        .AddTestDevice(AdRequest.DeviceIdEmulator)
-                        .AddTestDevice("45A39B3DBAE829B7AB8BA9B2C9E55D6F")
-                        .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
-                        .AddTestDevice("61B125201311D25A92623D5862F94D9A")
-                        .Build();
+                var adRequest = new AdRequest.Builder()
+                    .AddTestDevice(AdRequest.DeviceIdEmulator)
+                    .AddTestDevice("45A39B3DBAE829B7AB8BA9B2C9E55D6F")
+                    .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
+                    .AddTestDevice("61B125201311D25A92623D5862F94D9A")
+                    .Build();
 
-                    ad.AdListener = new AdListenerImpl(this, ad, adRequest);
-                    ad.LoadAd(adRequest);
-                }
+                _ad.AdListener = new AdListenerImpl(this, _ad, adRequest);
+                _ad.LoadAd(adRequest);
             }
             else
             {
                 if (resumeFromAdsClicked)
                 {
-                    var noAdsMin = pref.GetInt(NO_ADS_HOURS, 0);
+                    var noAdsMin = pref.GetInt(NoAdsHours, 0);
                     if (noAdsMin == Weights.Last())
                     {
                         var bigDay = this.Resources.GetString(aairvid.Resource.String.ThanksForClickingAdsBigDay);
-                        string txt = noAdsMin.ToString() + ": " + bigDay;
+                        var txt = noAdsMin.ToString() + ": " + bigDay;
                         Toast.MakeText(Context,
                             txt,
                             ToastLength.Long)
@@ -170,7 +165,7 @@ namespace aairvid.Ads
                     else
                     {
                         var thanks = this.Resources.GetString(aairvid.Resource.String.ThanksForClickingAds);
-                        string txt = noAdsMin.ToString() + ": " + thanks;
+                        var txt = noAdsMin.ToString() + ": " + thanks;
                         Toast.MakeText(Context,
                             txt,
                             ToastLength.Long).Show();
@@ -180,37 +175,24 @@ namespace aairvid.Ads
             }
         }
 
-        private bool ShouldShowAds(ISharedPreferences pref)
+        private static bool ShouldShowAds(ISharedPreferences pref)
         {
 #if DEBUG
             return true;
 #endif
-            var noAdsHours = pref.GetInt(NO_ADS_HOURS, 0);
-            var noAdsFromStr = pref.GetString(NO_ADS_FROM, DateTime.Now.ToString(NO_ADS_DATE_FMT));
-            var noAdsFrom = DateTime.ParseExact(noAdsFromStr, NO_ADS_DATE_FMT, CultureInfo.InvariantCulture);
+#pragma warning disable 162
+            var noAdsHours = pref.GetInt(NoAdsHours, 0);
+            var noAdsFromStr = pref.GetString(NoAdsFrom, DateTime.Now.ToString(NoAdsDateFmt));
+            var noAdsFrom = DateTime.ParseExact(noAdsFromStr, NoAdsDateFmt, CultureInfo.InvariantCulture);
 
             var now = DateTime.Now;
 
-            if (noAdsFrom + TimeSpan.FromHours(noAdsHours * 5) > now)
-            {
-                return false;
-            }
-            return true;
+            return noAdsFrom + TimeSpan.FromHours(noAdsHours * 5) <= now;
+#pragma warning restore 162
         }
 
-        private bool _IsAdsLoaded = false;
-        public static readonly bool SHOW_ADS_WHEN_PLAYING = false;
-        public bool IsAdsLoaded
-        {
-            get
-            {
-                return _IsAdsLoaded;
-            }
-            set
-            {
-                _IsAdsLoaded = value;
-            }
-        }
+        public static readonly bool ShowAdsWhenPlaying = false;
+        public bool IsAdsLoaded { get; set; }
     }
 
     public class AdListenerImpl : AdListener, IDisposable
@@ -223,9 +205,9 @@ namespace aairvid.Ads
 
         public AdListenerImpl(AdsLayout adsLayout, AdView ad, AdRequest adRequest)
         {
-            this._adContainer = adsLayout;
-            this._ad = ad;
-            this._adRequest = adRequest;
+            _adContainer = adsLayout;
+            _ad = ad;
+            _adRequest = adRequest;
         }
         public override void OnAdLoaded()
         {

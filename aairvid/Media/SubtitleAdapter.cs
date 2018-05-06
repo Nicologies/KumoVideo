@@ -23,7 +23,7 @@ namespace aairvid.Adapter
 
         public override int Count
         {
-            get { return _subtitles.Count(); }
+            get { return _subtitles.Count; }
         }
 
         public override long GetItemId(int position)
@@ -55,7 +55,7 @@ namespace aairvid.Adapter
         {
             get
             {
-                if (position >= _subtitles.Count())
+                if (position >= _subtitles.Count)
                 {
                     return null;
                 }

@@ -21,7 +21,7 @@ namespace aairvid.Adapter
 
         public override int Count
         {
-            get { return _resources.Count(); }
+            get { return _resources.Count; }
         }
 
         public override long GetItemId(int position)
@@ -64,7 +64,7 @@ namespace aairvid.Adapter
         {
             get
             {
-                if (position >= _resources.Count())
+                if (position >= _resources.Count)
                 {
                     return null;
                 }

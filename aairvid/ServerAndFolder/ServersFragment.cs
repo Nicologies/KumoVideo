@@ -1,5 +1,6 @@
-using aairvid.Model;
-using aairvid.ServerAndFolder;
+using System;
+using System.Collections.Generic;
+using System.Net;
 using Android.App;
 using Android.Content;
 using Android.Net;
@@ -11,22 +12,18 @@ using libairvidproto;
 using libairvidproto.model;
 using Network.Bonjour;
 using Network.ZeroConf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 
-namespace aairvid
+namespace aairvid.ServerAndFolder
 {
     public class ServersFragment : Fragment
     {
-        ServerListAdapter _servers;
+        private ServerListAdapter _servers;
 
-        Dictionary<string, CachedServerItem> _cachedServers = null;
+        private Dictionary<string, CachedServerItem> _cachedServers = null;
 
-        ProgressDialog progressDetectingServer;
+        private ProgressDialog _progressDetectingServer;
 
-        BonjourServiceResolver _serverDetector;
+        private BonjourServiceResolver _serverDetector;
 
         public ServersFragment()
         {
@@ -53,50 +50,42 @@ namespace aairvid
                 _servers = new ServerListAdapter(this.Activity);
             }
 
-            if (_cachedServers != null)
+            if (_cachedServers == null) return;
+            foreach (var ser in _cachedServers)
             {
-                foreach (var ser in _cachedServers)
+                IServer concretSer;
+                if (ser.Value.IsManual)
                 {
-                    IServer concretSer;
-                    if (ser.Value.IsManual)
-                    {
-                        concretSer = new ManualServer.ManualServerBuilder()
-                            .SetAddress(ser.Value.Addr)
-                            .SetName(ser.Value.Name)
-                            .SetPort(ser.Value.Port).Build();
-                    }
-                    else
-                    {
-                        concretSer = new BonjourServer(ser.Value.Name, 
-                            ser.Value.Addr,
-                            ser.Value.Port,
-                            ser.Value.ServerPassword);
-                    }
-                    this._servers.AddServer(concretSer);
+                    concretSer = new ManualServer.ManualServerBuilder()
+                        .SetAddress(ser.Value.Addr)
+                        .SetName(ser.Value.Name)
+                        .SetPort(ser.Value.Port).Build();
                 }
+                else
+                {
+                    concretSer = new BonjourServer(ser.Value.Name, 
+                        ser.Value.Addr,
+                        ser.Value.Port,
+                        ser.Value.ServerPassword);
+                }
+                this._servers.AddServer(concretSer);
             }
         }
 
         private void OnServiceFound(Network.ZeroConf.IService item)
         {
-            if (progressDetectingServer != null)
-            {
-                progressDetectingServer.Dismiss();
-            }
-            if (Activity != null)
-            {
-                Activity.RunOnUiThread(() => this.AddServer(item));
-            }
+            _progressDetectingServer?.Dismiss();
+            Activity?.RunOnUiThread(() => AddServer(item));
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            View view = inflater.Inflate(Resource.Layout.servers_fragment, container, false);
+            var view = inflater.Inflate(Resource.Layout.servers_fragment, container, false);
 
             var lvServers = view.FindViewById<ListView>(Resource.Id.lvServers);
             lvServers.FastScrollEnabled = true;
             lvServers.Adapter = _servers;
-            lvServers.ItemClick += lvServers_ItemClick;
+            lvServers.ItemClick += LvServers_ItemClick;
 
             RegisterForContextMenu(lvServers);
 
@@ -105,10 +94,10 @@ namespace aairvid
                 _servers = new ServerListAdapter(Activity);
             }
 
-            if (progressDetectingServer == null)
+            if (_progressDetectingServer == null)
             {
-                progressDetectingServer = new ProgressDialog(Activity);
-                progressDetectingServer.SetMessage("Detecting Servers...");
+                _progressDetectingServer = new ProgressDialog(Activity);
+                _progressDetectingServer.SetMessage("Detecting Servers...");
             }
 
             Activity.RunOnUiThread(() =>
@@ -139,13 +128,13 @@ namespace aairvid
                     }
                 case Resource.Id.add_server:
                     {
-                        LayoutInflater factory = LayoutInflater.From(this.Activity);
-                        View view = factory.Inflate(Resource.Layout.server_detail, null);
+                        var factory = LayoutInflater.From(this.Activity);
+                        var view = factory.Inflate(Resource.Layout.server_detail, null);
 
                         var editServerPort = view.FindViewById<EditText>(Resource.Id.editServerPort);
                         editServerPort.Text = "45631";
                         
-                        AlertDialog addServerDlg = new AlertDialog.Builder(this.Activity)
+                        var addServerDlg = new AlertDialog.Builder(this.Activity)
                             .SetTitle(Resource.String.AddServer)
                             .SetCancelable(true)
                             .SetView(view)
@@ -160,15 +149,14 @@ namespace aairvid
                                 var editServerIp = view.FindViewById<EditText>(Resource.Id.editServerIp);
                                 var editServerPwd = view.FindViewById<EditText>(Resource.Id.editServerPwd);
 
-                                IPAddress ip;
-                                if (!IPAddress.TryParse(editServerIp.Text, out ip))
+                                if (!IPAddress.TryParse(editServerIp.Text, out var ip))
                                 {
                                     editServerIp.RequestFocus();
                                     Toast.MakeText(Activity, Resource.String.InvalidIP, ToastLength.Short).Show();
                                     return;
                                 }
-                                ushort port = 0;
-                                if (!ushort.TryParse(editServerPort.Text, out port) || port <= 0 || port >= 65535)
+
+                                if (!ushort.TryParse(editServerPort.Text, out var port) || port <= 0 || port >= 65535)
                                 {
                                     editServerPort.RequestFocus();
                                     Toast.MakeText(Activity, Resource.String.InvalidPort, ToastLength.Short).Show();
@@ -187,8 +175,8 @@ namespace aairvid
                                     .SetPassword(editServerPwd.Text)
                                     .Build();
 
-                                var addedSvr = this._servers.AddServer(server);
-                                this._cachedServers.Add(addedSvr.ID, new CachedServerItem(addedSvr.Server));
+                                var addedSvr = _servers.AddServer(server);
+                                _cachedServers.Add(addedSvr.ID, new CachedServerItem(addedSvr.Server));
 
                                 addServerDlg.Dismiss();
                             };
@@ -214,13 +202,15 @@ namespace aairvid
             _serverDetector.ServiceFound += this.OnServiceFound;
             
             var connectivityManager = (ConnectivityManager)Activity.GetSystemService(Context.ConnectivityService);
-            var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi).GetState();
-            if (wifiState == NetworkInfo.State.Connected)
+            var activeNetworkInfo = connectivityManager.ActiveNetworkInfo;
+            if (activeNetworkInfo.Type == ConnectivityType.Wifi &&
+                activeNetworkInfo.IsConnected)
             {
-                if (progressDetectingServer != null && !progressDetectingServer.IsShowing)
+                if (_progressDetectingServer != null && !_progressDetectingServer.IsShowing)
                 {
-                    progressDetectingServer.Show();
+                    _progressDetectingServer.Show();
                 }
+
                 _serverDetector.Resolve("_airvideoserver._tcp.local.");
             }
             else
@@ -232,7 +222,7 @@ namespace aairvid
         public override void OnDestroyView()
         {
             var lvServers = View.FindViewById<ListView>(Resource.Id.lvServers);
-            lvServers.ItemClick -= lvServers_ItemClick;
+            lvServers.ItemClick -= LvServers_ItemClick;
 
             if (_serverDetector != null)
             {
@@ -241,21 +231,21 @@ namespace aairvid
             }
             base.OnDestroyView();
         }
-        void lvServers_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
+
+        private void LvServers_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            var listener = this.Activity as IServerSelectedListener;
-            if (listener != null)
+            if (Activity is IServerSelectedListener listener)
             {
-                listener.OnServerSelected(this._servers[e.Position]);
+                listener.OnServerSelected(_servers[e.Position]);
             }
         }
 
         internal void AddServer(IService item)
         {
-            this._servers.AddServer(item);
+            _servers.AddServer(item);
         }
 
-        internal void SetServers(System.Collections.Generic.Dictionary<string, CachedServerItem> cachedServers)
+        internal void SetServers(Dictionary<string, CachedServerItem> cachedServers)
         {
             _cachedServers = cachedServers;
         }
@@ -264,10 +254,10 @@ namespace aairvid
         {
             if (v.Id == Resource.Id.lvServers)
             {
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                var info = (AdapterView.AdapterContextMenuInfo)menuInfo;
                 menu.SetHeaderTitle(_servers[info.Position].Name);
-                string[] menuItems = Resources.GetStringArray(Resource.Array.server_ctx_menu);
-                for (int i = 0; i < menuItems.Length; i++)
+                var menuItems = Resources.GetStringArray(Resource.Array.server_ctx_menu);
+                for (var i = 0; i < menuItems.Length; i++)
                 {
                     menu.Add(Menu.None, i, i, menuItems[i]);
                 }
@@ -277,7 +267,7 @@ namespace aairvid
 
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.MenuInfo;
+            var info = (AdapterView.AdapterContextMenuInfo)item.MenuInfo;
 
             var selectedItem = item.TitleFormatted.ToString();
 

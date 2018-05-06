@@ -11,10 +11,8 @@ namespace aairvid.Utils
             var connectivityManager = (ConnectivityManager)ctx.GetSystemService(
                 Context.ConnectivityService);
 
-            var wifiState = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi)
-                .GetState();
-            var wifiEnabled = wifiState == NetworkInfo.State.Connected;
-            return wifiEnabled;
+            var activeNetwork = connectivityManager.ActiveNetworkInfo;
+            return activeNetwork.Type == ConnectivityType.Wifi && activeNetwork.IsConnected;
         }
     }
 }

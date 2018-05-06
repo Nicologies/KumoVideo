@@ -22,6 +22,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using aairvid.ServerAndFolder;
 using Android.Content;
 using ServerContainer = System.Collections.Generic.Dictionary<string, aairvid.ServerAndFolder.CachedServerItem>;
 
@@ -211,20 +212,20 @@ namespace aairvid
 
             try
             {
-                var resources = await Task <List<AirVidResource>>.Run(() =>
+                var resources = await Task.Run(() =>
                 {
                     try
                     {
                         return selectedServer.GetServerRootResources(new WebClientAdp());
                     }
-                    catch (System.Net.WebException ex)
+                    catch (System.Net.WebException)
                     {
                         ShowConnectionFailure();
                         return new List<AirVidResource>();
                     }
                 });
 
-                if (resources.Count() == 0)
+                if (!resources.Any())
                 {
                     progress.Dismiss();
                     return;
@@ -237,14 +238,14 @@ namespace aairvid
                 if (resources.Count == 1 && resources[0] is Folder)
                 {
                     progress.Dismiss();
-                    OnFolderSelected(resources[0] as Folder);
+                    OnFolderSelected((Folder) resources[0]);
                     return;
                 }
 
                 var adp = new AirVidResourcesAdapter(this);
                 adp.AddRange(resources);
 
-                DisplayMetrics dispMetrics = new DisplayMetrics();
+                var dispMetrics = new DisplayMetrics();
                 WindowManager.DefaultDisplay.GetMetrics(dispMetrics);
 
                 var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, dispMetrics);
@@ -259,13 +260,15 @@ namespace aairvid
             {
                 progress.Dismiss();
 
-                EditText passwdView = new EditText(this);
-                passwdView.InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextVariationPassword;
-                passwdView.TransformationMethod = PasswordTransformationMethod.Instance;
+                var passwdView = new EditText(this)
+                {
+                    InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextVariationPassword,
+                    TransformationMethod = PasswordTransformationMethod.Instance
+                };
                 passwdView.SetMaxLines(1);
 
                 passwdView.LayoutParameters = new Android.Views.ViewGroup.LayoutParams(-1, 22);
-                AlertDialog passwordDlg = new AlertDialog.Builder(this)
+                var passwordDlg = new AlertDialog.Builder(this)
                     .SetTitle(Resource.String.PasswordRequired)
                     .SetCancelable(true)
                     .SetView(passwdView)
@@ -291,7 +294,7 @@ namespace aairvid
         {
             selectedServer.SetPassword(passwd);
 
-            _cachedServers[selectedServer.ID] = new ServerAndFolder.CachedServerItem(selectedServer.Server)
+            _cachedServers[selectedServer.ID] = new CachedServerItem(selectedServer.Server)
             {
                 ServerPassword = passwd,
                 LastUsedTime = DateTime.Now
@@ -303,19 +306,18 @@ namespace aairvid
         void passwdView_KeyPress(object sender, Android.Views.View.KeyEventArgs e, AirVidServer server, AlertDialog dlg)
         {
             e.Handled = false;
-            if (e.KeyCode == Android.Views.Keycode.Enter && e.Event.Action == Android.Views.KeyEventActions.Down)
-            {
-                e.Handled = true;
+            if (e.KeyCode != Android.Views.Keycode.Enter ||
+                e.Event.Action != Android.Views.KeyEventActions.Down) return;
+            e.Handled = true;
 
-                var passwd = (sender as EditText).Text;
-                OnPasswordInputed(server, passwd);
-                dlg.Dismiss();
-            }
+            var passwd = (sender as EditText)?.Text;
+            OnPasswordInputed(server, passwd);
+            dlg.Dismiss();
         }
 
         public async void OnFolderSelected(Folder folder)
         {
-            ProgressDialog progress = new ProgressDialog(this);
+            var progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
@@ -325,7 +327,7 @@ namespace aairvid
                 {
                     return folder.GetResources(new WebClientAdp()); 
                 }
-                catch (System.Net.WebException ex)
+                catch (System.Net.WebException)
                 {
                     ShowConnectionFailure();
                     return new List<AirVidResource>();
@@ -346,14 +348,14 @@ namespace aairvid
             if (resources.Count == 1 && resources[0] is Folder)
             {
                 progress.Dismiss();
-                OnFolderSelected(resources[0] as Folder);
+                OnFolderSelected((Folder) resources[0]);
                 return;
             }
 
             var adp = new AirVidResourcesAdapter(this);
             adp.AddRange(resources);
 
-            DisplayMetrics dispMetrics = new DisplayMetrics();
+            var dispMetrics = new DisplayMetrics();
             WindowManager.DefaultDisplay.GetMetrics(dispMetrics);
 
             var folderFragment = FolderFragmentFactory.GetFolderFragment(adp, dispMetrics);
@@ -367,11 +369,11 @@ namespace aairvid
 
             if (resources.Count == 1 && resources[0] is Video)
             {
-                OnMediaSelected(resources[0] as Video, folderFragment);
+                OnMediaSelected((Video) resources[0], folderFragment);
             }
-            else if (resources[0] is Video && ScreenProperty.IsLargeScreen(Resources.DisplayMetrics))
+            else if (resources[0] is Video video && ScreenProperty.IsLargeScreen(Resources.DisplayMetrics))
             {
-                OnMediaSelected(resources[0] as Video, folderFragment);
+                OnMediaSelected(video, folderFragment);
             }
         }
 
@@ -387,7 +389,7 @@ namespace aairvid
                 {
                     return video.GetMediaInfo(new WebClientAdp());
                 }
-                catch (System.Net.WebException ex)
+                catch (System.Net.WebException)
                 {
                     ShowConnectionFailure();
                     return null;
@@ -415,13 +417,13 @@ namespace aairvid
             progress.SetMessage("Loading");
             progress.Show();
 
-            var mediaInfo = await Task<MediaInfo>.Run(() =>
+            var mediaInfo = await Task.Run(() =>
             {
                 try
                 {
                     return video.GetMediaInfo(new WebClientAdp());
                 }
-                catch (System.Net.WebException ex)
+                catch (System.Net.WebException)
                 {
                     ShowConnectionFailure();
                     return null;
@@ -525,17 +527,17 @@ namespace aairvid
             SubtitleStream sub, AudioStream audio,
             ICodecProfile codecProfile)
         {
-            ProgressDialog progress = new ProgressDialog(this);
+            var progress = new ProgressDialog(this);
             progress.SetMessage("Loading");
             progress.Show();
 
-            string playbackUrl = await Task<string>.Run(() =>
+            var playbackUrl = await Task.Run(() =>
             {
                 try
                 {
                     return funcGetUrl(new WebClientAdp(), mediaInfo, sub, audio, codecProfile);
                 }
-                catch (System.Net.WebException ex)
+                catch (System.Net.WebException)
                 {
                     ShowConnectionFailure();
                     return null;
@@ -590,8 +592,7 @@ namespace aairvid
 #if NON_FREE_VERSION
 #else
             ResetFullScreenAds();
-            _fullScreenAds = new InterstitialAd(this);
-            _fullScreenAds.AdUnitId = "ca-app-pub-3312616311449672/4527954348";
+            _fullScreenAds = new InterstitialAd(this) {AdUnitId = "ca-app-pub-3312616311449672/4527954348"};
 
             var adRequest = new AdRequest.Builder()
                 .AddTestDevice("421746E519013F2F4FF3B62742A642D1")
@@ -667,7 +668,7 @@ namespace aairvid
 
         public AirVidServer GetServerById(string id)
         {
-            return _serverFragment == null ? null : _serverFragment.GetServerById(id);
+            return _serverFragment?.GetServerById(id);
         }
     }    
 }

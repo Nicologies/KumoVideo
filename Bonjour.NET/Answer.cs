@@ -20,13 +20,15 @@ namespace Network.Dns
             return string.Format("{0}, Type: {1}, Class: {2}, TTL: {3} = {4}", DomainName, Type, Class, Ttl, ResponseData);
         }
 
-        internal static Answer Get(System.IO.BinaryReader reader)
+        internal static Answer Get(BinaryReader reader)
         {
-            Answer a = new Answer();
-            a.DomainName = DomainName.Get(reader);
-            a.Type = (Type)BinaryHelper.ReadUInt16(reader);
-            a.Class = (Class)BinaryHelper.ReadUInt16(reader);
-            a.Ttl = BinaryHelper.ReadUInt32(reader);
+            var a = new Answer
+            {
+                DomainName = DomainName.Get(reader),
+                Type = (Type) BinaryHelper.ReadUInt16(reader),
+                Class = (Class) BinaryHelper.ReadUInt16(reader),
+                Ttl = BinaryHelper.ReadUInt32(reader)
+            };
             a.ResponseData = ResponseData.Get(a.Type, reader);
             return a;
         }
@@ -37,8 +39,7 @@ namespace Network.Dns
             BinaryHelper.Write(stream, (ushort)Type);
             BinaryHelper.Write(stream, (ushort)Class);
             BinaryHelper.Write(stream, Ttl);
-            if (ResponseData != null)
-                ResponseData.WriteTo(stream);
+            ResponseData?.WriteTo(stream);
         }
     }
 }
