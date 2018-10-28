@@ -6,9 +6,7 @@ using aairvid.UIUtils;
 using aairvid.Utils;
 using Android.App;
 using Android.Gms.Ads;
-using Android.Gms.Analytics;
 using Android.OS;
-using Android.Runtime;
 using Android.Text.Method;
 using Android.Util;
 using Android.Widget;
@@ -52,11 +50,6 @@ namespace aairvid
         private AdsLayout _adsLayout;
 
         private InterstitialAd _fullScreenAds;
-        public enum EmTraker
-        {
-            GlobalTracker
-        };
-        Dictionary<EmTraker, Tracker> _trackers = new Dictionary<EmTraker, Tracker>();
 
         protected override void OnDestroy()
         {
@@ -110,12 +103,6 @@ namespace aairvid
                 }
             }
 
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
-            AndroidEnvironment.UnhandledExceptionRaiser += HandleAndroidException;
-
-            InitGATrackers();
-
             SetContentView(Resource.Layout.main);
 
             if (FragmentManager.BackStackEntryCount == 0)
@@ -135,42 +122,6 @@ namespace aairvid
                 FragmentHelper.AddFragment(this, _serverFragment, tag);
             }
             ReloadInterstitialAd();
-        }
-
-        private void InitGATrackers()
-        {
-            if (!_trackers.ContainsKey(EmTraker.GlobalTracker))
-            {
-                Tracker tracker = GoogleAnalytics.GetInstance(this)
-                .NewTracker(Resource.Xml.ga_global_tracker);
-
-                _trackers.Add(EmTraker.GlobalTracker, tracker);
-            }
-        }
-
-        private void HandleAndroidException(object sender, RaiseThrowableEventArgs e)
-        {
-            ReportException(e.Exception.ToString());
-        }
-
-        private void ReportException(string exceptionStr)
-        {
-            var tracker = _trackers[EmTraker.GlobalTracker];
-            var exBuilder = new HitBuilders.ExceptionBuilder();
-            exBuilder.SetDescription("Unhandled Exception" + exceptionStr);
-            exBuilder.SetFatal(true);
-            var bui = exBuilder.Build();
-            var report = new Dictionary<string, string>();
-            foreach (var i in bui.Keys)
-            {
-                report.Add(i.ToString(), bui[i].ToString());
-            }
-            tracker.Send(report);
-        }
-
-        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            ReportException(e.ExceptionObject.ToString());
         }
 
         private void LoadAds()

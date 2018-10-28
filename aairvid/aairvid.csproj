@@ -201,9 +201,6 @@
     <PackageReference Include="Xamarin.GooglePlayServices.Ads.Lite">
       <Version>42.1021.1</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.GooglePlayServices.Analytics">
-      <Version>42.1021.1</Version>
-    </PackageReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(Configuration)'=='Debug'" />
