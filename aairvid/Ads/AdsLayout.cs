@@ -129,7 +129,7 @@ namespace aairvid.Ads
                 _ad = new AdView(Context)
                 {
                     AdSize = AdSize.SmartBanner,
-                    AdUnitId = "ca-app-pub-3312616311449672/9767882743",
+                    AdUnitId = "ca-app-pub-3312616311449672/4789013512",
                     Id = Resource.Id.adView
                 };
 
