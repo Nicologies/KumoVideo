@@ -75,3 +75,4 @@ dist
 res/raw/libarm
 aairvid.sln.ide/
 /.vs/
+/release-key.keystore
