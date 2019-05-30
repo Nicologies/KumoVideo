@@ -42,4 +42,11 @@
             android:inputType="number"
             android:title="@string/VerticalResolution3G" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/AdsPreference">
+		<CheckBoxPreference
+            android:key="@string/KeyPreferPersonalizedAds"
+            android:title="@string/PreferPersonalizedAds"
+            android:defaultValue="true" />
+	</PreferenceCategory>
 </PreferenceScreen>

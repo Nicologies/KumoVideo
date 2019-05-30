@@ -21,7 +21,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using aairvid.ServerAndFolder;
+using aairvid.Settings;
 using Android.Content;
+using Android.Content.Res;
+using Android.Preferences;
+using Com.Google.Ads.Consent;
+using Java.Net;
 using ServerContainer = System.Collections.Generic.Dictionary<string, aairvid.ServerAndFolder.CachedServerItem>;
 
 namespace aairvid
@@ -34,7 +39,7 @@ namespace aairvid
         )]
 	public class MainActivity : Activity, IResourceSelectedListener,
         IPlayVideoListener, IServerSelectedListener, 
-        IVideoNotPlayableListener
+        IVideoNotPlayableListener, ISupportAdsAndConsent
     {
         private static ServerContainer _cachedServers = new ServerContainer();
         private static readonly string SERVER_PWD_FILE_NAME = "./servers.bin";
@@ -538,10 +543,26 @@ namespace aairvid
             LoadAds();
         }
 
+        private ConsentForm _consentForm;
         public void ReloadInterstitialAd()
         {
 #if NON_FREE_VERSION
 #else
+            var pref = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
+            if (!pref.IsConsentCollected(Resources))
+            {
+                ConsentInformation.RequestConsentInfoUpdate();
+
+               _consentForm = _consentForm ?? new ConsentForm.Builder(ApplicationContext, new URL("http://nicologies.tk/privacy"))
+                    .WithListener(new ConsentFormListenerImpl(this, pref, Resources))
+                    .WithAdFreeOption()
+                    .WithNonPersonalizedAdsOption()
+                    .WithPersonalizedAdsOption()
+                    .Build();
+                _consentForm.Load();
+                return;
+            }
+
             ResetFullScreenAds();
             _fullScreenAds = new InterstitialAd(this) {AdUnitId = "ca-app-pub-3312616311449672/4527954348"};
 
@@ -557,7 +578,12 @@ namespace aairvid
 #endif
         }
 
-		public void PopupSettingsFragment ()
+        public void ShowConsentForm()
+        {
+            _consentForm?.Show();
+        }
+
+        public void PopupSettingsFragment ()
 		{
 		    if (IsShowingSettingsFragment()) return;
 		    var tag = typeof(SettingsFragment).Name;
@@ -621,6 +647,45 @@ namespace aairvid
         {
             return _serverFragment?.GetServerById(id);
         }
-    }    
+    }
+
+    public interface ISupportAdsAndConsent
+    {
+        void ReloadInterstitialAd();
+        void ShowConsentForm();
+    }
+
+    class ConsentFormListenerImpl : ConsentFormListener 
+    {
+        private readonly ISupportAdsAndConsent _adsAndConsent;
+        private readonly ISharedPreferences _pref;
+        private readonly Resources _resources;
+
+        public ConsentFormListenerImpl(ISupportAdsAndConsent adsAndConsent,
+            ISharedPreferences pref, Resources resources)
+        {
+            _adsAndConsent = adsAndConsent;
+            _pref = pref;
+            _resources = resources;
+        }
+
+        public override void OnConsentFormLoaded()
+        {
+            _adsAndConsent.ShowConsentForm();
+        }
+
+        public override void OnConsentFormClosed(
+            ConsentStatus consentStatus, Java.Lang.Boolean userPrefersAdFree)
+        {
+            // Consent form was closed.
+            _pref.SetAdsPreference(_resources, userPrefersAdFree.BooleanValue());
+            _adsAndConsent.ReloadInterstitialAd();
+        }
+
+        public override void OnConsentFormError(String errorDescription)
+        {
+            // Consent form error.
+        }
+    }
 }
 

@@ -38,7 +38,9 @@
   <string name="ViewFolderInfo">View Folder Info</string>
   <string name="DeleteFromHistory">Delete From History</string>
   <string name="Exit">Exit</string>
-  
+  <string name="PreferPersonalizedAds">Prefer Personalized Ads</string>
+  <string name="AdsPreference">Ads Preference</string>
+
 
   <string-array name="server_ctx_menu">
     <item>@string/Delete</item>
@@ -60,4 +62,6 @@
   <string name="KeyH264PassthroughWifi">KeyH264PassthroughWifi</string>
   <string name="KeyH264Passthrough3G">KeyH264Passthrough3G</string>
   <string name="KeyShowH264Warning">KeyShowH264Warning</string>
+  <string name="KeyPreferPersonalizedAds">KeyPreferPersonalizedAds</string>
+  <string name="KeyConsentCollected">KeyConsentCollected</string>
 </resources>

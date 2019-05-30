@@ -182,6 +182,10 @@
     <AndroidResource Include="Resources\drawable\exit.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdmobXamarinConsent\AdmobXamarinConsent.csproj">
+      <Project>{aa1a8bc9-e0e1-410c-b0d3-de6cd83ff0c4}</Project>
+      <Name>AdmobXamarinConsent</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Bonjour.NET\Bonjour.NET.csproj">
       <Project>{a311fda7-f101-4596-a1c8-6a75c5b88059}</Project>
       <Name>Bonjour.NET</Name>

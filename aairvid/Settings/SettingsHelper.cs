@@ -154,5 +154,25 @@ namespace aairvid.Settings
             editor.PutBoolean(key, value);
             editor.Commit();
         }
+
+        public static bool PreferPersonalizedAds(this ISharedPreferences pref, Resources res)
+        {
+            var key = res.GetString(Resource.String.KeyPreferPersonalizedAds);
+            return pref.GetBoolean(key, true);
+        }
+
+        public static void SetAdsPreference(this ISharedPreferences pref, Resources res, bool preferPersonalized)
+        {
+            var key = res.GetString(Resource.String.KeyPreferPersonalizedAds);
+            var editor = pref.Edit();
+            editor.PutBoolean(key, preferPersonalized);
+            editor.Commit();
+        }
+
+        public static bool IsConsentCollected(this ISharedPreferences pref, Resources res)
+        {
+            var key = res.GetString(Resource.String.KeyConsentCollected);
+            return pref.GetBoolean(key, false);
+        }
     }
 }
